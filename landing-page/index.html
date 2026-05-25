@@ -627,14 +627,14 @@
           </div>
         </div>
         <!-- Botões de Ação -->
-        <div class="grid grid-cols-2 gap-3 mt-6">
-          <a :href="cases[activeCase]?.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 justify-center bg-brick hover:bg-brick-light text-white font-heading font-semibold text-sm px-4 py-2.5 rounded-xl transition-all shadow-md shadow-brick/5 group/btn">
-            Acessar Sistema
-            <svg class="w-4 h-4 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-          </a>
-          <a href="#contato" @click="modalOpen = false" class="inline-flex items-center gap-1.5 justify-center bg-snow hover:bg-navy/5 text-navy font-heading font-semibold text-sm px-4 py-2.5 rounded-xl border border-navy/10 transition-colors">
+        <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8">
+          <a href="#contato" @click="modalOpen = false" class="order-2 sm:order-1 inline-flex items-center gap-1.5 justify-center bg-snow hover:bg-navy/5 text-navy font-heading font-semibold text-sm px-5 py-2.5 rounded-xl border border-navy/10 transition-colors">
             Falar do Projeto
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+          </a>
+          <a :href="cases[activeCase]?.url" target="_blank" rel="noopener noreferrer" class="order-1 sm:order-2 inline-flex items-center gap-1.5 justify-center bg-brick hover:bg-brick-light text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md shadow-brick/5 group/btn">
+            Acessar Sistema
+            <svg class="w-4 h-4 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
           </a>
         </div>
       </div>

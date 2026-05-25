@@ -529,97 +529,68 @@
            x-intersect.once="$el.classList.add('animate-fade-up')">
         <div class="accent-line mx-auto mb-5"></div>
         <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
-          Resultados que Falam por Si
+          Nossa Vitrine de Soluções Reais
         </h2>
         <p class="font-body text-graphite-light text-lg max-w-2xl mx-auto">
-          Não vendemos sistemas complicados, entregamos soluções ágeis que resolvem problemas reais. Veja como transformamos negócios da nossa região.
+          Não vendemos sistemas complicados, entregamos ferramentas ágeis que resolvem dores reais de comércios e indústrias. Explore abaixo as nossas soluções em funcionamento:
         </p>
       </div>
 
       <!-- Portfolio Grid -->
-      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
-        <!-- Case 1 -->
-        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
-             @click="openModal(0)"
-             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-1')">
-          <!-- Visual placeholder -->
-          <div class="h-48 bg-gradient-to-br from-navy to-navy-light relative overflow-hidden">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <template x-for="(c, index) in cases" :key="index">
+          <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer flex flex-col justify-between group"
+               @click="openModal(index)"
+               x-intersect.once="$el.classList.add('animate-fade-up')">
+            <div>
+              <!-- Visual Card Header -->
+              <div class="h-40 bg-gradient-to-br relative overflow-hidden flex items-center justify-center"
+                   :class="index % 3 === 0 ? 'from-navy to-navy-light' : (index % 3 === 1 ? 'from-teal to-teal-light' : 'from-brick to-brick-light')">
+                <!-- Decorative Icon or Graphics inside Card Header -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-20">
+                  <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path x-show="index === 0" stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+                    <path x-show="index === 1" stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    <path x-show="index === 2" stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                    <path x-show="index === 3" stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    <path x-show="index === 4" stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zM14.25 15h.008v.008H14.25V15zm0 2.25h.008v.008H14.25v-.008zM16.5 15h.008v.008H16.5V15zm0 2.25h.008v.008H16.5v-.008z"/>
+                    <path x-show="index === 5" stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
+                  </svg>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-brick" :class="index % 2 === 0 ? 'bg-brick' : 'bg-navy'"></div>
+              </div>
+              <div class="p-6">
+                <!-- Tag -->
+                <div class="inline-flex items-center gap-1.5 font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide"
+                     :class="index % 3 === 0 ? 'bg-navy/10 text-navy' : (index % 3 === 1 ? 'bg-teal/10 text-teal' : 'bg-brick/10 text-brick')"
+                     x-text="c.tag">
+                </div>
+                <!-- Title -->
+                <h3 class="font-heading font-bold text-lg text-navy mb-2 group-hover:text-brick transition-colors" x-text="c.title"></h3>
+                <!-- Description -->
+                <p class="font-body text-sm text-graphite-light leading-relaxed mb-4" x-text="c.description.substring(0, 115) + '...'"></p>
+              </div>
             </div>
-            <div class="absolute bottom-0 left-0 right-0 h-1 bg-brick"></div>
-          </div>
-          <div class="p-6">
-            <div class="inline-flex items-center gap-1.5 bg-teal/10 text-teal font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
-              Automação
-            </div>
-            <h3 class="font-heading font-bold text-lg text-navy mb-2">Automação de Alertas de Prazos</h3>
-            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
-              Substituímos o acompanhamento manual por alertas automáticos. O setor passou a cumprir os prazos com folga.
-            </p>
-            <div class="flex items-center gap-2">
-              <span class="font-heading font-bold text-2xl text-brick">40%</span>
-              <span class="font-body text-sm text-graphite-light">redução em atrasos</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Case 2 -->
-        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
-             @click="openModal(1)"
-             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-2')">
-          <div class="h-48 bg-gradient-to-br from-teal to-teal-light relative overflow-hidden">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 h-1 bg-brick"></div>
-          </div>
-          <div class="p-6">
-            <div class="inline-flex items-center gap-1.5 bg-navy/10 text-navy font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
-              Indústria
-            </div>
-            <h3 class="font-heading font-bold text-lg text-navy mb-2">Visão de Chão de Fábrica</h3>
-            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
-              Implementamos um painel de monitoramento contínuo que identificou gargalos ocultos, permitindo ajustes rápidos.
-            </p>
-            <div class="flex items-center gap-2">
-              <span class="font-heading font-bold text-2xl text-brick">15%</span>
-              <span class="font-body text-sm text-graphite-light">aumento em eficiência</span>
+            <!-- Bottom Metric & CTA Link -->
+            <div class="px-6 pb-6 pt-3 border-t border-navy/5 flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="font-heading font-bold text-xl text-brick" x-text="c.metric"></span>
+                <span class="font-body text-[11px] text-graphite-light leading-tight max-w-[120px]" x-text="c.metricLabel"></span>
+              </div>
+              <span class="font-heading font-bold text-xs text-navy group-hover:text-brick flex items-center gap-1 transition-colors">
+                Ver Detalhes
+                <svg class="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
             </div>
           </div>
-        </div>
-
-        <!-- Case 3 -->
-        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
-             @click="openModal(2)"
-             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-3')">
-          <div class="h-48 bg-gradient-to-br from-brick to-brick-light relative overflow-hidden">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 h-1 bg-navy"></div>
-          </div>
-          <div class="p-6">
-            <div class="inline-flex items-center gap-1.5 bg-brick/10 text-brick font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
-              Estoque
-            </div>
-            <h3 class="font-heading font-bold text-lg text-navy mb-2">Controle de Almoxarifado Digital</h3>
-            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
-              Criamos um controle integrado com rastreabilidade total, garantindo um estoque sempre enxuto e seguro.
-            </p>
-            <div class="flex items-center gap-2">
-              <span class="font-heading font-bold text-2xl text-brick">100%</span>
-              <span class="font-body text-sm text-graphite-light">fim das perdas por giro</span>
-            </div>
-          </div>
-        </div>
+        </template>
       </div>
 
       <!-- CTA -->
-      <div class="text-center mt-12"
+      <div class="text-center mt-14"
            x-intersect.once="$el.classList.add('animate-fade-up')">
-        <a href="#contato" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-colors">
-          Quero algo assim para minha empresa
+        <a href="#contato" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-colors shadow-lg shadow-navy/10">
+          Precisa de um painel sob medida? Fale Conosco
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
         </a>
       </div>
@@ -655,10 +626,17 @@
             </template>
           </div>
         </div>
-        <a href="#contato" @click="modalOpen = false" class="inline-flex items-center gap-2 w-full justify-center bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-6 py-3.5 rounded-xl transition-colors">
-          Quero algo assim
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
-        </a>
+        <!-- Botões de Ação -->
+        <div class="flex flex-col gap-3">
+          <a :href="cases[activeCase]?.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 w-full justify-center bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-brick/10 group/btn">
+            Acessar Sistema Online
+            <svg class="w-4.5 h-4.5 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+          </a>
+          <a href="#contato" @click="modalOpen = false" class="inline-flex items-center gap-2 w-full justify-center bg-snow hover:bg-navy/5 text-navy font-heading font-semibold text-base px-6 py-3.5 rounded-xl border border-navy/10 transition-colors">
+            Falar sobre este Projeto
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -847,28 +825,58 @@
         activeCase: 0,
         cases: [
           {
-            tag: 'Automação',
-            title: 'Automação de Alertas de Prazos',
-            metric: '40%',
-            metricLabel: 'redução em atrasos de pedidos',
-            description: 'Um setor de compras de uma indústria de Capivari enfrentava atrasos constantes por depender de acompanhamento manual de prazos. Implementamos um sistema de alertas automáticos que notifica os responsáveis antes do vencimento de cada pedido. O resultado foi uma redução de 40% nos atrasos e uma rotina de compras muito mais organizada e previsível.',
-            techs: ['Python', 'Pandas', 'Automação E-mail', 'SQLite']
+            tag: 'Inteligência Comercial',
+            title: 'Dashboard de Inteligência de Vendas',
+            metric: 'R$ 48k+',
+            metricLabel: 'vendas simuladas em dashboard',
+            description: 'Painel completo para acompanhamento de KPIs de faturamento diário, tíquete médio de vendas, evolução semanal e ranking dos 8 produtos mais vendidos. Desenvolvido para substituir o controle manual de vendas no Excel, de forma totalmente automatizada com gráficos dinâmicos de movimentação em tempo real.',
+            techs: ['Python', 'Flask', 'SQLite', 'Chart.js', 'Bootstrap 5'],
+            url: 'https://baseexata-vendas.onrender.com'
+          },
+          {
+            tag: 'Logística e Estoque',
+            title: 'Sistema de Gestão de Estoque',
+            metric: '30+',
+            metricLabel: 'produtos ativos monitorados',
+            description: 'Sistema robusto para controle e monitoramento de estoque. Fornece um painel em tempo real de entradas e saídas de mercadorias, cadastro detalhado de produtos por categorias, e alertas de estoque mínimo com ordens automáticas de reposição por nível de urgência, eliminando rupturas de estoque.',
+            techs: ['Python', 'Flask', 'SQLite', 'Bootstrap 5', 'Gunicorn'],
+            url: 'https://baseexata-estoque-vitrine.onrender.com'
           },
           {
             tag: 'Indústria',
-            title: 'Visão de Chão de Fábrica',
-            metric: '15%',
-            metricLabel: 'aumento na eficiência da produção',
-            description: 'Uma pequena fábrica de embalagens da região operava sem visibilidade real da produtividade das máquinas. Criamos um painel de monitoramento contínuo que cruza dados de produção, paradas e manutenção. Gargalos ocultos foram identificados rapidamente, permitindo ajustes que elevaram a eficiência em 15% nos primeiros 60 dias.',
-            techs: ['Python', 'Flask', 'Chart.js', 'SQL', 'Power BI']
+            title: 'Monitor de Eficiência Industrial OEE',
+            metric: '78%',
+            metricLabel: 'de eficiência média alcançada',
+            description: 'Painel industrial completo (OEE - Overall Equipment Effectiveness) com Dark Theme dedicado. Apresenta o acompanhamento em tempo real da produtividade de 8 máquinas da fábrica, divididas em turnos, com cálculo de disponibilidade, performance, qualidade e um mapa térmico (heatmap) que destaca pontos de gargalo operacional.',
+            techs: ['Python', 'Flask', 'SQLite', 'Chart.js', 'Tema Industrial Escuro'],
+            url: 'https://baseexata-oee.onrender.com'
           },
           {
-            tag: 'Estoque',
-            title: 'Controle de Almoxarifado Digital',
-            metric: '100%',
-            metricLabel: 'fim das perdas por material sem giro',
-            description: 'Uma loja de materiais de construção em Capivari perdia dinheiro com materiais parados no almoxarifado sem nenhum sistema de rastreabilidade. Desenvolvemos um controle digital integrado que rastreia cada entrada e saída, com alertas de estoque mínimo e relatórios de giro. As perdas por material sem movimentação foram completamente eliminadas.',
-            techs: ['Python', 'Flask', 'SQLite', 'Bootstrap', 'Chart.js']
+            tag: 'Automação',
+            title: 'Automação de Relatórios Gerenciais',
+            metric: '95%',
+            metricLabel: 'economia de tempo gerencial',
+            description: 'Plataforma inteligente que simula e centraliza a consolidação mensal de relatórios de um supermercado de médio porte. Substitui 6 horas diárias de planilhas manuais no Excel por 12 minutos de agregação automática: faturamento por categoria, evolução mensal do tíquete médio e ranking dos Top 10 fornecedores.',
+            techs: ['Python', 'Flask', 'SQLite', 'Geração de Dados Realistas', 'Chart.js'],
+            url: 'https://baseexata-relatorios.onrender.com'
+          },
+          {
+            tag: 'Previsão e Dados',
+            title: 'Análise de Sazonalidade e Demanda',
+            metric: '2 anos',
+            metricLabel: 'histórico de dados sazonais',
+            description: 'Ferramenta avançada para análise de tendência de compras do comércio. Analisa o comportamento histórico diário de vendas de 10 categorias varejistas em Capivari para identificar picos sazonais (verão, frituras no inverno, festas juninas) e projetar a demanda mensal exata de compras para o ano inteiro, evitando encalhe.',
+            techs: ['Python', 'Flask', 'Algoritmo Sazonalidade', 'Previsões de Compra'],
+            url: 'https://baseexata-sazonalidade.onrender.com'
+          },
+          {
+            tag: 'Gestão de Equipes',
+            title: 'Painel de Performance Comercial',
+            metric: '6 regiões',
+            metricLabel: 'cobertura de faturamento regional',
+            description: 'Painel gerencial para líderes de vendas. Centraliza o faturamento consolidado por região de atuação do interior de SP e acompanha a taxa de fechamento comercial de 6 vendedores. Exibe gráficos de atingimento de metas mensais vs. faturamento real e um ranking interativo de comissão de vendedores.',
+            techs: ['Python', 'Flask', 'SQLite', 'Gráficos de Meta', 'Bootstrap 5'],
+            url: 'https://baseexata-performance.onrender.com'
           }
         ],
         openModal(index) {

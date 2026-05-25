@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block page_title %}Relatórios{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <h4><i class="bi bi-file-earmark-bar-graph-fill me-2" style="color:var(--teal)"></i>Relatórios e Análises</h4>
+</div>
+
+<!-- Valor por Categoria -->
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <div class="chart-container">
+      <h6><i class="bi bi-pie-chart-fill me-2 text-muted"></i>Valor em Estoque por Categoria</h6>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Categoria</th>
+              <th class="text-center">Produtos</th>
+              <th class="text-center">Unidades</th>
+              <th class="text-end">Valor (Custo)</th>
+              <th class="text-end">Valor (Venda)</th>
+              <th class="text-end">Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set ns = namespace(total_custo=0, total_venda=0) %}
+            {% for c in por_categoria %}
+            {% set ns.total_custo = ns.total_custo + c.valor_custo %}
+            {% set ns.total_venda = ns.total_venda + c.valor_venda %}
+            <tr>
+              <td class="fw-semibold">{{ c.nome }}</td>
+              <td class="text-center">{{ c.qtd_produtos }}</td>
+              <td class="text-center">{{ c.total_unidades }}</td>
+              <td class="text-end">{{ c.valor_custo|brl }}</td>
+              <td class="text-end">{{ c.valor_venda|brl }}</td>
+              <td class="text-end">
+                {% if c.valor_custo > 0 %}
+                <span class="badge bg-light text-dark">
+                  {{ '%.1f'|format((c.valor_venda - c.valor_custo) / c.valor_custo * 100) }}%
+                </span>
+                {% else %}—{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold" style="background:var(--snow)">
+              <td>TOTAL</td>
+              <td></td><td></td>
+              <td class="text-end">{{ ns.total_custo|brl }}</td>
+              <td class="text-end">{{ ns.total_venda|brl }}</td>
+              <td class="text-end">
+                {% if ns.total_custo > 0 %}
+                {{ '%.1f'|format((ns.total_venda - ns.total_custo) / ns.total_custo * 100) }}%
+                {% endif %}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="chart-container" style="height:100%">
+      <h6><i class="bi bi-bar-chart-fill me-2 text-muted"></i>Top 10 Mais Movimentados (30 dias)</h6>
+      <canvas id="chartTop10" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Movimentação por Período -->
+<div class="row g-3 mb-4">
+  <div class="col-12">
+    <div class="chart-container">
+      <h6><i class="bi bi-calendar3 me-2 text-muted"></i>Movimentações por Semana (Últimos 30 dias)</h6>
+      {% if mov_periodo %}
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Semana</th>
+              <th>Período</th>
+              <th class="text-center">Total Mov.</th>
+              <th class="text-center" style="color:var(--teal)">Entradas</th>
+              <th class="text-center" style="color:var(--brick)">Saídas</th>
+              <th>Balanço</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in mov_periodo %}
+            <tr>
+              <td class="fw-semibold">Semana {{ m.semana }}</td>
+              <td class="text-muted" style="font-size:0.8rem">{{ m.inicio }} a {{ m.fim }}</td>
+              <td class="text-center fw-bold">{{ m.total_mov }}</td>
+              <td class="text-center" style="color:var(--teal)">+{{ m.entradas }}</td>
+              <td class="text-center" style="color:var(--brick)">-{{ m.saidas }}</td>
+              <td>
+                {% set balanco = m.entradas - m.saidas %}
+                <span class="badge {% if balanco >= 0 %}badge-entrada{% else %}badge-saida{% endif %}">
+                  {{ '+' if balanco >= 0 else '' }}{{ balanco }} un.
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted text-center py-3 mb-0">Nenhuma movimentação nos últimos 30 dias.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Produtos sem Movimentação -->
+<div class="row g-3">
+  <div class="col-12">
+    <div class="chart-container">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="mb-0">
+          <i class="bi bi-clock-history me-2 text-muted"></i>
+          Produtos sem Movimentação há 30+ Dias
+          {% if sem_movimento %}<span class="badge bg-warning text-dark ms-2">{{ sem_movimento|length }}</span>{% endif %}
+        </h6>
+      </div>
+      {% if sem_movimento %}
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th class="text-center">Em Estoque</th>
+              <th class="text-end">Valor Parado</th>
+              <th>Última Mov.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in sem_movimento %}
+            <tr>
+              <td><code style="font-size:0.8rem; color:var(--navy)">{{ p.sku }}</code></td>
+              <td class="fw-semibold">{{ p.nome }}</td>
+              <td><span class="badge bg-light text-dark">{{ p.categoria_nome }}</span></td>
+              <td class="text-center">{{ p.estoque_atual }} un.</td>
+              <td class="text-end fw-semibold" style="color:var(--brick)">{{ p.valor_parado|brl }}</td>
+              <td class="text-muted" style="font-size:0.8rem">
+                {{ p.ultima_mov|data_br if p.ultima_mov else 'Nunca' }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted text-center py-3 mb-0">Todos os produtos tiveram movimentação nos últimos 30 dias!</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Top 10 mais movimentados
+const ctxTop = document.getElementById('chartTop10').getContext('2d');
+const dadosTop = {{ top_movimentados|tojson }};
+new Chart(ctxTop, {
+  type: 'bar',
+  data: {
+    labels: dadosTop.map(d => d.nome.length > 20 ? d.nome.substring(0,20)+'…' : d.nome),
+    datasets: [
+      {
+        label: 'Entradas',
+        data: dadosTop.map(d => d.entradas),
+        backgroundColor: 'rgba(0,128,128,0.7)',
+        borderRadius: 4,
+      },
+      {
+        label: 'Saídas',
+        data: dadosTop.map(d => d.saidas),
+        backgroundColor: 'rgba(211,84,0,0.7)',
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: true, grid: { color: '#f0f2f5' }, ticks: { font: { size: 10 } } },
+      y: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+{% endblock %}

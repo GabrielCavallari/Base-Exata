@@ -1,0 +1,163 @@
+/* Estilos globais — Projeto 3 Monitor OEE | Base Exata */
+/* Dark theme completo — fundo escuro em todos os elementos */
+
+:root {
+    --fundo-principal: #0d1117;
+    --fundo-card: #161b22;
+    --fundo-card-alt: #1c2128;
+    --borda-card: #30363d;
+    --texto-principal: #e6edf3;
+    --texto-muted: #8b949e;
+    --acento-verde: #3fb950;
+    --acento-amarelo: #d29922;
+    --acento-vermelho: #f85149;
+    --acento-azul: #58a6ff;
+}
+
+body {
+    background-color: var(--fundo-principal);
+    color: var(--texto-principal);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+}
+
+/* Banner de demonstração */
+.banner-demo {
+    background: #1c2128;
+    color: var(--acento-azul);
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    border-bottom: 1px solid var(--borda-card);
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: #161b22;
+    border-bottom: 1px solid var(--borda-card);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: var(--acento-azul) !important;
+}
+
+/* Override global de cards */
+.card {
+    background-color: var(--fundo-card);
+    border: 1px solid var(--borda-card);
+    border-radius: 10px;
+}
+
+/* Cards KPI */
+.kpi-card {
+    border-radius: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.kpi-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: var(--acento-azul);
+}
+
+.kpi-valor {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--texto-principal);
+    line-height: 1.2;
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: var(--texto-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-badge {
+    margin-top: 6px;
+}
+
+/* Header de cards */
+.card-header-custom {
+    background-color: var(--fundo-card-alt);
+    color: var(--texto-principal);
+    border-bottom: 1px solid var(--borda-card);
+    border-radius: 10px 10px 0 0 !important;
+}
+
+/* Cabeçalho da tabela */
+.thead-custom th {
+    background-color: var(--fundo-card-alt);
+    color: var(--texto-muted);
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda-card);
+    border-top: none;
+}
+
+/* Override de tabelas */
+table.table {
+    color: var(--texto-principal);
+}
+
+table.table td,
+table.table th {
+    border-color: var(--borda-card);
+}
+
+/* Narrativa de case */
+.case-destaque {
+    background: linear-gradient(135deg, #161b22, #1c2128);
+    color: var(--texto-principal);
+    border: 1px solid var(--borda-card);
+    border-radius: 10px;
+    padding: 14px 20px;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: #161b22;
+    color: var(--texto-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--borda-card);
+}
+
+/* Badges de classificação OEE */
+.badge-oee-bom {
+    background-color: #1a4d2e;
+    color: var(--acento-verde);
+}
+
+.badge-oee-atencao {
+    background-color: #3d2e00;
+    color: var(--acento-amarelo);
+}
+
+.badge-oee-critico {
+    background-color: #3d0f0a;
+    color: var(--acento-vermelho);
+}
+
+/* Responsivo mobile */
+@media (max-width: 576px) {
+    .kpi-valor { font-size: 1.2rem; }
+    .kpi-icon  { font-size: 1.5rem; }
+    .thead-custom th { font-size: 11px; padding: 8px 10px; }
+}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Nova Movimentação{% endblock %}
+{% block page_title %}Nova Movimentação{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="chart-container">
+      <div class="d-flex align-items-center gap-2 mb-4">
+        <a href="{{ url_for('movimentacoes_lista') }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i>
+        </a>
+        <h5 class="mb-0 fw-bold" style="color:var(--navy)">Registrar Movimentação</h5>
+      </div>
+
+      <form method="POST">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Produto *</label>
+            <select name="produto_id" class="form-select" required id="selectProduto">
+              <option value="">Selecione o produto...</option>
+              {% for p in produtos %}
+              <option value="{{ p.id }}" data-estoque="{{ p.estoque_atual }}">
+                {{ p.nome }} ({{ p.sku }}) — Estoque: {{ p.estoque_atual }} un.
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Tipo *</label>
+            <div class="d-flex gap-2">
+              <input type="radio" class="btn-check" name="tipo" id="tipoEntrada" value="entrada" checked>
+              <label class="btn btn-outline-success flex-fill" for="tipoEntrada">
+                <i class="bi bi-arrow-down-circle me-1"></i> Entrada
+              </label>
+              <input type="radio" class="btn-check" name="tipo" id="tipoSaida" value="saida">
+              <label class="btn btn-outline-danger flex-fill" for="tipoSaida">
+                <i class="bi bi-arrow-up-circle me-1"></i> Saída
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Quantidade *</label>
+            <input type="number" name="quantidade" class="form-control" min="1" required placeholder="0" id="inputQtd">
+            <div class="form-text" id="estoqueInfo" style="display:none">
+              Estoque disponível: <strong id="estoqueDisp">0</strong> un.
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Observação</label>
+            <textarea name="observacao" class="form-control" rows="2"
+                      placeholder="Ex: Reposição semanal, venda balcão, perda por validade..."></textarea>
+          </div>
+        </div>
+
+        <hr class="my-4">
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{{ url_for('movimentacoes_lista') }}" class="btn btn-outline-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-navy px-4">
+            <i class="bi bi-check-lg me-1"></i> Registrar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('selectProduto').addEventListener('change', function() {
+  const opt = this.options[this.selectedIndex];
+  const info = document.getElementById('estoqueInfo');
+  const disp = document.getElementById('estoqueDisp');
+  if (this.value) {
+    disp.textContent = opt.dataset.estoque;
+    info.style.display = 'block';
+  } else {
+    info.style.display = 'none';
+  }
+});
+</script>
+{% endblock %}

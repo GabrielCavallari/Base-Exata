@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Alertas de Estoque{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">
+        <i class="bi bi-exclamation-triangle me-2 text-danger"></i>Alertas de Estoque
+    </h5>
+    <span class="badge bg-danger fs-6">{{ alertas|length }} produto(s) em alerta</span>
+</div>
+
+{% if alertas %}
+<div class="row g-3">
+    {% for a in alertas %}
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 card-alerta {% if a.quantidade_atual == 0 %}card-alerta-zerado{% else %}card-alerta-critico{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="card-title mb-0 fw-bold">{{ a.nome }}</h6>
+                    {% if a.quantidade_atual == 0 %}
+                        <span class="badge bg-danger">ZERADO</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">CRÍTICO</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted small mb-3">{{ a.categoria }}</p>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="stat-alerta {% if a.quantidade_atual == 0 %}text-danger{% else %}text-warning{% endif %}">
+                            {{ a.quantidade_atual }}
+                        </div>
+                        <small class="text-muted">Atual</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-alerta text-secondary">{{ a.quantidade_minima }}</div>
+                        <small class="text-muted">Mínimo</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-alerta text-danger fw-bold">{{ a.deficit }}</div>
+                        <small class="text-muted">Déficit</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-success text-center py-5">
+    <i class="bi bi-check-circle display-4 d-block mb-3"></i>
+    <h5>Estoque saudável!</h5>
+    <p class="mb-0">Nenhum produto está abaixo do nível mínimo.</p>
+</div>
+{% endif %}
+
+{% endblock %}

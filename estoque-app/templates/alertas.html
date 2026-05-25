@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Alertas{% endblock %}
+{% block page_title %}Alertas de Estoque{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <h4>
+    <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+    Produtos Abaixo do Mínimo
+    {% if produtos %}<span class="badge bg-danger ms-2">{{ produtos|length }}</span>{% endif %}
+  </h4>
+  <a href="{{ url_for('movimentacao_nova') }}" class="btn btn-teal btn-sm px-3">
+    <i class="bi bi-plus-lg me-1"></i> Registrar Entrada
+  </a>
+</div>
+
+{% if produtos %}
+<div class="row g-3">
+  {% for p in produtos %}
+  <div class="col-md-6 col-xl-4">
+    <div class="stat-card" style="border-left: 4px solid {% if p.pct < 25 %}#dc3545{% elif p.pct < 50 %}#ffc107{% else %}#fd7e14{% endif %}">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <h6 class="fw-bold mb-1" style="color:var(--navy)">{{ p.nome }}</h6>
+          <small class="text-muted">{{ p.sku }} · {{ p.categoria_nome }}</small>
+        </div>
+        <span class="badge {% if p.pct < 25 %}badge-critico{% else %}badge-alerta{% endif %}">
+          {% if p.estoque_atual == 0 %}SEM ESTOQUE{% else %}BAIXO{% endif %}
+        </span>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-end mb-2">
+        <div>
+          <span class="fs-4 fw-bold" style="color:{% if p.pct < 25 %}#dc3545{% else %}#D35400{% endif %}">
+            {{ p.estoque_atual }}
+          </span>
+          <span class="text-muted" style="font-size:0.85rem"> / {{ p.estoque_minimo }} un.</span>
+        </div>
+        <div class="text-end">
+          <small class="text-muted">Faltam</small>
+          <div class="fw-bold" style="color:var(--brick)">{{ p.deficit }} un.</div>
+        </div>
+      </div>
+
+      <div class="progress progress-thin">
+        <div class="progress-bar {% if p.pct < 25 %}bg-danger{% elif p.pct < 50 %}bg-warning{% else %}bg-info{% endif %}"
+             style="width:{{ [p.pct, 100]|min }}%"></div>
+      </div>
+      <div class="d-flex justify-content-between mt-2">
+        <small class="text-muted">{{ p.pct }}% do mínimo</small>
+        <small class="text-muted">{{ p.fornecedor if p.fornecedor else '—' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="chart-container text-center py-5">
+  <i class="bi bi-check-circle-fill text-success" style="font-size:3rem"></i>
+  <h5 class="mt-3 fw-bold" style="color:var(--navy)">Tudo certo!</h5>
+  <p class="text-muted mb-0">Todos os produtos estão com estoque acima do mínimo configurado.</p>
+</div>
+{% endif %}
+{% endblock %}

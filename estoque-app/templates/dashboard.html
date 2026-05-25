@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon" style="background:rgba(0,128,128,0.1); color:var(--teal)">
+          <i class="bi bi-box-seam-fill"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ total_produtos }}</div>
+          <div class="stat-label">Produtos Ativos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon" style="background:rgba(26,54,93,0.1); color:var(--navy)">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div>
+          <div class="stat-value" style="font-size:1.3rem">{{ valor_estoque|brl }}</div>
+          <div class="stat-label">Valor em Estoque (custo)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon" style="background:rgba(211,84,0,0.1); color:var(--brick)">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ abaixo_minimo }}</div>
+          <div class="stat-label">Abaixo do Mínimo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon" style="background:rgba(0,128,128,0.1); color:var(--teal)">
+          <i class="bi bi-arrow-left-right"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ mov_hoje }}</div>
+          <div class="stat-label">Movimentações Hoje</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="chart-container">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="mb-0">Movimentações — Últimos 7 Dias</h6>
+        <span class="badge bg-light text-muted" style="font-size:0.7rem">Atualizado agora</span>
+      </div>
+      <canvas id="chartMov7d" height="120"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="chart-container">
+      <h6>Valor por Categoria</h6>
+      <canvas id="chartCategoria" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Row -->
+<div class="row g-3">
+  <!-- Alertas -->
+  <div class="col-lg-5">
+    <div class="chart-container">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Alertas de Estoque</h6>
+        <a href="{{ url_for('alertas') }}" class="btn btn-sm btn-outline-secondary" style="font-size:0.75rem">Ver todos</a>
+      </div>
+      {% if alertas_top %}
+      <div class="list-group list-group-flush">
+        {% for p in alertas_top %}
+        <div class="list-group-item px-0 py-2 border-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold" style="font-size:0.85rem">{{ p.nome }}</div>
+              <small class="text-muted">{{ p.categoria }}</small>
+            </div>
+            <div class="text-end">
+              <span class="badge {% if p.estoque_atual == 0 %}badge-critico{% else %}badge-alerta{% endif %}">
+                {{ p.estoque_atual }} / {{ p.estoque_minimo }} un.
+              </span>
+            </div>
+          </div>
+          <div class="progress progress-thin mt-2">
+            {% set pct = (p.estoque_atual / p.estoque_minimo * 100) if p.estoque_minimo > 0 else 0 %}
+            <div class="progress-bar {% if pct < 30 %}bg-danger{% elif pct < 70 %}bg-warning{% else %}bg-success{% endif %}"
+                 style="width:{{ [pct, 100]|min }}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-4">
+        <i class="bi bi-check-circle-fill text-success fs-2"></i>
+        <p class="text-muted mt-2 mb-0" style="font-size:0.875rem">Todos os produtos estão acima do mínimo!</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Últimas Movimentações -->
+  <div class="col-lg-7">
+    <div class="table-container">
+      <div class="d-flex align-items-center justify-content-between p-3 pb-0">
+        <h6 class="fw-bold mb-0" style="color:var(--navy); font-size:0.85rem">Últimas Movimentações</h6>
+        <a href="{{ url_for('movimentacoes_lista') }}" class="btn btn-sm btn-outline-secondary" style="font-size:0.75rem">Ver todas</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Tipo</th>
+              <th>Qtd</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in ultimas_mov %}
+            <tr>
+              <td>
+                <span class="fw-semibold">{{ m.produto_nome }}</span>
+                <br><small class="text-muted">{{ m.sku }}</small>
+              </td>
+              <td>
+                <span class="badge {% if m.tipo == 'entrada' %}badge-entrada{% else %}badge-saida{% endif %}">
+                  <i class="bi bi-{% if m.tipo == 'entrada' %}arrow-down{% else %}arrow-up{% endif %} me-1"></i>
+                  {{ m.tipo|capitalize }}
+                </span>
+              </td>
+              <td class="fw-semibold">{{ m.quantidade }}</td>
+              <td><small>{{ m.data|data_br }}</small></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── Movimentações 7 dias ──
+const ctx7d = document.getElementById('chartMov7d').getContext('2d');
+const dados7d = {{ dados_7d|tojson }};
+new Chart(ctx7d, {
+  type: 'bar',
+  data: {
+    labels: dados7d.map(d => d.label),
+    datasets: [
+      {
+        label: 'Entradas',
+        data: dados7d.map(d => d.entradas),
+        backgroundColor: 'rgba(0,128,128,0.7)',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'Saídas',
+        data: dados7d.map(d => d.saidas),
+        backgroundColor: 'rgba(211,84,0,0.7)',
+        borderRadius: 6,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f2f5' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ── Valor por Categoria (Donut) ──
+const ctxCat = document.getElementById('chartCategoria').getContext('2d');
+const dadosCat = {{ valor_categoria|tojson }};
+const cores = ['#1A365D','#D35400','#008080','#2C3E50','#E8731A','#234782','#00A3A3','#5D7083'];
+new Chart(ctxCat, {
+  type: 'doughnut',
+  data: {
+    labels: dadosCat.map(d => d.nome),
+    datasets: [{
+      data: dadosCat.map(d => d.valor),
+      backgroundColor: cores.slice(0, dadosCat.length),
+      borderWidth: 2,
+      borderColor: '#fff',
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, padding: 8 } }
+    }
+  }
+});
+</script>
+{% endblock %}

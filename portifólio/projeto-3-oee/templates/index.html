@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Seção 1: Narrativa do case -->
+<div class="case-destaque mb-4 d-flex align-items-start gap-3">
+    <i class="bi bi-trophy-fill fs-4 flex-shrink-0" style="color: var(--acento-amarelo);"></i>
+    <span>
+        <strong>Case real:</strong> Aumentou o OEE médio de 61% para 78% em 90 dias identificando
+        paradas não programadas na Prensa Hidráulica B.
+    </span>
+</div>
+
+<!-- Seção 2: Cards KPI -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card p-3 text-center" id="kpi-oee">
+            <div class="kpi-icon"><i class="bi bi-speedometer2"></i></div>
+            <div class="kpi-valor" id="valor-oee">—</div>
+            <div class="kpi-label">OEE Geral</div>
+            <div class="kpi-badge" id="badge-oee"></div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card p-3 text-center" id="kpi-disponib">
+            <div class="kpi-icon"><i class="bi bi-clock-history"></i></div>
+            <div class="kpi-valor" id="valor-disponibilidade">—</div>
+            <div class="kpi-label">Disponibilidade</div>
+            <div class="kpi-badge" id="badge-disponibilidade"></div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card p-3 text-center" id="kpi-performance">
+            <div class="kpi-icon"><i class="bi bi-lightning-fill"></i></div>
+            <div class="kpi-valor" id="valor-performance">—</div>
+            <div class="kpi-label">Performance</div>
+            <div class="kpi-badge" id="badge-performance"></div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card p-3 text-center" id="kpi-qualidade">
+            <div class="kpi-icon"><i class="bi bi-check-circle"></i></div>
+            <div class="kpi-valor" id="valor-qualidade">—</div>
+            <div class="kpi-label">Qualidade</div>
+            <div class="kpi-badge" id="badge-qualidade"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 3: Gráficos -->
+<div class="row g-3 mb-4">
+    <!-- Gráfico OEE por Máquina -->
+    <div class="col-12 col-lg-8">
+        <div class="card h-100">
+            <div class="card-header-custom px-3 py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-bar-chart-steps"></i>
+                <span class="fw-semibold">OEE por Máquina</span>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoOeeMaquina"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico OEE Histórico -->
+    <div class="col-12 col-lg-4">
+        <div class="card h-100">
+            <div class="card-header-custom px-3 py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-graph-up"></i>
+                <span class="fw-semibold">OEE Diário — 30 dias</span>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoOeeHistorico"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 4: Tabela Heatmap -->
+<div class="row g-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header-custom px-3 py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-grid-3x3"></i>
+                <span class="fw-semibold">OEE por Máquina e Turno</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                        <thead class="thead-custom">
+                            <tr>
+                                <th>Máquina</th>
+                                <th>Turno A</th>
+                                <th>Turno B</th>
+                                <th>Turno C</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaHeatmap"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,156 @@
+/* Estilos globais — Projeto 2 Gestão de Estoque | Base Exata */
+
+:root {
+    --azul-escuro: #1a1a2e;
+    --vermelho-acento: #e94560;
+    --cinza-claro: #f4f6f9;
+    --texto-muted: #6c757d;
+}
+
+body {
+    background-color: var(--cinza-claro);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+}
+
+/* Banner de demonstração */
+.banner-demo {
+    background: var(--azul-escuro);
+    color: var(--vermelho-acento);
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--azul-escuro);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: var(--vermelho-acento) !important;
+}
+
+/* Cards KPI */
+.kpi-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.kpi-icon {
+    font-size: 2rem;
+    color: var(--azul-escuro);
+    margin-bottom: 8px;
+}
+
+.kpi-valor {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    line-height: 1.2;
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: var(--texto-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Header de cards */
+.card-header-custom {
+    background-color: var(--azul-escuro);
+    color: #fff;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* Cabeçalho da tabela */
+.thead-custom th {
+    background-color: var(--azul-escuro);
+    color: #fff;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 12px 16px;
+    border: none;
+}
+
+/* Badge de categoria */
+.badge-categoria {
+    background-color: #e8eaf0;
+    color: var(--azul-escuro);
+    font-weight: 500;
+}
+
+/* Cards de alerta */
+.card-alerta {
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: transform 0.15s ease;
+}
+
+.card-alerta:hover {
+    transform: translateY(-2px);
+}
+
+.card-alerta-zerado {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.card-alerta-critico {
+    border-color: #ffc107;
+    background-color: #fffdf0;
+}
+
+.stat-alerta {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Narrativa de case */
+.case-destaque {
+    background: linear-gradient(135deg, var(--azul-escuro), #16213e);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 15px;
+}
+
+/* Modal header */
+.modal-header-custom {
+    background-color: var(--azul-escuro);
+    color: #fff;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: var(--azul-escuro);
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+}
+
+/* Responsivo mobile */
+@media (max-width: 576px) {
+    .kpi-valor { font-size: 1.2rem; }
+    .kpi-icon  { font-size: 1.5rem; }
+    .thead-custom th { font-size: 11px; padding: 8px 10px; }
+}

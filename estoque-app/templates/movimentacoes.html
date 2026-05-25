@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Movimentações{% endblock %}
+{% block page_title %}Movimentações{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <h4><i class="bi bi-arrow-left-right me-2" style="color:var(--teal)"></i>Movimentações</h4>
+  <a href="{{ url_for('movimentacao_nova') }}" class="btn btn-brick btn-sm px-3">
+    <i class="bi bi-plus-lg me-1"></i> Nova Movimentação
+  </a>
+</div>
+
+<!-- Filters -->
+<div class="chart-container mb-4">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-2">
+      <label class="form-label">Tipo</label>
+      <select name="tipo" class="form-select form-select-sm">
+        <option value="">Todos</option>
+        <option value="entrada" {% if tipo=='entrada' %}selected{% endif %}>Entrada</option>
+        <option value="saida" {% if tipo=='saida' %}selected{% endif %}>Saída</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Produto</label>
+      <select name="produto_id" class="form-select form-select-sm">
+        <option value="">Todos</option>
+        {% for p in produtos %}
+        <option value="{{ p.id }}" {% if produto_id|string == p.id|string %}selected{% endif %}>{{ p.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Data Início</label>
+      <input type="date" name="data_de" class="form-control form-control-sm" value="{{ data_de }}">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Data Fim</label>
+      <input type="date" name="data_ate" class="form-control form-control-sm" value="{{ data_ate }}">
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button type="submit" class="btn btn-navy btn-sm flex-fill">
+        <i class="bi bi-funnel me-1"></i>Filtrar
+      </button>
+      <a href="{{ url_for('movimentacoes_lista') }}" class="btn btn-outline-secondary btn-sm" title="Limpar">
+        <i class="bi bi-x-lg"></i>
+      </a>
+    </div>
+  </form>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Produto</th>
+          <th>Tipo</th>
+          <th class="text-center">Quantidade</th>
+          <th>Data/Hora</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in movimentacoes %}
+        <tr>
+          <td class="text-muted">{{ m.id }}</td>
+          <td>
+            <span class="fw-semibold">{{ m.produto_nome }}</span>
+            <br><small class="text-muted">{{ m.sku }}</small>
+          </td>
+          <td>
+            <span class="badge {% if m.tipo == 'entrada' %}badge-entrada{% else %}badge-saida{% endif %}">
+              <i class="bi bi-{% if m.tipo == 'entrada' %}arrow-down-circle{% else %}arrow-up-circle{% endif %} me-1"></i>
+              {{ m.tipo|capitalize }}
+            </span>
+          </td>
+          <td class="text-center fw-bold" style="font-size:1rem">
+            {% if m.tipo == 'entrada' %}
+            <span style="color:var(--teal)">+{{ m.quantidade }}</span>
+            {% else %}
+            <span style="color:var(--brick)">-{{ m.quantidade }}</span>
+            {% endif %}
+          </td>
+          <td><small>{{ m.data|data_br }}</small></td>
+          <td class="text-muted" style="font-size:0.8rem; max-width:200px">{{ m.observacao }}</td>
+        </tr>
+        {% endfor %}
+        {% if not movimentacoes %}
+        <tr>
+          <td colspan="6" class="text-center py-4 text-muted">
+            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+            Nenhuma movimentação encontrada.
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

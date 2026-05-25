@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Narrativa do case -->
+<div class="alert case-destaque mb-4" role="alert">
+    <i class="bi bi-trophy-fill me-2"></i>
+    <strong>Case real:</strong> "Reduziu em 40% o tempo de análise de vendas e identificou R$ 12.000 em produtos com margem negativa no primeiro mês."
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md">
+        <div class="card kpi-card h-100">
+            <div class="card-body text-center">
+                <div class="kpi-icon text-success"><i class="bi bi-currency-dollar"></i></div>
+                <div class="kpi-valor">R$ {{ "%.2f"|format(faturamento_mes) }}</div>
+                <div class="kpi-label">Faturamento do Mês</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card kpi-card h-100">
+            <div class="card-body text-center">
+                <div class="kpi-icon"><i class="bi bi-receipt"></i></div>
+                <div class="kpi-valor">R$ {{ "%.2f"|format(ticket_medio) }}</div>
+                <div class="kpi-label">Ticket Médio</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card kpi-card h-100">
+            <div class="card-body text-center">
+                <div class="kpi-icon text-primary"><i class="bi bi-bag-check"></i></div>
+                <div class="kpi-valor">{{ total_vendas_mes }}</div>
+                <div class="kpi-label">Vendas no Mês</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card kpi-card h-100">
+            <div class="card-body text-center">
+                <div class="kpi-icon text-warning"><i class="bi bi-boxes"></i></div>
+                <div class="kpi-valor">{{ produtos_vendidos }}</div>
+                <div class="kpi-label">Unidades Vendidas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card kpi-card h-100">
+            <div class="card-body text-center">
+                <div class="kpi-icon text-danger"><i class="bi bi-percent"></i></div>
+                <div class="kpi-valor">{{ "%.1f"|format(margem_media) }}%</div>
+                <div class="kpi-label">Margem Média</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos: linha de faturamento + doughnut de categorias -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-header card-header-custom">
+                <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>Faturamento Diário — Últimos 30 Dias</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoFaturamentoDiario" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header card-header-custom">
+                <h6 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Participação por Categoria</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="graficoCategorias"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico: top 10 produtos -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header card-header-custom">
+                <h6 class="mb-0"><i class="bi bi-bar-chart-steps me-2"></i>Top 10 Produtos por Receita</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoTopProdutos" height="80"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela: últimas vendas -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header card-header-custom">
+                <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimas Vendas</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-custom">
+                            <tr>
+                                <th>#</th>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Qtd</th>
+                                <th>Preço Unit.</th>
+                                <th>Total</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaUltimasVendas">
+                            <!-- preenchido via main.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

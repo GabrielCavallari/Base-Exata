@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base Exata Consultoria | Análise de Dados e Automação em Capivari, SP</title>
+  <meta name="description" content="Consultoria em análise de dados e automação para comércios e indústrias de Capivari, SP. Dashboards, controle de estoque e relatórios inteligentes.">
+  <meta name="keywords" content="análise de dados Capivari, automação comercial Capivari, dashboard para empresas, controle de estoque, Power BI, consultoria dados interior SP">
+  <meta name="author" content="Base Exata Consultoria">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://baseexata.com.br">
+  <meta property="og:title" content="Base Exata Consultoria | Dados e Automação em Capivari">
+  <meta property="og:description" content="Substitua cadernos e planilhas confusas por painéis automáticos. Consultoria local em análise de dados para comércios e indústrias.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Google Analytics 4 Placeholder -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Schema.org LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Base Exata Consultoria",
+    "description": "Consultoria em análise de dados e automação para comércios e indústrias de Capivari, SP.",
+    "url": "https://baseexata.com.br",
+    "telephone": "+5519999999999",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Capivari",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "areaServed": {
+      "@type": "Place",
+      "name": "Capivari, SP"
+    },
+    "priceRange": "$$",
+    "serviceType": ["Análise de Dados", "Automação Comercial", "Dashboards", "Controle de Estoque"]
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'navy': '#1A365D',
+            'navy-light': '#234782',
+            'navy-dark': '#0F2340',
+            'brick': '#D35400',
+            'brick-light': '#E8731A',
+            'brick-dark': '#A84300',
+            'snow': '#F8F9FA',
+            'teal': '#008080',
+            'teal-light': '#00A3A3',
+            'graphite': '#2C3E50',
+            'graphite-light': '#5D7083',
+          },
+          fontFamily: {
+            'heading': ['Montserrat', 'sans-serif'],
+            'body': ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    * { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: #2C3E50; }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.03; }
+      50% { opacity: 0.07; }
+    }
+
+    .animate-fade-up { animation: fadeUp 0.7s ease-out forwards; }
+    .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    .animate-slide-left { animation: slideInLeft 0.7s ease-out forwards; }
+    .animate-slide-right { animation: slideInRight 0.7s ease-out forwards; }
+
+    [x-cloak] { display: none !important; }
+
+    /* Stagger children */
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+
+    /* Hero grid pattern */
+    .hero-grid {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPulse 6s ease-in-out infinite;
+    }
+
+    /* WhatsApp pulse */
+    .whatsapp-pulse {
+      animation: pulse-soft 2s ease-in-out infinite;
+    }
+
+    /* Card hover lift */
+    .card-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(26, 54, 93, 0.12);
+    }
+
+    /* Navbar glass */
+    .nav-glass {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(248, 249, 250, 0.88);
+      border-bottom: 1px solid rgba(26, 54, 93, 0.08);
+    }
+
+    /* Hero gradient */
+    .hero-gradient {
+      background: linear-gradient(135deg, #1A365D 0%, #234782 40%, #0F2340 100%);
+    }
+
+    /* Accent line */
+    .accent-line {
+      width: 48px;
+      height: 4px;
+      background: #D35400;
+      border-radius: 2px;
+    }
+
+    /* Section divider */
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #D35400, transparent);
+      opacity: 0.2;
+    }
+
+    /* Form focus */
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #008080;
+      box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      background: rgba(15, 35, 64, 0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #F8F9FA; }
+    ::-webkit-scrollbar-thumb { background: #1A365D; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #234782; }
+  </style>
+</head>
+
+<body class="bg-snow antialiased" x-data="siteApp()">
+
+  <!-- ============================================ -->
+  <!--  NAVBAR                                      -->
+  <!-- ============================================ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-glass" x-data="{ open: false }">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16 md:h-[72px]">
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center group">
+          <img src="logo-base-exata.png" alt="Base Exata — Consultoria | Dados e Automação" class="h-10 md:h-11 w-auto">
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#problemas" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Problemas</a>
+          <a href="#servicos" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Serviços</a>
+          <a href="#portfolio" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Portfólio</a>
+          <a href="#sobre" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Sobre</a>
+          <a href="#contato" class="inline-flex items-center gap-2 bg-brick hover:bg-brick-light text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
+            Fale Conosco
+          </a>
+        </div>
+
+        <!-- Mobile Toggle -->
+        <button @click="open = !open" class="md:hidden p-2 rounded-lg hover:bg-navy/5 transition-colors" aria-label="Menu">
+          <svg x-show="!open" class="w-6 h-6 text-navy" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg x-show="open" x-cloak class="w-6 h-6 text-navy" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 -translate-y-2" class="md:hidden pb-4 border-t border-navy/5">
+        <div class="flex flex-col gap-1 pt-3">
+          <a @click="open = false" href="#problemas" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Problemas</a>
+          <a @click="open = false" href="#servicos" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Serviços</a>
+          <a @click="open = false" href="#portfolio" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Portfólio</a>
+          <a @click="open = false" href="#sobre" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Sobre</a>
+          <a @click="open = false" href="#contato" class="inline-flex items-center justify-center bg-brick text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg mt-2">Fale Conosco</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================ -->
+  <!--  HERO                                        -->
+  <!-- ============================================ -->
+  <section id="hero" class="hero-gradient relative min-h-screen flex items-center overflow-hidden">
+    <!-- Grid overlay -->
+    <div class="hero-grid absolute inset-0 pointer-events-none"></div>
+    <!-- Decorative shapes -->
+    <div class="absolute top-20 right-0 w-[500px] h-[500px] bg-brick/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-20 md:pt-32 md:pb-28 w-full">
+      <div class="max-w-3xl"
+           x-intersect.once="$el.classList.add('animate-fade-up')">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+          <div class="w-2 h-2 rounded-full bg-brick animate-pulse"></div>
+          <span class="font-body text-xs font-medium text-white/70 tracking-wide uppercase">Consultoria em Dados — Capivari, SP</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="font-heading font-900 text-4xl sm:text-5xl lg:text-[3.5rem] text-white leading-[1.1] tracking-tight mb-6">
+          Organizamos os dados da sua empresa para decisões mais
+          <span class="relative inline-block">
+            <span class="text-brick-light">assertivas.</span>
+            <svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 8" fill="none"><path d="M2 6c40-4 80-4 196 0" stroke="#D35400" stroke-width="3" stroke-linecap="round"/></svg>
+          </span>
+        </h1>
+
+        <!-- Sub-headline -->
+        <p class="font-body text-lg sm:text-xl text-white/70 leading-relaxed mb-10 max-w-2xl">
+          Substitua os cadernos e as planilhas confusas por painéis automáticos que mostram exatamente para onde o seu dinheiro e o seu tempo estão indo.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#contato" class="inline-flex items-center justify-center gap-2 bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 group">
+            Quero organizar minha empresa
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+          </a>
+          <a href="#problemas" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-heading font-semibold text-base px-8 py-4 rounded-xl border border-white/15 transition-all">
+            Entenda como funciona
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+          </a>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="flex flex-wrap items-center gap-6 mt-14 pt-8 border-t border-white/10">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="font-body text-sm text-white/60">Diagnóstico gratuito</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="font-body text-sm text-white/60">Foco no mercado local</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="font-body text-sm text-white/60">Resultados em 30 dias</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+      <span class="font-body text-xs text-white/40 tracking-widest uppercase">Role</span>
+      <svg class="w-5 h-5 text-white/30 animate-bounce" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!--  PROBLEMAS                                   -->
+  <!-- ============================================ -->
+  <section id="problemas" class="py-20 md:py-28 bg-snow">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Section header -->
+      <div class="text-center mb-16"
+           x-intersect.once="$el.classList.add('animate-fade-up')">
+        <div class="accent-line mx-auto mb-5"></div>
+        <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
+          Isso te parece familiar?
+        </h2>
+        <p class="font-body text-graphite-light text-lg max-w-xl mx-auto">
+          Se sua empresa enfrenta algum desses problemas, nós temos a solução.
+        </p>
+      </div>
+
+      <!-- Cards -->
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Card 1 -->
+        <div class="card-lift bg-white rounded-2xl p-8 border border-navy/5 relative overflow-hidden"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-1')">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-brick/5 rounded-bl-[60px]"></div>
+          <div class="w-14 h-14 rounded-xl bg-brick/10 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-brick" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-xl text-navy mb-3">Furos no Estoque</h3>
+          <p class="font-body text-graphite-light leading-relaxed">
+            Você nunca sabe exatamente o que tem guardado, gerando compras em duplicidade ou falta de produtos na prateleira.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card-lift bg-white rounded-2xl p-8 border border-navy/5 relative overflow-hidden"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-2')">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-teal/5 rounded-bl-[60px]"></div>
+          <div class="w-14 h-14 rounded-xl bg-teal/10 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-teal" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-xl text-navy mb-3">Horas Perdidas em Fechamentos</h3>
+          <p class="font-body text-graphite-light leading-relaxed">
+            Fechar o mês é um pesadelo demorado, cheio de anotações manuais que dificultam enxergar o lucro real do negócio.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card-lift bg-white rounded-2xl p-8 border border-navy/5 relative overflow-hidden"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-3')">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-navy/5 rounded-bl-[60px]"></div>
+          <div class="w-14 h-14 rounded-xl bg-navy/10 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-navy" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-xl text-navy mb-3">Falta de Controle na Operação</h3>
+          <p class="font-body text-graphite-light leading-relaxed">
+            Máquinas paradas ou equipe ociosa porque não há um acompanhamento claro do ritmo de produção do dia a dia.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!--  SERVIÇOS                                    -->
+  <!-- ============================================ -->
+  <section id="servicos" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Section header -->
+      <div class="text-center mb-16"
+           x-intersect.once="$el.classList.add('animate-fade-up')">
+        <div class="accent-line mx-auto mb-5"></div>
+        <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
+          Como transformamos sua operação
+        </h2>
+        <p class="font-body text-graphite-light text-lg max-w-xl mx-auto">
+          Soluções práticas, sem complicação, que começam a dar resultado em semanas.
+        </p>
+      </div>
+
+      <!-- Service Cards -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Service 1 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-1')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-brick/10 flex items-center justify-center flex-shrink-0 group-hover:bg-brick/20 transition-colors">
+              <svg class="w-6 h-6 text-brick" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Painéis de Vendas e Faturamento</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Acompanhe em tempo real os produtos que mais saem e o faturamento do mês. Tudo em uma tela simples e automática.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Entender minhas vendas
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-2')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0 group-hover:bg-teal/20 transition-colors">
+              <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Automação e Controle de Estoque</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Chega de contagem manual. Rastreie entradas e saídas com alertas na sua tela quando um item estiver acabando.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Proteger meu estoque
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-3')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-navy/15 transition-colors">
+              <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Monitoramento de Eficiência Industrial</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Meça a produtividade da sua fábrica e identifique gargalos operacionais para garantir que as metas sejam atingidas.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Otimizar minha fábrica
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-4')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-brick/10 flex items-center justify-center flex-shrink-0 group-hover:bg-brick/20 transition-colors">
+              <svg class="w-6 h-6 text-brick" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Relatórios Executivos Inteligentes</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Transformamos dados dispersos em relatórios claros e diretos em PDF, gerados de forma automática para embasar reuniões.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Receber relatórios claros
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-1')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0 group-hover:bg-teal/20 transition-colors">
+              <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Criação de Landing Pages</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Sua empresa precisa de um vendedor que trabalhe 24 horas por dia. Criamos páginas de vendas rápidas, modernas e otimizadas para transformar visitantes em orçamentos reais no seu WhatsApp.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Quero atrair mais clientes
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="card-lift bg-snow rounded-2xl p-8 border border-navy/5 group"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-2')">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-navy/15 transition-colors">
+              <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-heading font-bold text-lg text-navy mb-2">Automação de WhatsApp e Atendimento</h3>
+              <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
+                Pare de perder vendas por demora nas respostas. Criamos automações inteligentes no seu WhatsApp para responder dúvidas frequentes, catalogar pedidos e direcionar o cliente, economizando horas do seu dia.
+              </p>
+              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+                Automatizar meu atendimento
+                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!--  PORTFÓLIO                                   -->
+  <!-- ============================================ -->
+  <section id="portfolio" class="py-20 md:py-28 bg-snow">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Section header -->
+      <div class="text-center mb-16"
+           x-intersect.once="$el.classList.add('animate-fade-up')">
+        <div class="accent-line mx-auto mb-5"></div>
+        <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
+          Resultados que Falam por Si
+        </h2>
+        <p class="font-body text-graphite-light text-lg max-w-2xl mx-auto">
+          Não vendemos sistemas complicados, entregamos soluções ágeis que resolvem problemas reais. Veja como transformamos negócios da nossa região.
+        </p>
+      </div>
+
+      <!-- Portfolio Grid -->
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Case 1 -->
+        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
+             @click="openModal(0)"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-1')">
+          <!-- Visual placeholder -->
+          <div class="h-48 bg-gradient-to-br from-navy to-navy-light relative overflow-hidden">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-brick"></div>
+          </div>
+          <div class="p-6">
+            <div class="inline-flex items-center gap-1.5 bg-teal/10 text-teal font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+              Automação
+            </div>
+            <h3 class="font-heading font-bold text-lg text-navy mb-2">Automação de Alertas de Prazos</h3>
+            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
+              Substituímos o acompanhamento manual por alertas automáticos. O setor passou a cumprir os prazos com folga.
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="font-heading font-bold text-2xl text-brick">40%</span>
+              <span class="font-body text-sm text-graphite-light">redução em atrasos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
+             @click="openModal(1)"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-2')">
+          <div class="h-48 bg-gradient-to-br from-teal to-teal-light relative overflow-hidden">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-brick"></div>
+          </div>
+          <div class="p-6">
+            <div class="inline-flex items-center gap-1.5 bg-navy/10 text-navy font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+              Indústria
+            </div>
+            <h3 class="font-heading font-bold text-lg text-navy mb-2">Visão de Chão de Fábrica</h3>
+            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
+              Implementamos um painel de monitoramento contínuo que identificou gargalos ocultos, permitindo ajustes rápidos.
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="font-heading font-bold text-2xl text-brick">15%</span>
+              <span class="font-body text-sm text-graphite-light">aumento em eficiência</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 3 -->
+        <div class="card-lift bg-white rounded-2xl overflow-hidden border border-navy/5 cursor-pointer"
+             @click="openModal(2)"
+             x-intersect.once="$el.classList.add('animate-fade-up', 'stagger-3')">
+          <div class="h-48 bg-gradient-to-br from-brick to-brick-light relative overflow-hidden">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-navy"></div>
+          </div>
+          <div class="p-6">
+            <div class="inline-flex items-center gap-1.5 bg-brick/10 text-brick font-heading text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+              Estoque
+            </div>
+            <h3 class="font-heading font-bold text-lg text-navy mb-2">Controle de Almoxarifado Digital</h3>
+            <p class="font-body text-sm text-graphite-light leading-relaxed mb-4">
+              Criamos um controle integrado com rastreabilidade total, garantindo um estoque sempre enxuto e seguro.
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="font-heading font-bold text-2xl text-brick">100%</span>
+              <span class="font-body text-sm text-graphite-light">fim das perdas por giro</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-12"
+           x-intersect.once="$el.classList.add('animate-fade-up')">
+        <a href="#contato" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-colors">
+          Quero algo assim para minha empresa
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Portfólio -->
+  <div x-show="modalOpen" x-cloak
+       class="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay"
+       @click.self="modalOpen = false"
+       x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div class="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+      <div class="p-8">
+        <div class="flex items-start justify-between mb-6">
+          <div class="inline-flex items-center gap-1.5 bg-teal/10 text-teal font-heading text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide" x-text="cases[activeCase]?.tag"></div>
+          <button @click="modalOpen = false" class="p-1.5 rounded-lg hover:bg-snow transition-colors" aria-label="Fechar">
+            <svg class="w-5 h-5 text-graphite-light" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <h3 class="font-heading font-bold text-2xl text-navy mb-2" x-text="cases[activeCase]?.title"></h3>
+        <div class="flex items-center gap-2 mb-6">
+          <span class="font-heading font-bold text-3xl text-brick" x-text="cases[activeCase]?.metric"></span>
+          <span class="font-body text-graphite-light" x-text="cases[activeCase]?.metricLabel"></span>
+        </div>
+        <p class="font-body text-graphite-light leading-relaxed mb-6" x-text="cases[activeCase]?.description"></p>
+        <div class="mb-6">
+          <h4 class="font-heading font-semibold text-sm text-navy mb-2 uppercase tracking-wide">Tecnologias utilizadas</h4>
+          <div class="flex flex-wrap gap-2">
+            <template x-for="tech in cases[activeCase]?.techs" :key="tech">
+              <span class="bg-snow text-graphite font-body text-xs font-medium px-3 py-1.5 rounded-lg border border-navy/5" x-text="tech"></span>
+            </template>
+          </div>
+        </div>
+        <a href="#contato" @click="modalOpen = false" class="inline-flex items-center gap-2 w-full justify-center bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-6 py-3.5 rounded-xl transition-colors">
+          Quero algo assim
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!--  SOBRE                                       -->
+  <!-- ============================================ -->
+  <section id="sobre" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-5 gap-12 lg:gap-16 items-center">
+        <!-- Photo side -->
+        <div class="md:col-span-2"
+             x-intersect.once="$el.classList.add('animate-slide-left')">
+          <div class="relative">
+            <!-- Photo placeholder -->
+            <div class="w-56 h-56 sm:w-64 sm:h-64 mx-auto rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center overflow-hidden border-4 border-snow shadow-xl">
+              <div class="text-center">
+                <svg class="w-20 h-20 text-white/30 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span class="font-heading text-xs font-medium text-white/40 mt-1 block">Sua foto aqui</span>
+              </div>
+            </div>
+            <!-- Decorative dot -->
+            <div class="absolute -bottom-3 -right-3 w-20 h-20 bg-brick/10 rounded-full -z-10"></div>
+            <div class="absolute -top-3 -left-3 w-16 h-16 bg-teal/10 rounded-full -z-10"></div>
+          </div>
+        </div>
+
+        <!-- Bio side -->
+        <div class="md:col-span-3"
+             x-intersect.once="$el.classList.add('animate-slide-right')">
+          <div class="accent-line mb-5"></div>
+          <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-6">
+            Quem está por trás dos dados
+          </h2>
+          <p class="font-body text-graphite-light leading-relaxed mb-6 text-lg">
+            Gabriel Lopes Cavallari é especialista em Análise de Dados e Desenvolvimento de Sistemas, com sólida vivência na melhoria contínua de processos industriais e de suprimentos. Residente em Capivari, SP, sua atuação é guiada por um princípio claro: <strong class="text-navy font-semibold">usar dados e organização para que as pessoas consigam tomar decisões com confiança e assertividade</strong>.
+          </p>
+          <p class="font-body text-graphite-light leading-relaxed mb-8">
+            Combinando o entendimento da rotina de fábricas e comércios com inteligência analítica, transforma informações desorganizadas em bases seguras para o crescimento dos negócios locais.
+          </p>
+
+          <!-- Tech stack -->
+          <h3 class="font-heading font-semibold text-sm text-navy uppercase tracking-wide mb-4">Tecnologias que dominamos</h3>
+          <div class="flex flex-wrap gap-3">
+            <div class="flex items-center gap-2 bg-snow px-4 py-2.5 rounded-xl border border-navy/5">
+              <svg class="w-5 h-5 text-teal" viewBox="0 0 24 24" fill="currentColor"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.13.5-.22.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/></svg>
+              <span class="font-heading text-sm font-semibold text-navy">Python</span>
+            </div>
+            <div class="flex items-center gap-2 bg-snow px-4 py-2.5 rounded-xl border border-navy/5">
+              <svg class="w-5 h-5 text-teal" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zM6 17v-1.29c1.24.77 3.44 1.29 6 1.29s4.76-.52 6-1.29V17c0 .5-2.13 2-6 2s-6-1.5-6-2zm0-4v-1.29c1.24.77 3.44 1.29 6 1.29s4.76-.52 6-1.29V13c0 .5-2.13 2-6 2s-6-1.5-6-2z"/></svg>
+              <span class="font-heading text-sm font-semibold text-navy">SQL</span>
+            </div>
+            <div class="flex items-center gap-2 bg-snow px-4 py-2.5 rounded-xl border border-navy/5">
+              <svg class="w-5 h-5 text-teal" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM5 15h2v2H5zm0-4h2v2H5zm0-4h2v2H5zm4 8h2v2H9zm0-4h2v2H9zm0-4h2v2H9zm8 8h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2zm-4 8h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2z"/></svg>
+              <span class="font-heading text-sm font-semibold text-navy">Power BI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!--  CONTATO                                     -->
+  <!-- ============================================ -->
+  <section id="contato" class="py-20 md:py-28 bg-navy relative overflow-hidden">
+    <!-- Decorative -->
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-brick/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-teal/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <!-- Left text -->
+        <div x-intersect.once="$el.classList.add('animate-slide-left')">
+          <div class="w-12 h-1 bg-brick rounded mb-6"></div>
+          <h2 class="font-heading font-800 text-3xl sm:text-4xl text-white mb-4 leading-tight">
+            Pronto para assumir o controle total da sua empresa?
+          </h2>
+          <p class="font-body text-white/60 text-lg leading-relaxed mb-8">
+            Pare de perder tempo brigando com anotações que não funcionam. Preencha o formulário para agendarmos uma conversa rápida e sem compromisso.
+          </p>
+
+          <!-- Perks -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-teal/15 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              </div>
+              <span class="font-body text-white/70">Diagnóstico inicial gratuito e sem compromisso</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-teal/15 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              </div>
+              <span class="font-body text-white/70">Resposta em até 24 horas</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-teal/15 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              </div>
+              <span class="font-body text-white/70">Atendimento presencial em Capivari e região</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div x-intersect.once="$el.classList.add('animate-slide-right')">
+          <form action="https://formspree.io/f/SEU_ID_AQUI" method="POST" class="bg-white rounded-2xl p-8 shadow-2xl shadow-black/20">
+            <div class="space-y-5">
+              <div>
+                <label for="nome" class="block font-heading text-sm font-semibold text-navy mb-1.5">Nome</label>
+                <input type="text" id="nome" name="nome" required placeholder="Seu nome completo"
+                       class="w-full font-body text-sm border border-navy/15 rounded-xl px-4 py-3 bg-snow placeholder-graphite-light/50 transition-all">
+              </div>
+              <div>
+                <label for="empresa" class="block font-heading text-sm font-semibold text-navy mb-1.5">Empresa</label>
+                <input type="text" id="empresa" name="empresa" placeholder="Nome da sua empresa"
+                       class="w-full font-body text-sm border border-navy/15 rounded-xl px-4 py-3 bg-snow placeholder-graphite-light/50 transition-all">
+              </div>
+              <div>
+                <label for="whatsapp" class="block font-heading text-sm font-semibold text-navy mb-1.5">WhatsApp</label>
+                <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(19) 99999-9999"
+                       class="w-full font-body text-sm border border-navy/15 rounded-xl px-4 py-3 bg-snow placeholder-graphite-light/50 transition-all">
+              </div>
+              <div>
+                <label for="desafio" class="block font-heading text-sm font-semibold text-navy mb-1.5">Maior desafio hoje</label>
+                <textarea id="desafio" name="desafio" rows="3" placeholder="Descreva brevemente o que mais tira seu sono na gestão da empresa..."
+                          class="w-full font-body text-sm border border-navy/15 rounded-xl px-4 py-3 bg-snow placeholder-graphite-light/50 transition-all resize-none"></textarea>
+              </div>
+              <button type="submit"
+                      class="w-full bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-6 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 flex items-center justify-center gap-2 group">
+                Solicitar contato
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!--  FOOTER                                      -->
+  <!-- ============================================ -->
+  <footer class="bg-navy-dark py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Logo footer -->
+        <div class="flex items-center">
+          <img src="logo-base-exata.png" alt="Base Exata" class="h-8 w-auto brightness-0 invert opacity-80">
+        </div>
+
+        <!-- Location -->
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-white/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+          <span class="font-body text-sm text-white/40">Capivari, SP — Brasil</span>
+        </div>
+
+        <!-- Copyright -->
+        <p class="font-body text-xs text-white/30">
+          &copy; <span x-text="new Date().getFullYear()"></span> Base Exata Consultoria. Todos os direitos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================ -->
+  <!--  WHATSAPP FLUTUANTE                          -->
+  <!-- ============================================ -->
+  <a href="https://api.whatsapp.com/send?phone=5519999999999&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Base%20Exata%20e%20gostaria%20de%20organizar%20minha%20empresa."
+     target="_blank" rel="noopener noreferrer"
+     class="fixed bottom-6 right-6 z-50 whatsapp-pulse"
+     aria-label="Fale conosco pelo WhatsApp">
+    <div class="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-[#25D366]/30 hover:shadow-xl hover:shadow-[#25D366]/40 transition-shadow">
+      <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </div>
+  </a>
+
+  <!-- ============================================ -->
+  <!--  ALPINE.JS APP                               -->
+  <!-- ============================================ -->
+  <script>
+    function siteApp() {
+      return {
+        modalOpen: false,
+        activeCase: 0,
+        cases: [
+          {
+            tag: 'Automação',
+            title: 'Automação de Alertas de Prazos',
+            metric: '40%',
+            metricLabel: 'redução em atrasos de pedidos',
+            description: 'Um setor de compras de uma indústria de Capivari enfrentava atrasos constantes por depender de acompanhamento manual de prazos. Implementamos um sistema de alertas automáticos que notifica os responsáveis antes do vencimento de cada pedido. O resultado foi uma redução de 40% nos atrasos e uma rotina de compras muito mais organizada e previsível.',
+            techs: ['Python', 'Pandas', 'Automação E-mail', 'SQLite']
+          },
+          {
+            tag: 'Indústria',
+            title: 'Visão de Chão de Fábrica',
+            metric: '15%',
+            metricLabel: 'aumento na eficiência da produção',
+            description: 'Uma pequena fábrica de embalagens da região operava sem visibilidade real da produtividade das máquinas. Criamos um painel de monitoramento contínuo que cruza dados de produção, paradas e manutenção. Gargalos ocultos foram identificados rapidamente, permitindo ajustes que elevaram a eficiência em 15% nos primeiros 60 dias.',
+            techs: ['Python', 'Flask', 'Chart.js', 'SQL', 'Power BI']
+          },
+          {
+            tag: 'Estoque',
+            title: 'Controle de Almoxarifado Digital',
+            metric: '100%',
+            metricLabel: 'fim das perdas por material sem giro',
+            description: 'Uma loja de materiais de construção em Capivari perdia dinheiro com materiais parados no almoxarifado sem nenhum sistema de rastreabilidade. Desenvolvemos um controle digital integrado que rastreia cada entrada e saída, com alertas de estoque mínimo e relatórios de giro. As perdas por material sem movimentação foram completamente eliminadas.',
+            techs: ['Python', 'Flask', 'SQLite', 'Bootstrap', 'Chart.js']
+          }
+        ],
+        openModal(index) {
+          this.activeCase = index;
+          this.modalOpen = true;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

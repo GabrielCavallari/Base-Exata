@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Produtos{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-box me-2"></i>Produtos Cadastrados</h5>
+    <span class="badge bg-secondary">{{ produtos|length }} produtos</span>
+</div>
+
+<!-- Campo de busca em tempo real -->
+<div class="mb-3">
+    <input type="text" id="campoBusca" class="form-control"
+           placeholder="Buscar produto por nome ou categoria...">
+</div>
+
+<!-- Tabela de produtos -->
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0" id="tabelaProdutos">
+            <thead class="thead-custom">
+                <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th class="text-center">Qtd. Atual</th>
+                    <th class="text-center">Mínimo</th>
+                    <th class="text-end">Preço Unit.</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produtos %}
+                <tr class="linha-produto">
+                    <td class="fw-medium">{{ p.nome }}</td>
+                    <td><span class="badge badge-categoria">{{ p.categoria }}</span></td>
+                    <td class="text-center">{{ p.quantidade_atual }} {{ p.unidade }}</td>
+                    <td class="text-center text-muted">{{ p.quantidade_minima }}</td>
+                    <td class="text-end">R$ {{ "%.2f"|format(p.preco_unitario) }}</td>
+                    <td class="text-center">
+                        {% if p.quantidade_atual == 0 %}
+                            <span class="badge bg-danger">Zerado</span>
+                        {% elif p.quantidade_atual < p.quantidade_minima %}
+                            <span class="badge bg-warning text-dark">Crítico</span>
+                        {% else %}
+                            <span class="badge bg-success">OK</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalMovimentacao"
+                                data-id="{{ p.id }}"
+                                data-nome="{{ p.nome }}">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de movimentação -->
+<div class="modal fade" id="modalMovimentacao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h6 class="modal-title">
+                    <i class="bi bi-arrow-left-right me-2"></i>Registrar Movimentação
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/movimentacao" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="produto_id" id="modalProdutoId">
+                    <p class="text-muted mb-3">Produto: <strong id="modalProdutoNome"></strong></p>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo</label>
+                        <select name="tipo" class="form-select" required>
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" name="quantidade" class="form-control" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observação (opcional)</label>
+                        <input type="text" name="observacao" class="form-control"
+                               placeholder="Ex: Recebimento NF-e">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Preenche o modal com dados do produto selecionado
+    document.getElementById('modalMovimentacao').addEventListener('show.bs.modal', function (e) {
+        const btn = e.relatedTarget;
+        document.getElementById('modalProdutoId').value = btn.dataset.id;
+        document.getElementById('modalProdutoNome').textContent = btn.dataset.nome;
+    });
+</script>
+{% endblock %}

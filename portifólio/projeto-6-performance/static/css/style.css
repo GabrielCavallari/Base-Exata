@@ -1,0 +1,281 @@
+/* Estilos Globais — Projeto 6 Painel de Performance Comercial | Base Exata */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #0f172a;       /* Slate 900 */
+    --primary-light: #1e293b; /* Slate 800 */
+    --accent: #10b981;        /* Emerald 500 */
+    --accent-light: #ecfdf5;  /* Emerald 50 */
+    --bg-claro: #f8fafc;      /* Slate 50 */
+    --text-dark: #0f172a;
+    --text-muted: #64748b;    /* Slate 500 */
+    --border-color: #e2e8f0;  /* Slate 200 */
+    --white: #ffffff;
+    --danger: #f43f5e;        /* Rose 500 */
+    --warning: #f59e0b;       /* Amber 500 */
+    --info: #0ea5e9;          /* Sky 500 */
+}
+
+body {
+    background-color: var(--bg-claro);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-dark);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Banner de Demonstração */
+.banner-demo {
+    background-color: var(--primary);
+    color: #f43f5e;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--primary-light);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 14px 0;
+}
+
+.navbar-custom .navbar-brand {
+    font-weight: 700;
+    color: var(--white);
+    font-size: 1.15rem;
+    letter-spacing: -0.5px;
+}
+
+.navbar-custom .navbar-brand span {
+    color: var(--accent);
+}
+
+.navbar-custom .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    font-size: 13.5px;
+    padding: 6px 16px !important;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Container de Introdução / Caso de Negócio */
+.intro-case-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.badge-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Cards KPI */
+.kpi-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.kpi-title {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.kpi-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.kpi-val {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.15;
+    margin-bottom: 4px;
+}
+
+.kpi-desc {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.kpi-desc strong {
+    color: var(--accent);
+}
+
+/* Estilos de Cores dos Cards */
+.bg-icon-primary { background-color: #f1f5f9; color: var(--primary); }
+.bg-icon-success { background-color: #ecfdf5; color: var(--accent); }
+.bg-icon-warning { background-color: #fffbeb; color: var(--warning); }
+.bg-icon-info { background-color: #f0f9ff; color: var(--info); }
+
+/* Painel de Gráficos e Tabelas */
+.dashboard-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    height: 100%;
+}
+
+.dashboard-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-card-title i {
+    color: var(--accent);
+}
+
+/* Customizações de Tabela */
+.table-custom {
+    margin: 0;
+}
+
+.table-custom thead th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 16px;
+}
+
+.table-custom tbody td {
+    padding: 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.table-custom tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Progresso Personalizado */
+.progress-container-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 140px;
+}
+
+.progress-custom {
+    height: 6px;
+    border-radius: 3px;
+    background-color: #f1f5f9;
+    overflow: hidden;
+}
+
+.progress-bar-custom {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Badges e Status */
+.badge-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-status-success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge-status-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge-status-danger {
+    background-color: #ffe4e6;
+    color: #9f1239;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: var(--primary);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Responsividade */
+@media (max-width: 991.98px) {
+    .kpi-card { padding: 18px; }
+    .kpi-val { font-size: 1.5rem; }
+    .dashboard-card { padding: 18px; }
+}
+
+@media (max-width: 575.98px) {
+    .banner-demo { font-size: 9.5px; padding: 6px 12px; }
+    .kpi-val { font-size: 1.35rem; }
+    .navbar-custom { padding: 10px 0; }
+    .table-custom thead th, .table-custom tbody td { padding: 10px 8px; font-size: 12px; }
+    .progress-container-custom { min-width: 90px; }
+}

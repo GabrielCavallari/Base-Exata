@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel de Performance Comercial{% endblock %}
+
+{% block content %}
+
+<!-- Seção 1: Caso de Uso / Apresentação -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="intro-case-card d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge badge-tag bg-icon-success text-success mb-2 d-inline-block">Caso Prático de Negócio</span>
+                <h4 class="fw-bold mb-1" style="color: var(--primary);">Painel de Performance Comercial — Força de Vendas Regional</h4>
+                <p class="text-muted mb-0">
+                    Acompanhamento executivo de faturamento, eficiência de conversão e atingimento de metas da equipe de vendas da <strong>Base Exata</strong>. 
+                    Monitoramento abrangente das operações distribuídas nos polos regionais paulistas.
+                </p>
+            </div>
+            <div class="text-md-end shrink-0">
+                <span class="badge bg-icon-primary text-secondary p-2 d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-clock-history text-primary"></i> Atualizado hoje
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 2: Cards de KPI Globais -->
+<div class="row g-4 mb-4">
+    <!-- Card 1: Faturamento Realizado -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="kpi-card h-100">
+            <div class="kpi-header">
+                <h6 class="kpi-title">Faturamento Total</h6>
+                <div class="kpi-icon-wrapper bg-icon-success">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+            </div>
+            <div class="kpi-val" id="kpi-faturamento">R$ 0,00</div>
+            <p class="kpi-desc">Somatória de vendas <strong>Concluídas</strong></p>
+        </div>
+    </div>
+    <!-- Card 2: Taxa de Conversão -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="kpi-card h-100">
+            <div class="kpi-header">
+                <h6 class="kpi-title">Taxa de Conversão</h6>
+                <div class="kpi-icon-wrapper bg-icon-info">
+                    <i class="bi bi-percent"></i>
+                </div>
+            </div>
+            <div class="kpi-val" id="kpi-conversao">0.0%</div>
+            <p class="kpi-desc">Contratos fechados vs. cancelados</p>
+        </div>
+    </div>
+    <!-- Card 3: Líder do Mês Atual -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="kpi-card h-100">
+            <div class="kpi-header">
+                <h6 class="kpi-title">Melhor Vendedor (Mês)</h6>
+                <div class="kpi-icon-wrapper bg-icon-warning">
+                    <i class="bi bi-trophy"></i>
+                </div>
+            </div>
+            <div class="kpi-val text-truncate fs-5 fw-bold py-1" id="kpi-lider" style="min-height: 40px; color: var(--primary);">Buscando...</div>
+            <p class="kpi-desc" id="kpi-lider-faturamento">Faturamento realizado: R$ 0,00</p>
+        </div>
+    </div>
+    <!-- Card 4: Meta Global -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="kpi-card h-100">
+            <div class="kpi-header">
+                <h6 class="kpi-title">Meta Global (6m)</h6>
+                <div class="kpi-icon-wrapper bg-icon-primary">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+            </div>
+            <div class="kpi-val" id="kpi-meta-global">0.0%</div>
+            <p class="kpi-desc">Atingimento geral da força de vendas</p>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 3: Gráficos de Evolução e Região -->
+<div class="row g-4 mb-4">
+    <!-- Gráfico 1: Vendas Realizadas vs. Meta Esperada (últimos 6 meses) -->
+    <div class="col-lg-8">
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                <i class="bi bi-bar-chart-line-fill"></i> Comparativo Mensal — Faturamento vs. Meta
+            </div>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="chart-evolucao"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Gráfico 2: Faturamento por Região -->
+    <div class="col-lg-4">
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                <i class="bi bi-pie-chart-fill"></i> Participação por Região
+            </div>
+            <div style="position: relative; height: 320px; width: 100%; display: flex; align-items: center; justify-content: center;">
+                <canvas id="chart-regioes"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 4: Ranking e Detalhamento da Equipe -->
+<div class="row">
+    <div class="col-12">
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                <i class="bi bi-person-lines-fill"></i> Desempenho e Ranking Geral de Vendedores (Acumulado 6 Meses)
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom align-middle table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 80px;">Posição</th>
+                            <th>Vendedor</th>
+                            <th>Região de Atuação</th>
+                            <th class="text-end">Meta Mensal</th>
+                            <th class="text-end">Meta Acumulada (6m)</th>
+                            <th class="text-end">Faturado (6m)</th>
+                            <th class="text-center" style="width: 200px;">Progresso da Meta</th>
+                            <th class="text-center">Atingimento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-ranking-corpo">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">Carregando dados comerciais...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- O arquivo main.js será carregado e executará as consultas de API -->
+{% endblock %}

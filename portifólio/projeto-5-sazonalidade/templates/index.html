@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard de Sazonalidade{% endblock %}
+
+{% block content %}
+<!-- Seção 1 — Título da página -->
+<h5 class="mb-4"><i class="bi bi-bar-chart-line me-2"></i>Análise de Sazonalidade e Demanda</h5>
+
+<!-- Seção 2 — 4 Cards de KPI em linha -->
+<div class="row g-3 mb-4">
+    <!-- Card 1: Total de Produtos -->
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card shadow-sm h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
+                <i class="bi bi-box-seam kpi-icon"></i>
+                <div class="kpi-valor" id="kpi-total-produtos">-</div>
+                <div class="kpi-label">Total de Produtos</div>
+            </div>
+        </div>
+    </div>
+    <!-- Card 2: Vendas (30 dias) -->
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card shadow-sm h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
+                <i class="bi bi-currency-dollar kpi-icon text-success"></i>
+                <div class="kpi-valor" id="kpi-vendas-30d">-</div>
+                <div class="kpi-label">Vendas (30 dias)</div>
+            </div>
+        </div>
+    </div>
+    <!-- Card 3: Ticket Médio/Dia -->
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card shadow-sm h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
+                <i class="bi bi-receipt kpi-icon text-info"></i>
+                <div class="kpi-valor" id="kpi-ticket-30d">-</div>
+                <div class="kpi-label">Ticket Médio/Dia</div>
+            </div>
+        </div>
+    </div>
+    <!-- Card 4: Mais Vendido (30d) -->
+    <div class="col-6 col-md-3">
+        <div class="card kpi-card shadow-sm h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
+                <i class="bi bi-trophy kpi-icon text-warning"></i>
+                <div class="kpi-valor text-truncate fs-5" id="kpi-mais-vendido" style="min-height: 2.4rem; display: flex; align-items: center; justify-content: center;">-</div>
+                <div class="kpi-label">Mais Vendido (30d)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 3 — Gráfico de barras: Sazonalidade Mensal -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header card-header-custom py-3">
+        <h6 class="m-0 fw-bold"><i class="bi bi-calendar3 me-2"></i>Sazonalidade Mensal — Quantidade Vendida</h6>
+    </div>
+    <div class="card-body">
+        <div class="grafico-container">
+            <canvas id="grafico-sazonalidade" height="100"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 4 — Dois gráficos lado a lado -->
+<div class="row g-4 mb-4">
+    <!-- Coluna esquerda — Gráfico de linha: Evolução Semanal -->
+    <div class="col-12 col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header card-header-custom py-3">
+                <h6 class="m-0 fw-bold"><i class="bi bi-graph-up me-2"></i>Evolução Semanal — Últimas 12 Semanas</h6>
+            </div>
+            <div class="card-body">
+                <div class="grafico-container">
+                    <canvas id="grafico-semanal" height="160"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Coluna direita — Gráfico de rosca: Top 8 Produtos por Volume -->
+    <div class="col-12 col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header card-header-custom py-3">
+                <h6 class="m-0 fw-bold"><i class="bi bi-pie-chart me-2"></i>Top 8 Produtos — Volume Total</h6>
+            </div>
+            <div class="card-body">
+                <div class="grafico-container">
+                    <canvas id="grafico-top-produtos" height="160"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção 5 — Tabela: Previsão de Demanda Mensal -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header card-header-custom py-3">
+        <h6 class="m-0 fw-bold"><i class="bi bi-table me-2"></i>Previsão de Demanda Mensal por Produto</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover tabela-previsao align-middle m-0">
+                <thead class="thead-custom">
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Jan</th>
+                        <th>Fev</th>
+                        <th>Mar</th>
+                        <th>Abr</th>
+                        <th>Mai</th>
+                        <th>Jun</th>
+                        <th>Jul</th>
+                        <th>Ago</th>
+                        <th>Set</th>
+                        <th>Out</th>
+                        <th>Nov</th>
+                        <th>Dez</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-previsao">
+                    <!-- Preenchido via Javascript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

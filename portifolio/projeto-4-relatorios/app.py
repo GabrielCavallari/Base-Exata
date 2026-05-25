@@ -16,6 +16,7 @@ DATABASE = os.path.join(BASE_DIR, 'database.db')
 def get_db():
     """Retorna conexão com o banco SQLite."""
     conn = sqlite3.connect(DATABASE)
+    conn.execute('PRAGMA journal_mode=WAL;')
     conn.row_factory = sqlite3.Row
     return conn
 

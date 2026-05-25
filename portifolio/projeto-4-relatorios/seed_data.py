@@ -9,6 +9,7 @@ from datetime import date, timedelta
 def seed_database(database_path):
     """Popula o banco com categorias, fornecedores, vendas e ticket diário dos últimos 12 meses."""
     conn = sqlite3.connect(database_path)
+    conn.execute('PRAGMA journal_mode=WAL;')
     cursor = conn.cursor()
 
     # 8 categorias com margem média realista para varejo de interior SP

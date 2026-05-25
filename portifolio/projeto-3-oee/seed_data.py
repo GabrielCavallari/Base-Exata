@@ -9,6 +9,7 @@ from datetime import date, timedelta
 def seed_database(database_path):
     """Popula o banco com 8 máquinas e ~500 registros de turno dos últimos 30 dias."""
     conn = sqlite3.connect(database_path)
+    conn.execute('PRAGMA journal_mode=WAL;')
     cursor = conn.cursor()
 
     # 8 máquinas com setor e capacidade ideal por hora

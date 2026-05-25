@@ -93,6 +93,7 @@ PRODUTOS_CONFIG = {
 def seed_database(database_path):
     """Popula o banco de dados com produtos, vendas diárias e previsões sazonais."""
     conn = sqlite3.connect(database_path)
+    conn.execute('PRAGMA journal_mode=WAL;')
     cursor = conn.cursor()
 
     # 1. Inserir produtos
@@ -176,6 +177,7 @@ if __name__ == '__main__':
     
     # Criar tabelas se rodando diretamente
     conn = sqlite3.connect(DB_PATH)
+    conn.execute('PRAGMA journal_mode=WAL;')
     conn.execute('DROP TABLE IF EXISTS produtos')
     conn.execute('DROP TABLE IF EXISTS vendas_diarias')
     conn.execute('DROP TABLE IF EXISTS previsoes')

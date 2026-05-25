@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 def popular_banco(database_path):
     """Popula o banco com 30 produtos e 200 movimentações dos últimos 30 dias."""
     conn = sqlite3.connect(database_path)
+    conn.execute('PRAGMA journal_mode=WAL;')
     cursor = conn.cursor()
 
     # 30 produtos de supermercado com dados realistas

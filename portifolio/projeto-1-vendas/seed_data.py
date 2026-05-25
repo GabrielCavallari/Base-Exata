@@ -97,6 +97,7 @@ STATUS_OPCOES = ['Concluída', 'Concluída', 'Concluída', 'Concluída', 'Cancel
 def popular_banco(database_path):
     """Popula o banco com 50 produtos e 6 meses de vendas."""
     conn = sqlite3.connect(database_path)
+    conn.execute('PRAGMA journal_mode=WAL;')
     cursor = conn.cursor()
 
     # Insere produtos

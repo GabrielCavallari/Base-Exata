@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 
 
 def seed_demo_data(db_path):
+    # Seed fixo para gerar dados sempre idênticos (disco efêmero do Render)
+    random.seed(42)
     db = sqlite3.connect(db_path)
     cur = db.cursor()
 
@@ -102,6 +104,8 @@ def seed_demo_data(db_path):
     ]
 
     movimentacoes = []
+    # Data base fixa para que os dados sejam idênticos em cada restart
+    data_base = datetime(2026, 5, 20, 12, 0, 0)
     for _ in range(220):
         prod_id = random.choice(prod_ids)
         tipo = random.choices(["entrada", "saida"], weights=[40, 60])[0]
@@ -109,7 +113,7 @@ def seed_demo_data(db_path):
         dias_atras = random.randint(0, 45)
         hora = random.randint(7, 20)
         minuto = random.randint(0, 59)
-        data = (datetime.now() - timedelta(days=dias_atras)).replace(
+        data = (data_base - timedelta(days=dias_atras)).replace(
             hour=hora, minute=minuto, second=0
         ).strftime("%Y-%m-%d %H:%M:%S")
         obs = random.choice(

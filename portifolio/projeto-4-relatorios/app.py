@@ -87,6 +87,46 @@ def dashboard():
     return render_template('index.html')
 
 
+@app.route('/categorias')
+def categorias():
+    return render_template(
+        'simple_page.html',
+        title='Categorias',
+        icon='bi-tags-fill',
+        description='Visão preparada para detalhar participação por categoria, margem estimada e variações de compra e venda.'
+    )
+
+
+@app.route('/fornecedores')
+def fornecedores():
+    return render_template(
+        'simple_page.html',
+        title='Fornecedores',
+        icon='bi-truck',
+        description='Área para acompanhar fornecedores com maior volume, recorrência de pedidos e concentração de compras.'
+    )
+
+
+@app.route('/fechamento-mensal')
+def fechamento_mensal():
+    return render_template(
+        'simple_page.html',
+        title='Fechamento Mensal',
+        icon='bi-calendar-month-fill',
+        description='Resumo mensal para validar evolução de vendas, margem estimada e indicadores usados em reuniões gerenciais.'
+    )
+
+
+@app.route('/relatorio-executivo')
+def relatorio_executivo():
+    return render_template(
+        'simple_page.html',
+        title='Relatório Executivo',
+        icon='bi-file-earmark-bar-graph-fill',
+        description='Página de síntese para consolidar categorias, fornecedores, ticket e fechamento em uma leitura executiva.'
+    )
+
+
 @app.route('/api/resumo')
 def api_resumo():
     """API JSON: 4 KPIs gerais do painel."""

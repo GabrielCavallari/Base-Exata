@@ -74,6 +74,46 @@ def dashboard():
     return render_template('index.html')
 
 
+@app.route('/maquinas')
+def maquinas():
+    return render_template(
+        'simple_page.html',
+        title='Máquinas',
+        icon='bi-cpu-fill',
+        description='Visão preparada para comparar máquinas, capacidade produtiva e eficiência média por equipamento.'
+    )
+
+
+@app.route('/turnos')
+def turnos():
+    return render_template(
+        'simple_page.html',
+        title='Turnos',
+        icon='bi-clock-history',
+        description='Área dedicada a analisar diferenças entre turnos, perdas recorrentes e oportunidades de ajuste operacional.'
+    )
+
+
+@app.route('/gargalos')
+def gargalos():
+    return render_template(
+        'simple_page.html',
+        title='Gargalos',
+        icon='bi-exclamation-triangle-fill',
+        description='Resumo para destacar máquinas, turnos ou indicadores que mais derrubam o OEE geral.'
+    )
+
+
+@app.route('/relatorio-executivo')
+def relatorio_executivo():
+    return render_template(
+        'simple_page.html',
+        title='Relatório Executivo',
+        icon='bi-file-earmark-bar-graph-fill',
+        description='Síntese gerencial de eficiência, disponibilidade, performance, qualidade e próximos pontos de atenção.'
+    )
+
+
 @app.route('/api/resumo')
 def api_resumo():
     """API JSON: OEE geral e componentes (disponibilidade, performance, qualidade)."""

@@ -133,7 +133,7 @@ function inicializarGraficos() {
                         {
                             label: 'Faturamento Realizado (R$)',
                             data: realizado,
-                            backgroundColor: '#10b981', // Verde Esmeralda
+                            backgroundColor: '#008080',
                             borderRadius: 6,
                             borderWidth: 0,
                             barPercentage: 0.8,
@@ -142,7 +142,7 @@ function inicializarGraficos() {
                         {
                             label: 'Meta Planejada (R$)',
                             data: meta,
-                            backgroundColor: '#94a3b8', // Cinza Slate
+                            backgroundColor: '#D35400',
                             borderRadius: 6,
                             borderWidth: 0,
                             barPercentage: 0.8,
@@ -233,12 +233,12 @@ function inicializarGraficos() {
                     datasets: [{
                         data: valores,
                         backgroundColor: [
-                            '#1e3a8a', // Azul Escuro
-                            '#10b981', // Verde Esmeralda
-                            '#0ea5e9', // Azul Sky
-                            '#f59e0b', // Laranja Amber
-                            '#8b5cf6', // Roxo Violet
-                            '#ec4899'  // Rosa
+                            '#1A365D',
+                            '#D35400',
+                            '#008080',
+                            '#2C3E50',
+                            '#E8731A',
+                            '#234782'
                         ],
                         borderWidth: 2,
                         borderColor: '#ffffff',

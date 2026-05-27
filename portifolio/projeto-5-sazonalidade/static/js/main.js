@@ -46,7 +46,7 @@ async function carregarSazonalidade() {
                     datasets: [{
                         label: 'Quantidade Vendida',
                         data: data.map(d => d.quantidade),
-                        backgroundColor: '#1a1a2e',
+                        backgroundColor: '#1A365D',
                         borderWidth: 0
                     }]
                 },
@@ -104,8 +104,8 @@ async function carregarSemanal() {
                     datasets: [{
                         label: 'Faturamento',
                         data: data.map(d => d.valor),
-                        borderColor: '#e94560',
-                        backgroundColor: '#e94560',
+                        borderColor: '#008080',
+                        backgroundColor: '#008080',
                         tension: 0.3,
                         pointRadius: 3,
                         fill: false
@@ -160,14 +160,14 @@ async function carregarTopProdutos() {
                     datasets: [{
                         data: data.map(d => d.quantidade_total),
                         backgroundColor: [
-                            '#1a1a2e',
-                            '#e94560',
-                            '#0f3460',
-                            '#533483',
-                            '#ffbc12',
-                            '#16213e',
-                            '#3282b8',
-                            '#7c83fd'
+                            '#1A365D',
+                            '#D35400',
+                            '#008080',
+                            '#2C3E50',
+                            '#E8731A',
+                            '#234782',
+                            '#00A3A3',
+                            '#5D7083'
                         ],
                         borderWidth: 1
                     }]

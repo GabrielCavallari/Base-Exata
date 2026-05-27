@@ -1,0 +1,40 @@
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5103
+Press CTRL+C to quit
+127.0.0.1 - - [27/May/2026 08:59:22] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /static/js/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /static/css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /api/oee-por-maquina HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /api/heatmap HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /api/oee-historico HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /api/resumo HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 08:59:34] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [27/May/2026 09:00:19] "GET /maquinas HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:20] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:20] "GET /turnos HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:20] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:30] "GET /gargalos HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:30] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:31] "GET /relatorio-executivo HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:31] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /gargalos HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /turnos HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /maquinas HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:33] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /api/resumo HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /api/heatmap HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /api/oee-por-maquina HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:00:34] "GET /api/oee-historico HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /api/oee-por-maquina HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /api/resumo HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /api/oee-historico HTTP/1.1" 200 -
+127.0.0.1 - - [27/May/2026 09:16:20] "GET /api/heatmap HTTP/1.1" 200 -

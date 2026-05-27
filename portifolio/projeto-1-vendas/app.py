@@ -117,6 +117,46 @@ def dashboard():
                            total_vendas_mes=total_vendas_mes)
 
 
+@app.route('/faturamento')
+def faturamento():
+    return render_template(
+        'simple_page.html',
+        title='Faturamento',
+        icon='bi-currency-dollar',
+        description='Visão dedicada para acompanhar evolução de receita, ticket médio e períodos com maior impacto no caixa.'
+    )
+
+
+@app.route('/produtos')
+def produtos():
+    return render_template(
+        'simple_page.html',
+        title='Produtos',
+        icon='bi-box-seam-fill',
+        description='Área preparada para analisar mix, categorias, produtos mais vendidos e itens que exigem revisão de margem.'
+    )
+
+
+@app.route('/ultimas-vendas')
+def ultimas_vendas():
+    return render_template(
+        'simple_page.html',
+        title='Últimas Vendas',
+        icon='bi-clock-history',
+        description='Lista operacional para consultar vendas recentes, status e comportamento de compra em ordem cronológica.'
+    )
+
+
+@app.route('/relatorio-executivo')
+def relatorio_executivo():
+    return render_template(
+        'simple_page.html',
+        title='Relatório Executivo',
+        icon='bi-file-earmark-bar-graph-fill',
+        description='Resumo gerencial para apresentar faturamento, margem, produtos relevantes e recomendações de decisão.'
+    )
+
+
 @app.route('/api/faturamento-diario')
 def api_faturamento_diario():
     """API: faturamento diário dos últimos 30 dias."""

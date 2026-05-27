@@ -80,6 +80,46 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/produtos')
+def produtos():
+    return render_template(
+        'simple_page.html',
+        title='Produtos',
+        icon='bi-box-seam-fill',
+        description='Visão preparada para analisar itens com maior giro, categorias sazonais e produtos que exigem planejamento de compra.'
+    )
+
+
+@app.route('/previsao-demanda')
+def previsao_demanda():
+    return render_template(
+        'simple_page.html',
+        title='Previsão de Demanda',
+        icon='bi-graph-up-arrow',
+        description='Área para detalhar demanda prevista por produto, mês e categoria antes de decisões de compra.'
+    )
+
+
+@app.route('/sazonalidade-mensal')
+def sazonalidade_mensal():
+    return render_template(
+        'simple_page.html',
+        title='Sazonalidade Mensal',
+        icon='bi-calendar-month-fill',
+        description='Resumo para comparar meses de pico, meses fracos e padrões recorrentes de venda.'
+    )
+
+
+@app.route('/relatorio-executivo')
+def relatorio_executivo():
+    return render_template(
+        'simple_page.html',
+        title='Relatório Executivo',
+        icon='bi-file-earmark-bar-graph-fill',
+        description='Síntese gerencial para orientar compras, estoque e campanhas conforme a previsão de demanda.'
+    )
+
+
 @app.route('/api/resumo')
 def api_resumo():
     """Retorna dados consolidados para os KPIs (últimos 30 dias em relação à data máxima)."""

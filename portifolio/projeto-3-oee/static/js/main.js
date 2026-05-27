@@ -66,9 +66,9 @@ function carregarOeeMaquina() {
             var valores = dados.map(function(d) { return parseFloat((d.oee * 100).toFixed(1)); });
             var cores = dados.map(function(d) {
                 var classe = classificarOee(d.oee);
-                if (classe === 'bom')     return '#3fb950';
-                if (classe === 'atencao') return '#d29922';
-                return '#f85149';
+                if (classe === 'bom')     return '#008080';
+                if (classe === 'atencao') return '#E8731A';
+                return '#D35400';
             });
 
             var ctx = document.getElementById('graficoOeeMaquina').getContext('2d');
@@ -100,15 +100,15 @@ function carregarOeeMaquina() {
                         x: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: '#30363d' },
+                            grid: { color: '#f0f2f5' },
                             ticks: {
-                                color: '#8b949e',
+                                color: '#5D7083',
                                 callback: function(valor) { return valor + '%'; }
                             }
                         },
                         y: {
-                            grid: { color: '#30363d' },
-                            ticks: { color: '#e6edf3' }
+                            grid: { display: false },
+                            ticks: { color: '#5D7083' }
                         }
                     }
                 }
@@ -132,8 +132,8 @@ function carregarHistorico() {
                     datasets: [{
                         label: 'OEE Diário',
                         data: valores,
-                        borderColor: '#58a6ff',
-                        backgroundColor: 'rgba(88, 166, 255, 0.1)',
+                        borderColor: '#1A365D',
+                        backgroundColor: 'rgba(26, 54, 93, 0.1)',
                         fill: true,
                         tension: 0.3,
                         pointRadius: 2,
@@ -150,15 +150,15 @@ function carregarHistorico() {
                             beginAtZero: false,
                             min: 0,
                             max: 100,
-                            grid: { color: '#30363d' },
+                            grid: { color: '#f0f2f5' },
                             ticks: {
-                                color: '#8b949e',
+                                color: '#5D7083',
                                 callback: function(valor) { return valor + '%'; }
                             }
                         },
                         x: {
-                            grid: { color: '#30363d' },
-                            ticks: { color: '#8b949e' }
+                            grid: { display: false },
+                            ticks: { color: '#5D7083' }
                         }
                     }
                 }

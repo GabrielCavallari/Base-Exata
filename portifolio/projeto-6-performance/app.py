@@ -120,6 +120,22 @@ def inject_now():
     return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
 
 
+def format_brl(valor):
+    return f"R$ {float(valor or 0):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def format_pct(valor):
+    return f"{float(valor or 0):.1f}%".replace(".", ",")
+
+
+def badge_meta(percentual):
+    if percentual >= 100:
+        return '<span class="badge badge-status badge-status-success">Meta batida</span>'
+    if percentual >= 85:
+        return '<span class="badge badge-status badge-status-warning">Próximo da meta</span>'
+    return '<span class="badge badge-status badge-status-danger">Ação necessária</span>'
+
+
 @app.route('/')
 def dashboard():
     """Renderiza a página principal do Painel de Performance Comercial."""
@@ -128,41 +144,212 @@ def dashboard():
 
 @app.route('/vendedores')
 def vendedores():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT v.id, v.nome, v.regiao, v.meta_mensal,
+               SUM(CASE WHEN s.status = 'Concluída' THEN s.valor ELSE 0 END) AS realizado,
+               COUNT(s.id) AS oportunidades,
+               SUM(CASE WHEN s.status = 'Concluída' THEN 1 ELSE 0 END) AS concluidas
+        FROM vendedores v
+        LEFT JOIN vendas s ON s.vendedor_id = v.id
+        GROUP BY v.id, v.nome, v.regiao, v.meta_mensal
+        ORDER BY realizado DESC
+    ''').fetchall()
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Vendedores',
         icon='bi-people-fill',
-        description='Visão preparada para comparar vendedores, ranking, conversão e distância individual para a meta.'
+        subtitle='Ranking comercial por vendedor',
+        description='Visão para comparar vendedores, ranking, conversão e distância individual para a meta.',
+        kpis=[
+            {'label': 'Líder comercial', 'value': rows[0]['nome'] if rows else '-', 'hint': format_brl(rows[0]['realizado']) if rows else 'Sem dados.', 'icon': 'bi-trophy'},
+            {'label': 'Vendedores', 'value': len(rows), 'hint': 'Equipe cadastrada na demo.', 'icon': 'bi-people'},
+            {'label': 'Conversão média', 'value': format_pct(sum((row['concluidas'] / row['oportunidades'] * 100) if row['oportunidades'] else 0 for row in rows) / len(rows) if rows else 0), 'hint': 'Média das taxas individuais.', 'icon': 'bi-check2-circle'},
+            {'label': 'Realizado total', 'value': format_brl(sum(row['realizado'] or 0 for row in rows)), 'hint': 'Somente vendas concluídas.', 'icon': 'bi-cash-stack'},
+        ],
+        chart={
+            'title': 'Faturamento por vendedor',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in rows],
+            'datasets': [{'label': 'Realizado', 'data': [round(row['realizado'] or 0, 2) for row in rows], 'backgroundColor': '#10b981'}]
+        },
+        insights=[
+            {'title': 'Gestão de equipe', 'text': 'O ranking torna visível quem puxa o resultado e quem precisa de acompanhamento.'},
+            {'title': 'Ação sugerida', 'text': 'Usar a taxa de conversão para separar problema de volume de oportunidades de problema de fechamento.'},
+        ],
+        table={
+            'title': 'Desempenho individual',
+            'headers': ['Vendedor', 'Região', 'Realizado', 'Meta 6 meses', 'Conversão', 'Status'],
+            'rows': [[row['nome'], row['regiao'], format_brl(row['realizado']), format_brl(row['meta_mensal'] * 6), format_pct((row['concluidas'] / row['oportunidades'] * 100) if row['oportunidades'] else 0), badge_meta((row['realizado'] / (row['meta_mensal'] * 6) * 100) if row['meta_mensal'] else 0)] for row in rows]
+        }
     )
 
 
 @app.route('/regioes')
 def regioes():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT v.regiao,
+               COUNT(DISTINCT v.id) AS vendedores,
+               SUM(CASE WHEN s.status = 'Concluída' THEN s.valor ELSE 0 END) AS realizado,
+               SUM(v.meta_mensal) * 6 AS meta,
+               COUNT(s.id) AS oportunidades
+        FROM vendedores v
+        LEFT JOIN vendas s ON s.vendedor_id = v.id
+        GROUP BY v.regiao
+        ORDER BY realizado DESC
+    ''').fetchall()
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Regiões',
         icon='bi-geo-alt-fill',
-        description='Área para analisar faturamento por região, concentração comercial e oportunidades de redistribuição de foco.'
+        subtitle='Desempenho comercial por região',
+        description='Área para analisar faturamento por região, concentração comercial e oportunidades de redistribuição de foco.',
+        kpis=[
+            {'label': 'Região líder', 'value': rows[0]['regiao'] if rows else '-', 'hint': format_brl(rows[0]['realizado']) if rows else 'Sem dados.', 'icon': 'bi-geo-alt'},
+            {'label': 'Regiões', 'value': len(rows), 'hint': 'Praças atendidas pela equipe.', 'icon': 'bi-map'},
+            {'label': 'Cobertura total', 'value': sum(row['vendedores'] for row in rows), 'hint': 'Vendedores distribuídos nas regiões.', 'icon': 'bi-person-lines-fill'},
+            {'label': 'Oportunidades', 'value': sum(row['oportunidades'] or 0 for row in rows), 'hint': 'Vendas concluídas e canceladas.', 'icon': 'bi-bullseye'},
+        ],
+        chart={
+            'title': 'Realizado por região',
+            'type': 'doughnut',
+            'prefix': 'R$ ',
+            'labels': [row['regiao'] for row in rows],
+            'datasets': [{'label': 'Realizado', 'data': [round(row['realizado'] or 0, 2) for row in rows], 'backgroundColor': ['#10b981', '#0f172a', '#0ea5e9', '#f59e0b', '#f43f5e', '#64748b']}]
+        },
+        insights=[
+            {'title': 'Território visível', 'text': 'A tela ajuda a discutir expansão, foco de visitas e distribuição de carteira.'},
+            {'title': 'Ação sugerida', 'text': 'Regiões abaixo da meta podem receber reforço de carteira ou campanhas específicas.'},
+        ],
+        table={
+            'title': 'Regiões e metas',
+            'headers': ['Região', 'Vendedores', 'Realizado', 'Meta 6 meses', 'Atingimento'],
+            'rows': [[row['regiao'], row['vendedores'], format_brl(row['realizado']), format_brl(row['meta']), format_pct((row['realizado'] / row['meta'] * 100) if row['meta'] else 0)] for row in rows]
+        }
     )
 
 
 @app.route('/metas')
 def metas():
+    hoje = date.today()
+    meses = []
+    meses_nomes_pt = {
+        1: 'Jan', 2: 'Fev', 3: 'Mar', 4: 'Abr', 5: 'Mai', 6: 'Jun',
+        7: 'Jul', 8: 'Ago', 9: 'Set', 10: 'Out', 11: 'Nov', 12: 'Dez'
+    }
+    for i in range(5, -1, -1):
+        ano = hoje.year
+        mes = hoje.month - i
+        while mes <= 0:
+            mes += 12
+            ano -= 1
+        meses.append({'mes_ano': f"{ano}-{mes:02d}", 'label': f"{meses_nomes_pt[mes]}/{str(ano)[2:]}"})
+
+    conn = get_db()
+    meta_mensal = conn.execute('SELECT COALESCE(SUM(meta_mensal), 0) FROM vendedores').fetchone()[0]
+    rows = []
+    for item in meses:
+        realizado = conn.execute('''
+            SELECT COALESCE(SUM(valor), 0)
+            FROM vendas
+            WHERE status = 'Concluída' AND strftime('%Y-%m', data) = ?
+        ''', (item['mes_ano'],)).fetchone()[0]
+        rows.append({'mes': item['label'], 'realizado': realizado, 'meta': meta_mensal, 'atingimento': (realizado / meta_mensal * 100) if meta_mensal else 0})
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Metas',
         icon='bi-bullseye',
-        description='Resumo para acompanhar metas mensais, atingimento acumulado e desvios que exigem ação do gestor.'
+        subtitle='Realizado versus meta mensal',
+        description='Resumo para acompanhar metas mensais, atingimento acumulado e desvios que exigem ação do gestor.',
+        kpis=[
+            {'label': 'Meta mensal global', 'value': format_brl(meta_mensal), 'hint': 'Soma das metas dos vendedores.', 'icon': 'bi-bullseye'},
+            {'label': 'Realizado no mês', 'value': format_brl(rows[-1]['realizado'] if rows else 0), 'hint': rows[-1]['mes'] if rows else 'Sem dados.', 'icon': 'bi-calendar-check'},
+            {'label': 'Atingimento atual', 'value': format_pct(rows[-1]['atingimento'] if rows else 0), 'hint': 'Realizado dividido pela meta mensal.', 'icon': 'bi-percent'},
+            {'label': 'Meses na análise', 'value': len(rows), 'hint': 'Janela comercial recente.', 'icon': 'bi-calendar3'},
+        ],
+        chart={
+            'title': 'Evolução de metas',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['mes'] for row in rows],
+            'datasets': [
+                {'label': 'Realizado', 'data': [round(row['realizado'] or 0, 2) for row in rows], 'backgroundColor': '#10b981'},
+                {'label': 'Meta', 'data': [round(row['meta'] or 0, 2) for row in rows], 'backgroundColor': '#0f172a'},
+            ]
+        },
+        insights=[
+            {'title': 'Controle de desvio', 'text': 'A página deixa explícito quando o mês exige reforço comercial antes do fechamento.'},
+            {'title': 'Ação sugerida', 'text': 'Quando o realizado ficar abaixo de 85%, revisar carteira ativa e oportunidades em aberto.'},
+        ],
+        table={
+            'title': 'Acompanhamento mensal',
+            'headers': ['Mês', 'Realizado', 'Meta', 'Atingimento', 'Status'],
+            'rows': [[row['mes'], format_brl(row['realizado']), format_brl(row['meta']), format_pct(row['atingimento']), badge_meta(row['atingimento'])] for row in rows]
+        }
     )
 
 
 @app.route('/relatorio-executivo')
 def relatorio_executivo():
+    conn = get_db()
+    vendedores_rows = conn.execute('''
+        SELECT v.nome, v.regiao, v.meta_mensal,
+               SUM(CASE WHEN s.status = 'Concluída' THEN s.valor ELSE 0 END) AS realizado,
+               COUNT(s.id) AS oportunidades,
+               SUM(CASE WHEN s.status = 'Concluída' THEN 1 ELSE 0 END) AS concluidas
+        FROM vendedores v
+        LEFT JOIN vendas s ON s.vendedor_id = v.id
+        GROUP BY v.id, v.nome, v.regiao, v.meta_mensal
+        ORDER BY realizado DESC
+    ''').fetchall()
+    regioes_rows = conn.execute('''
+        SELECT v.regiao, SUM(CASE WHEN s.status = 'Concluída' THEN s.valor ELSE 0 END) AS realizado
+        FROM vendedores v
+        LEFT JOIN vendas s ON s.vendedor_id = v.id
+        GROUP BY v.regiao
+        ORDER BY realizado DESC
+    ''').fetchall()
+    conn.close()
+    realizado_total = sum(row['realizado'] or 0 for row in vendedores_rows)
+    meta_total = sum((row['meta_mensal'] or 0) * 6 for row in vendedores_rows)
+    taxa_media = sum((row['concluidas'] / row['oportunidades'] * 100) if row['oportunidades'] else 0 for row in vendedores_rows) / len(vendedores_rows) if vendedores_rows else 0
+
     return render_template(
         'simple_page.html',
         title='Relatório Executivo',
         icon='bi-file-earmark-bar-graph-fill',
-        description='Síntese comercial com faturamento, regiões, ranking de vendedores e metas para decisão gerencial.'
+        subtitle='Resumo comercial para ação gerencial',
+        description='Síntese comercial com faturamento, regiões, ranking de vendedores e metas para decisão gerencial.',
+        kpis=[
+            {'label': 'Realizado total', 'value': format_brl(realizado_total), 'hint': 'Vendas concluídas no histórico demo.', 'icon': 'bi-cash-stack'},
+            {'label': 'Atingimento global', 'value': format_pct((realizado_total / meta_total * 100) if meta_total else 0), 'hint': 'Realizado contra meta acumulada.', 'icon': 'bi-bullseye'},
+            {'label': 'Conversão média', 'value': format_pct(taxa_media), 'hint': 'Média de fechamento por vendedor.', 'icon': 'bi-check2-circle'},
+            {'label': 'Região líder', 'value': regioes_rows[0]['regiao'] if regioes_rows else '-', 'hint': format_brl(regioes_rows[0]['realizado']) if regioes_rows else 'Sem dados.', 'icon': 'bi-geo-alt'},
+        ],
+        chart={
+            'title': 'Ranking executivo de vendedores',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in vendedores_rows],
+            'datasets': [{'label': 'Realizado', 'data': [round(row['realizado'] or 0, 2) for row in vendedores_rows], 'backgroundColor': '#10b981'}]
+        },
+        insights=[
+            {'title': 'Mensagem executiva', 'text': 'A página combina resultado, meta e concentração regional em uma leitura única.'},
+            {'title': 'Ações sugeridas', 'text': 'Reforçar regiões abaixo da meta, replicar práticas dos líderes e revisar carteira inativa.'},
+        ],
+        table={
+            'title': 'Plano de ação comercial',
+            'headers': ['Prioridade', 'Vendedor', 'Região', 'Atingimento', 'Ação sugerida'],
+            'rows': [[idx + 1, row['nome'], row['regiao'], format_pct((row['realizado'] / (row['meta_mensal'] * 6) * 100) if row['meta_mensal'] else 0), 'Manter ritmo e replicar abordagem' if idx < 2 else 'Revisar funil e carteira ativa'] for idx, row in enumerate(vendedores_rows)]
+        }
     )
 
 

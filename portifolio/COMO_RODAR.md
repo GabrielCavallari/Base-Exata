@@ -20,6 +20,7 @@ Guia para executar cada projeto do portfólio Base Exata durante o desenvolvimen
 - `database.db` não é versionado — é descartável
 - O sistema de estoque oficial fica fora da pasta `portifolio`, em `estoque-app/`
 - Os dados demonstrativos usam datas relativas e são atualizados automaticamente para manter dashboards recentes em ambientes de demo.
+- As páginas secundárias dos menus laterais usam os dados SQLite para KPIs, gráficos, tabelas e leituras comerciais de demonstração.
 
 ---
 

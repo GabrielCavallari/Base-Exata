@@ -129,6 +129,20 @@ def inject_now():
     return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
 
 
+MESES_PT = {
+    1: 'Jan', 2: 'Fev', 3: 'Mar', 4: 'Abr', 5: 'Mai', 6: 'Jun',
+    7: 'Jul', 8: 'Ago', 9: 'Set', 10: 'Out', 11: 'Nov', 12: 'Dez'
+}
+
+
+def format_brl(valor):
+    return f"R$ {float(valor or 0):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def format_num(valor):
+    return f"{int(valor or 0):,}".replace(",", ".")
+
+
 @app.route('/')
 def index():
     """Renderiza a página principal do dashboard de sazonalidade."""
@@ -137,41 +151,201 @@ def index():
 
 @app.route('/produtos')
 def produtos():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT p.nome, p.categoria, p.unidade,
+               SUM(v.quantidade) AS quantidade,
+               SUM(v.quantidade * v.valor_unitario) AS valor,
+               AVG(v.valor_unitario) AS preco_medio
+        FROM produtos p
+        JOIN vendas_diarias v ON v.produto_id = p.id
+        WHERE v.data >= date('now', '-89 days')
+        GROUP BY p.id, p.nome, p.categoria, p.unidade
+        ORDER BY quantidade DESC
+    ''').fetchall()
+    total_qtd = sum(row['quantidade'] or 0 for row in rows)
+    categorias = len({row['categoria'] for row in rows})
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Produtos',
         icon='bi-box-seam-fill',
-        description='Visão preparada para analisar itens com maior giro, categorias sazonais e produtos que exigem planejamento de compra.'
+        subtitle='Produtos com maior giro recente',
+        description='Visão para analisar itens com maior giro, categorias sazonais e produtos que exigem planejamento de compra.',
+        kpis=[
+            {'label': 'Volume 90 dias', 'value': format_num(total_qtd), 'hint': 'Quantidade vendida no período recente.', 'icon': 'bi-boxes'},
+            {'label': 'Produto líder', 'value': rows[0]['nome'] if rows else '-', 'hint': f"{format_num(rows[0]['quantidade'])} {rows[0]['unidade']}" if rows else 'Sem dados.', 'icon': 'bi-trophy'},
+            {'label': 'Categorias', 'value': categorias, 'hint': 'Grupos com venda recente.', 'icon': 'bi-tags'},
+            {'label': 'Receita 90 dias', 'value': format_brl(sum(row['valor'] or 0 for row in rows)), 'hint': 'Valor simulado das vendas recentes.', 'icon': 'bi-cash-stack'},
+        ],
+        chart={
+            'title': 'Top produtos por quantidade vendida',
+            'type': 'bar',
+            'labels': [row['nome'] for row in rows[:8]],
+            'datasets': [{'label': 'Quantidade', 'data': [row['quantidade'] for row in rows[:8]], 'backgroundColor': '#008080'}]
+        },
+        insights=[
+            {'title': 'Compra orientada', 'text': 'O ranking mostra onde o estoque precisa de atenção antes de ruptura.'},
+            {'title': 'Uso comercial', 'text': 'A tela demonstra planejamento de compra com base em giro real, não em percepção.'},
+        ],
+        table={
+            'title': 'Produtos por tendência recente',
+            'headers': ['Produto', 'Categoria', 'Unidade', 'Quantidade', 'Receita', 'Preço médio'],
+            'rows': [[row['nome'], row['categoria'], row['unidade'], format_num(row['quantidade']), format_brl(row['valor']), format_brl(row['preco_medio'])] for row in rows]
+        }
     )
 
 
 @app.route('/previsao-demanda')
 def previsao_demanda():
+    conn = get_db()
+    produto_rows = conn.execute('''
+        SELECT p.nome, p.categoria,
+               SUM(pr.quantidade_prevista) AS previsto_total,
+               MAX(pr.quantidade_prevista) AS pico_produto
+        FROM produtos p
+        JOIN previsoes pr ON pr.produto_id = p.id
+        GROUP BY p.id, p.nome, p.categoria
+        ORDER BY previsto_total DESC
+    ''').fetchall()
+    mes_rows = conn.execute('''
+        SELECT mes, SUM(quantidade_prevista) AS previsto
+        FROM previsoes
+        GROUP BY mes
+        ORDER BY mes
+    ''').fetchall()
+    pico = max(mes_rows, key=lambda row: row['previsto']) if mes_rows else None
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Previsão de Demanda',
         icon='bi-graph-up-arrow',
-        description='Área para detalhar demanda prevista por produto, mês e categoria antes de decisões de compra.'
+        subtitle='Previsão mensal para compras',
+        description='Área para detalhar demanda prevista por produto, mês e categoria antes de decisões de compra.',
+        kpis=[
+            {'label': 'Previsão anual', 'value': format_num(sum(row['previsto_total'] or 0 for row in produto_rows)), 'hint': 'Soma simulada das previsões mensais.', 'icon': 'bi-calendar4-range'},
+            {'label': 'Mês de pico', 'value': MESES_PT[pico['mes']] if pico else '-', 'hint': f"{format_num(pico['previsto'])} unidades previstas" if pico else 'Sem dados.', 'icon': 'bi-graph-up-arrow'},
+            {'label': 'Produto crítico', 'value': produto_rows[0]['nome'] if produto_rows else '-', 'hint': format_num(produto_rows[0]['previsto_total']) if produto_rows else 'Sem dados.', 'icon': 'bi-box-seam'},
+            {'label': 'Categorias', 'value': len({row['categoria'] for row in produto_rows}), 'hint': 'Categorias na matriz de previsão.', 'icon': 'bi-tags'},
+        ],
+        chart={
+            'title': 'Demanda prevista por mês',
+            'type': 'line',
+            'labels': [MESES_PT[row['mes']] for row in mes_rows],
+            'datasets': [{'label': 'Unidades previstas', 'data': [row['previsto'] for row in mes_rows], 'borderColor': '#1A365D', 'backgroundColor': 'rgba(26,54,93,.14)', 'tension': .35, 'fill': True}]
+        },
+        insights=[
+            {'title': 'Planejamento antes da ruptura', 'text': 'A previsão antecipa meses de maior compra e reduz decisão baseada apenas em histórico manual.'},
+            {'title': 'Ação sugerida', 'text': 'Negociar os produtos de maior previsão antes dos meses de pico.'},
+        ],
+        table={
+            'title': 'Previsão por produto',
+            'headers': ['Produto', 'Categoria', 'Previsto anual', 'Pico mensal', 'Recomendação'],
+            'rows': [[row['nome'], row['categoria'], format_num(row['previsto_total']), format_num(row['pico_produto']), 'Comprar com antecedência' if idx < 3 else 'Monitorar giro'] for idx, row in enumerate(produto_rows)]
+        }
     )
 
 
 @app.route('/sazonalidade-mensal')
 def sazonalidade_mensal():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT CAST(strftime('%m', data) AS INTEGER) AS mes,
+               SUM(quantidade) AS quantidade,
+               SUM(quantidade * valor_unitario) AS valor
+        FROM vendas_diarias
+        GROUP BY mes
+        ORDER BY mes
+    ''').fetchall()
+    pico = max(rows, key=lambda row: row['quantidade']) if rows else None
+    menor = min(rows, key=lambda row: row['quantidade']) if rows else None
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Sazonalidade Mensal',
         icon='bi-calendar-month-fill',
-        description='Resumo para comparar meses de pico, meses fracos e padrões recorrentes de venda.'
+        subtitle='Meses de pico e vale de demanda',
+        description='Resumo para comparar meses de pico, meses fracos e padrões recorrentes de venda.',
+        kpis=[
+            {'label': 'Mês de pico', 'value': MESES_PT[pico['mes']] if pico else '-', 'hint': format_num(pico['quantidade']) if pico else 'Sem dados.', 'icon': 'bi-arrow-up-circle'},
+            {'label': 'Mês mais fraco', 'value': MESES_PT[menor['mes']] if menor else '-', 'hint': format_num(menor['quantidade']) if menor else 'Sem dados.', 'icon': 'bi-arrow-down-circle'},
+            {'label': 'Volume histórico', 'value': format_num(sum(row['quantidade'] or 0 for row in rows)), 'hint': 'Quantidade acumulada por mês do ano.', 'icon': 'bi-bar-chart'},
+            {'label': 'Receita histórica', 'value': format_brl(sum(row['valor'] or 0 for row in rows)), 'hint': 'Valor acumulado no histórico simulado.', 'icon': 'bi-currency-dollar'},
+        ],
+        chart={
+            'title': 'Sazonalidade por mês do ano',
+            'type': 'bar',
+            'labels': [MESES_PT[row['mes']] for row in rows],
+            'datasets': [
+                {'label': 'Quantidade', 'data': [row['quantidade'] for row in rows], 'backgroundColor': '#008080'},
+                {'label': 'Valor em R$', 'data': [round((row['valor'] or 0) / 10, 2) for row in rows], 'backgroundColor': '#D35400'},
+            ]
+        },
+        insights=[
+            {'title': 'Padrão recorrente', 'text': 'A leitura mensal deixa claro quando a operação precisa reforçar estoque e caixa.'},
+            {'title': 'Ação sugerida', 'text': 'Preparar compras, espaço e campanha antes dos meses com maior demanda histórica.'},
+        ],
+        table={
+            'title': 'Resumo mensal',
+            'headers': ['Mês', 'Quantidade', 'Receita', 'Classificação'],
+            'rows': [[MESES_PT[row['mes']], format_num(row['quantidade']), format_brl(row['valor']), 'Pico' if pico and row['mes'] == pico['mes'] else ('Vale' if menor and row['mes'] == menor['mes'] else 'Regular')] for row in rows]
+        }
     )
 
 
 @app.route('/relatorio-executivo')
 def relatorio_executivo():
+    conn = get_db()
+    top_produtos = conn.execute('''
+        SELECT p.nome, p.categoria,
+               SUM(v.quantidade) AS quantidade,
+               SUM(v.quantidade * v.valor_unitario) AS valor
+        FROM produtos p
+        JOIN vendas_diarias v ON v.produto_id = p.id
+        WHERE v.data >= date('now', '-89 days')
+        GROUP BY p.id, p.nome, p.categoria
+        ORDER BY quantidade DESC
+        LIMIT 6
+    ''').fetchall()
+    previsoes = conn.execute('''
+        SELECT mes, SUM(quantidade_prevista) AS previsto
+        FROM previsoes
+        GROUP BY mes
+        ORDER BY mes
+    ''').fetchall()
+    pico = max(previsoes, key=lambda row: row['previsto']) if previsoes else None
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Relatório Executivo',
         icon='bi-file-earmark-bar-graph-fill',
-        description='Síntese gerencial para orientar compras, estoque e campanhas conforme a previsão de demanda.'
+        subtitle='Recomendações de estoque e compra',
+        description='Síntese gerencial para orientar compras, estoque e campanhas conforme a previsão de demanda.',
+        kpis=[
+            {'label': 'Produto prioritário', 'value': top_produtos[0]['nome'] if top_produtos else '-', 'hint': f"{format_num(top_produtos[0]['quantidade'])} un. nos últimos 90 dias" if top_produtos else 'Sem dados.', 'icon': 'bi-star'},
+            {'label': 'Pico previsto', 'value': MESES_PT[pico['mes']] if pico else '-', 'hint': format_num(pico['previsto']) if pico else 'Sem dados.', 'icon': 'bi-calendar-event'},
+            {'label': 'Receita recente', 'value': format_brl(sum(row['valor'] or 0 for row in top_produtos)), 'hint': 'Top produtos dos últimos 90 dias.', 'icon': 'bi-cash-stack'},
+            {'label': 'Itens críticos', 'value': len(top_produtos[:3]), 'hint': 'Primeiros itens para plano de compra.', 'icon': 'bi-clipboard-check'},
+        ],
+        chart={
+            'title': 'Produtos que puxam a demanda',
+            'type': 'bar',
+            'labels': [row['nome'] for row in top_produtos],
+            'datasets': [{'label': 'Quantidade 90 dias', 'data': [row['quantidade'] for row in top_produtos], 'backgroundColor': '#1A365D'}]
+        },
+        insights=[
+            {'title': 'Resumo executivo', 'text': 'A demo conecta histórico, previsão e recomendação de compra em uma mesma tela.'},
+            {'title': 'Ação sugerida', 'text': 'Reservar orçamento e negociar entrega antes do mês de pico previsto.'},
+        ],
+        table={
+            'title': 'Plano sugerido de estoque',
+            'headers': ['Prioridade', 'Produto', 'Categoria', 'Giro recente', 'Ação sugerida'],
+            'rows': [[idx + 1, row['nome'], row['categoria'], format_num(row['quantidade']), 'Reforçar compra' if idx < 3 else 'Monitorar semanalmente'] for idx, row in enumerate(top_produtos)]
+        }
     )
 
 

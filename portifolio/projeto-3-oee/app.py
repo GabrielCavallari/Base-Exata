@@ -123,6 +123,59 @@ def inject_now():
     return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
 
 
+def format_pct(valor):
+    return f"{float(valor or 0):.1f}%".replace(".", ",")
+
+
+def classificar_oee(valor):
+    if valor >= 75:
+        return '<span class="badge badge-oee-bom">Bom</span>'
+    if valor >= 60:
+        return '<span class="badge badge-oee-atencao">Atenção</span>'
+    return '<span class="badge badge-oee-critico">Crítico</span>'
+
+
+def calcular_oee(registros):
+    if not registros:
+        return {'oee': 0, 'disp': 0, 'perf': 0, 'qual': 0, 'perda_min': 0, 'refugo': 0}
+
+    soma_oee = soma_disp = soma_perf = soma_qual = 0
+    perda_min = refugo = 0
+
+    for r in registros:
+        disp = r['tempo_operando_min'] / r['tempo_planejado_min'] if r['tempo_planejado_min'] else 0
+        capacidade_ideal = r['capacidade_hora'] * (r['tempo_operando_min'] / 60)
+        perf = r['producao_total'] / capacidade_ideal if capacidade_ideal else 0
+        qual = r['producao_aprovada'] / r['producao_total'] if r['producao_total'] else 0
+        soma_disp += disp
+        soma_perf += perf
+        soma_qual += qual
+        soma_oee += disp * perf * qual
+        perda_min += max(r['tempo_planejado_min'] - r['tempo_operando_min'], 0)
+        refugo += max(r['producao_total'] - r['producao_aprovada'], 0)
+
+    n = len(registros)
+    return {
+        'oee': soma_oee / n * 100,
+        'disp': soma_disp / n * 100,
+        'perf': soma_perf / n * 100,
+        'qual': soma_qual / n * 100,
+        'perda_min': perda_min,
+        'refugo': refugo,
+    }
+
+
+def registros_oee():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT rt.*, m.nome AS maquina, m.setor, m.capacidade_hora
+        FROM registros_turno rt
+        JOIN maquinas m ON m.id = rt.maquina_id
+    ''').fetchall()
+    conn.close()
+    return rows
+
+
 @app.route('/')
 def dashboard():
     """Página principal do monitor de OEE."""
@@ -131,41 +184,177 @@ def dashboard():
 
 @app.route('/maquinas')
 def maquinas():
+    registros = registros_oee()
+    grupos = {}
+    for row in registros:
+        grupos.setdefault(row['maquina'], []).append(row)
+    ranking = []
+    for maquina, itens in grupos.items():
+        metricas = calcular_oee(itens)
+        ranking.append({'maquina': maquina, 'setor': itens[0]['setor'], 'registros': len(itens), **metricas})
+    ranking.sort(key=lambda item: item['oee'], reverse=True)
+
     return render_template(
         'simple_page.html',
         title='Máquinas',
         icon='bi-cpu-fill',
-        description='Visão preparada para comparar máquinas, capacidade produtiva e eficiência média por equipamento.'
+        subtitle='Ranking de eficiência por equipamento',
+        description='Visão para comparar máquinas, capacidade produtiva e eficiência média por equipamento.',
+        kpis=[
+            {'label': 'OEE médio', 'value': format_pct(sum(item['oee'] for item in ranking) / len(ranking) if ranking else 0), 'hint': 'Média das máquinas monitoradas.', 'icon': 'bi-speedometer2'},
+            {'label': 'Máquina líder', 'value': ranking[0]['maquina'] if ranking else '-', 'hint': format_pct(ranking[0]['oee']) if ranking else 'Sem dados.', 'icon': 'bi-trophy'},
+            {'label': 'Ponto crítico', 'value': ranking[-1]['maquina'] if ranking else '-', 'hint': format_pct(ranking[-1]['oee']) if ranking else 'Sem dados.', 'icon': 'bi-exclamation-triangle'},
+            {'label': 'Equipamentos', 'value': len(ranking), 'hint': 'Máquinas com registros de turno.', 'icon': 'bi-cpu'},
+        ],
+        chart={
+            'title': 'OEE médio por máquina',
+            'type': 'bar',
+            'suffix': '%',
+            'labels': [item['maquina'] for item in ranking],
+            'datasets': [{'label': 'OEE', 'data': [round(item['oee'], 1) for item in ranking], 'backgroundColor': '#008080'}]
+        },
+        insights=[
+            {'title': 'Comparação objetiva', 'text': 'O ranking mostra rapidamente onde a produção performa bem e onde precisa de plano de ação.'},
+            {'title': 'Conversa comercial', 'text': 'Ajuda a vender a ideia de acompanhamento por máquina sem depender de planilhas manuais.'},
+        ],
+        table={
+            'title': 'Detalhe por máquina',
+            'headers': ['Máquina', 'Setor', 'OEE', 'Disponib.', 'Performance', 'Qualidade', 'Status'],
+            'rows': [[item['maquina'], item['setor'], format_pct(item['oee']), format_pct(item['disp']), format_pct(item['perf']), format_pct(item['qual']), classificar_oee(item['oee'])] for item in ranking]
+        }
     )
 
 
 @app.route('/turnos')
 def turnos():
+    registros = registros_oee()
+    grupos = {}
+    for row in registros:
+        grupos.setdefault(row['turno'], []).append(row)
+    ranking = []
+    for turno, itens in grupos.items():
+        metricas = calcular_oee(itens)
+        ranking.append({'turno': turno, 'registros': len(itens), **metricas})
+    ranking.sort(key=lambda item: item['turno'])
+
     return render_template(
         'simple_page.html',
         title='Turnos',
         icon='bi-clock-history',
-        description='Área dedicada a analisar diferenças entre turnos, perdas recorrentes e oportunidades de ajuste operacional.'
+        subtitle='Comparação operacional por turno',
+        description='Área dedicada a analisar diferenças entre turnos, perdas recorrentes e oportunidades de ajuste operacional.',
+        kpis=[
+            {'label': 'Melhor turno', 'value': max(ranking, key=lambda item: item['oee'])['turno'] if ranking else '-', 'hint': format_pct(max(ranking, key=lambda item: item['oee'])['oee']) if ranking else 'Sem dados.', 'icon': 'bi-award'},
+            {'label': 'Turno crítico', 'value': min(ranking, key=lambda item: item['oee'])['turno'] if ranking else '-', 'hint': format_pct(min(ranking, key=lambda item: item['oee'])['oee']) if ranking else 'Sem dados.', 'icon': 'bi-exclamation-circle'},
+            {'label': 'Registros', 'value': sum(item['registros'] for item in ranking), 'hint': 'Amostras de produção analisadas.', 'icon': 'bi-clipboard-data'},
+            {'label': 'Perda planejada', 'value': f"{sum(item['perda_min'] for item in ranking):,.0f} min".replace(",", "."), 'hint': 'Diferença entre tempo planejado e operando.', 'icon': 'bi-hourglass-split'},
+        ],
+        chart={
+            'title': 'OEE, disponibilidade, performance e qualidade por turno',
+            'type': 'bar',
+            'suffix': '%',
+            'labels': [f"Turno {item['turno']}" for item in ranking],
+            'datasets': [
+                {'label': 'OEE', 'data': [round(item['oee'], 1) for item in ranking], 'backgroundColor': '#1A365D'},
+                {'label': 'Disponibilidade', 'data': [round(item['disp'], 1) for item in ranking], 'backgroundColor': '#008080'},
+                {'label': 'Qualidade', 'data': [round(item['qual'], 1) for item in ranking], 'backgroundColor': '#D35400'},
+            ]
+        },
+        insights=[
+            {'title': 'Gestão de rotina', 'text': 'Turnos diferentes costumam esconder gargalos de setup, troca de equipe ou parada recorrente.'},
+            {'title': 'Ação sugerida', 'text': 'Usar o melhor turno como referência operacional para treinar os demais.'},
+        ],
+        table={
+            'title': 'Resumo por turno',
+            'headers': ['Turno', 'Registros', 'OEE', 'Disponibilidade', 'Performance', 'Qualidade'],
+            'rows': [[f"Turno {item['turno']}", item['registros'], format_pct(item['oee']), format_pct(item['disp']), format_pct(item['perf']), format_pct(item['qual'])] for item in ranking]
+        }
     )
 
 
 @app.route('/gargalos')
 def gargalos():
+    registros = registros_oee()
+    grupos = {}
+    for row in registros:
+        chave = (row['maquina'], row['turno'])
+        grupos.setdefault(chave, []).append(row)
+    gargalos_lista = []
+    for (maquina, turno), itens in grupos.items():
+        metricas = calcular_oee(itens)
+        gargalos_lista.append({'maquina': maquina, 'turno': turno, 'registros': len(itens), **metricas})
+    gargalos_lista.sort(key=lambda item: item['oee'])
+    criticos = [item for item in gargalos_lista if item['oee'] < 60]
+
     return render_template(
         'simple_page.html',
         title='Gargalos',
         icon='bi-exclamation-triangle-fill',
-        description='Resumo para destacar máquinas, turnos ou indicadores que mais derrubam o OEE geral.'
+        subtitle='Pontos que mais derrubam a eficiência',
+        description='Resumo para destacar máquinas, turnos ou indicadores que mais derrubam o OEE geral.',
+        kpis=[
+            {'label': 'Gargalos críticos', 'value': len(criticos), 'hint': 'Combinações máquina/turno abaixo de 60% OEE.', 'icon': 'bi-exclamation-octagon'},
+            {'label': 'Maior perda', 'value': gargalos_lista[0]['maquina'] if gargalos_lista else '-', 'hint': f"Turno {gargalos_lista[0]['turno']} · {format_pct(gargalos_lista[0]['oee'])}" if gargalos_lista else 'Sem dados.', 'icon': 'bi-arrow-down-circle'},
+            {'label': 'Minutos parados', 'value': f"{sum(item['perda_min'] for item in gargalos_lista):,.0f}".replace(",", "."), 'hint': 'Soma das perdas de disponibilidade.', 'icon': 'bi-stopwatch'},
+            {'label': 'Refugo estimado', 'value': f"{sum(item['refugo'] for item in gargalos_lista):,.0f}".replace(",", "."), 'hint': 'Peças produzidas e não aprovadas.', 'icon': 'bi-trash3'},
+        ],
+        chart={
+            'title': 'Menores OEEs por máquina e turno',
+            'type': 'bar',
+            'suffix': '%',
+            'labels': [f"{item['maquina']} · {item['turno']}" for item in gargalos_lista[:8]],
+            'datasets': [{'label': 'OEE', 'data': [round(item['oee'], 1) for item in gargalos_lista[:8]], 'backgroundColor': '#D35400'}]
+        },
+        insights=[
+            {'title': 'Prioridade clara', 'text': 'A página evita discutir todas as máquinas ao mesmo tempo e foca nas maiores perdas.'},
+            {'title': 'Recomendação', 'text': 'Investigar primeiro disponibilidade, depois performance e qualidade em cada gargalo.'},
+        ],
+        table={
+            'title': 'Gargalos priorizados',
+            'headers': ['Máquina', 'Turno', 'OEE', 'Perda min.', 'Refugo', 'Recomendação'],
+            'rows': [[item['maquina'], f"Turno {item['turno']}", format_pct(item['oee']), f"{item['perda_min']:.0f}", f"{item['refugo']:.0f}", 'Plano de ação de disponibilidade' if item['disp'] < item['perf'] else 'Revisar cadência e qualidade'] for item in gargalos_lista[:12]]
+        }
     )
 
 
 @app.route('/relatorio-executivo')
 def relatorio_executivo():
+    registros = registros_oee()
+    geral = calcular_oee(registros)
+    grupos = {}
+    for row in registros:
+        grupos.setdefault(row['maquina'], []).append(row)
+    ranking = [{'maquina': maquina, **calcular_oee(itens)} for maquina, itens in grupos.items()]
+    ranking.sort(key=lambda item: item['oee'], reverse=True)
+
     return render_template(
         'simple_page.html',
         title='Relatório Executivo',
         icon='bi-file-earmark-bar-graph-fill',
-        description='Síntese gerencial de eficiência, disponibilidade, performance, qualidade e próximos pontos de atenção.'
+        subtitle='Síntese gerencial de eficiência industrial',
+        description='Síntese gerencial de eficiência, disponibilidade, performance, qualidade e próximos pontos de atenção.',
+        kpis=[
+            {'label': 'OEE geral', 'value': format_pct(geral['oee']), 'hint': 'Indicador consolidado da operação.', 'icon': 'bi-speedometer'},
+            {'label': 'Disponibilidade', 'value': format_pct(geral['disp']), 'hint': 'Tempo operando sobre tempo planejado.', 'icon': 'bi-clock'},
+            {'label': 'Performance', 'value': format_pct(geral['perf']), 'hint': 'Produção real frente à capacidade ideal.', 'icon': 'bi-activity'},
+            {'label': 'Qualidade', 'value': format_pct(geral['qual']), 'hint': 'Produção aprovada sobre total produzido.', 'icon': 'bi-check2-circle'},
+        ],
+        chart={
+            'title': 'Ranking executivo de máquinas',
+            'type': 'bar',
+            'suffix': '%',
+            'labels': [item['maquina'] for item in ranking],
+            'datasets': [{'label': 'OEE', 'data': [round(item['oee'], 1) for item in ranking], 'backgroundColor': '#1A365D'}]
+        },
+        insights=[
+            {'title': 'Resumo para diretoria', 'text': 'A tela mostra se o problema principal está em tempo parado, cadência ou qualidade.'},
+            {'title': 'Ação sugerida', 'text': 'Definir uma rotina semanal com ranking de máquinas e revisão dos três piores pontos.'},
+        ],
+        table={
+            'title': 'Recomendações executivas',
+            'headers': ['Prioridade', 'Máquina', 'Indicador', 'Ação sugerida'],
+            'rows': [[idx + 1, item['maquina'], format_pct(item['oee']), 'Atacar disponibilidade' if item['disp'] < item['perf'] else 'Revisar cadência produtiva'] for idx, item in enumerate(reversed(ranking[-5:]))]
+        }
     )
 
 

@@ -71,6 +71,46 @@ def dashboard():
     return render_template('index.html')
 
 
+@app.route('/vendedores')
+def vendedores():
+    return render_template(
+        'simple_page.html',
+        title='Vendedores',
+        icon='bi-people-fill',
+        description='Visão preparada para comparar vendedores, ranking, conversão e distância individual para a meta.'
+    )
+
+
+@app.route('/regioes')
+def regioes():
+    return render_template(
+        'simple_page.html',
+        title='Regiões',
+        icon='bi-geo-alt-fill',
+        description='Área para analisar faturamento por região, concentração comercial e oportunidades de redistribuição de foco.'
+    )
+
+
+@app.route('/metas')
+def metas():
+    return render_template(
+        'simple_page.html',
+        title='Metas',
+        icon='bi-bullseye',
+        description='Resumo para acompanhar metas mensais, atingimento acumulado e desvios que exigem ação do gestor.'
+    )
+
+
+@app.route('/relatorio-executivo')
+def relatorio_executivo():
+    return render_template(
+        'simple_page.html',
+        title='Relatório Executivo',
+        icon='bi-file-earmark-bar-graph-fill',
+        description='Síntese comercial com faturamento, regiões, ranking de vendedores e metas para decisão gerencial.'
+    )
+
+
 @app.route('/api/resumo')
 def api_resumo():
     """API JSON: Retorna os 4 KPIs principais superiores."""

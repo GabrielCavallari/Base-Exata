@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h4><i class="bi {{ icon }} me-2" style="color:var(--teal)"></i>{{ title }}</h4>
+  <span class="badge demo-badge">Demo com dados simulados</span>
+</div>
+<div class="intro-panel">
+  <h5 class="mb-2">{{ title }} em evolução</h5>
+  <p class="mb-3">{{ description }}</p>
+  <p class="mb-0 text-muted">A página já segue a navegação e o visual da suíte Base Exata. Os indicadores detalhados podem ser conectados aos dados existentes em uma próxima etapa.</p>
+</div>
+{% endblock %}
+{% block page_scripts %}{% endblock %}

@@ -1,132 +1,37 @@
 {% extends 'base.html' %}
-
 {% block title %}Dashboard Gerencial{% endblock %}
+{% block page_title %}Dashboard Gerencial{% endblock %}
 
 {% block content %}
-<!-- Seção 1 — Narrativa do case -->
-<div class="case-destaque mb-4">
-    <div class="d-flex align-items-center">
-        <i class="bi bi-trophy-fill fs-3 me-3 text-warning"></i>
-        <div>
-            <strong>Case real:</strong> Reduziu de 6 horas para 12 minutos o tempo de geração do fechamento mensal de uma rede varejista de Capivari, integrando dados de 3 planilhas distintas.
-        </div>
-    </div>
+<div class="intro-panel mb-4">
+  <span class="badge demo-badge mb-2">Cenário demonstrativo baseado em problemas comuns de empresas locais.</span>
+  <h5 class="mb-2"><i class="bi bi-file-earmark-bar-graph-fill me-2" style="color:var(--teal)"></i>Fechamento gerencial sem retrabalho de planilhas</h5>
+  <p class="mb-0">Resolve a demora para consolidar vendas, fornecedores e fechamento mensal. Serve para varejos, distribuidores e empresas locais que recebem dados de várias fontes e precisam de um relatório confiável para reunião.</p>
+  <div class="row g-3 mt-2">
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Problema</small><span>Consolidar relatórios com menos digitação manual e menos risco de erro.</span></div>
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Empresa indicada</small><span>Empresas com compras, vendas e fornecedores acompanhados em planilhas separadas.</span></div>
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Decisão do gestor</small><span>Enxergar categorias fortes, fornecedores relevantes e evolução mensal do resultado.</span></div>
+  </div>
 </div>
 
-<!-- Seção 2 — 4 cards KPI em linha -->
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card p-3 text-center h-100 bg-white" id="kpi-total-vendas">
-            <div class="kpi-icon">
-                <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div class="kpi-valor" id="valor-total-vendas">R$ 0,00</div>
-            <div class="kpi-label">Total de Vendas</div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card p-3 text-center h-100 bg-white" id="kpi-ticket-medio">
-            <div class="kpi-icon">
-                <i class="bi bi-receipt"></i>
-            </div>
-            <div class="kpi-valor" id="valor-ticket-medio">R$ 0,00</div>
-            <div class="kpi-label">Ticket Médio</div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card p-3 text-center h-100 bg-white" id="kpi-categorias">
-            <div class="kpi-icon">
-                <i class="bi bi-tags"></i>
-            </div>
-            <div class="kpi-valor" id="valor-categorias">0</div>
-            <div class="kpi-label">Categorias Ativas</div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card p-3 text-center h-100 bg-white" id="kpi-fornecedores">
-            <div class="kpi-icon">
-                <i class="bi bi-truck"></i>
-            </div>
-            <div class="kpi-valor" id="valor-fornecedores">0</div>
-            <div class="kpi-label">Fornecedores Ativos</div>
-        </div>
-    </div>
+  <div class="col-6 col-lg-3"><div class="stat-card" id="kpi-total-vendas"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(26,54,93,.1); color:var(--navy)"><i class="bi bi-currency-dollar"></i></div><div><div class="stat-value" id="valor-total-vendas">R$ 0,00</div><div class="stat-label">Total de Vendas</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card" id="kpi-ticket-medio"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(0,128,128,.1); color:var(--teal)"><i class="bi bi-receipt"></i></div><div><div class="stat-value" id="valor-ticket-medio">R$ 0,00</div><div class="stat-label">Ticket Médio</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card" id="kpi-categorias"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(0,128,128,.1); color:var(--teal)"><i class="bi bi-tags"></i></div><div><div class="stat-value" id="valor-categorias">0</div><div class="stat-label">Categorias Ativas</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card" id="kpi-fornecedores"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(211,84,0,.1); color:var(--brick)"><i class="bi bi-truck"></i></div><div><div class="stat-value" id="valor-fornecedores">0</div><div class="stat-label">Fornecedores Ativos</div></div></div></div></div>
 </div>
 
-<!-- Seção 3 — Dois gráficos lado a lado -->
 <div class="row g-3 mb-4">
-    <!-- Vendas por Categoria -->
-    <div class="col-12 col-lg-7">
-        <div class="card shadow-sm border-0 h-100 bg-white">
-            <div class="card-header card-header-custom py-3 d-flex align-items-center">
-                <i class="bi bi-pie-chart me-2"></i>
-                <h6 class="m-0 fw-bold">Vendas por Categoria</h6>
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 350px;">
-                <div style="width: 100%; max-width: 450px;">
-                    <canvas id="graficoVendasCategoria"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Fechamento Mensal -->
-    <div class="col-12 col-lg-5">
-        <div class="card shadow-sm border-0 h-100 bg-white">
-            <div class="card-header card-header-custom py-3 d-flex align-items-center">
-                <i class="bi bi-calendar-month me-2"></i>
-                <h6 class="m-0 fw-bold">Fechamento Mensal (12 meses)</h6>
-            </div>
-            <div class="card-body" style="min-height: 350px;">
-                <canvas id="graficoFechamentoMensal"></canvas>
-            </div>
-        </div>
-    </div>
+  <div class="col-lg-7"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Vendas por Categoria</h6><div style="position:relative; height:340px;"><canvas id="graficoVendasCategoria"></canvas></div></div></div>
+  <div class="col-lg-5"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-calendar-month me-2"></i>Fechamento Mensal · 12 meses</h6><div style="position:relative; height:340px;"><canvas id="graficoFechamentoMensal"></canvas></div></div></div>
 </div>
 
-<!-- Seção 4 — Gráfico de linha full-width -->
 <div class="row g-3 mb-4">
-    <div class="col-12">
-        <div class="card shadow-sm border-0 bg-white">
-            <div class="card-header card-header-custom py-3 d-flex align-items-center">
-                <i class="bi bi-graph-up-arrow me-2"></i>
-                <h6 class="m-0 fw-bold">Evolução do Ticket Médio (12 meses)</h6>
-            </div>
-            <div class="card-body">
-                <div style="height: 300px; width: 100%;">
-                    <canvas id="graficoTicket"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="col-12"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-graph-up-arrow me-2"></i>Evolução do Ticket Médio · 12 meses</h6><div style="position:relative; height:300px;"><canvas id="graficoTicket"></canvas></div></div></div>
 </div>
 
-<!-- Seção 5 — Tabela de ranking de fornecedores -->
-<div class="row g-3">
-    <div class="col-12">
-        <div class="card shadow-sm border-0 bg-white">
-            <div class="card-header card-header-custom py-3 d-flex align-items-center">
-                <i class="bi bi-award me-2"></i>
-                <h6 class="m-0 fw-bold">Top 10 Fornecedores por Volume de Compras</h6>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="thead-custom">
-                            <tr>
-                                <th style="width: 80px;">#</th>
-                                <th>Fornecedor</th>
-                                <th>Cidade</th>
-                                <th class="text-end">Total Compras (R$)</th>
-                                <th class="text-center">Nº Pedidos</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaFornecedores">
-                            <!-- Preenchido dinamicamente via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="table-container">
+  <div class="d-flex align-items-center justify-content-between p-3 pb-0"><h6 class="fw-bold mb-0" style="color:var(--navy); font-size:.85rem"><i class="bi bi-award me-2"></i>Top 10 Fornecedores por Volume de Compras</h6><a href="{{ url_for('fornecedores') }}" class="btn btn-sm btn-outline-secondary">Ver fornecedores</a></div>
+  <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th style="width:80px">#</th><th>Fornecedor</th><th>Cidade</th><th class="text-end">Total Compras</th><th class="text-center">Nº Pedidos</th></tr></thead><tbody id="tabelaFornecedores"></tbody></table></div>
 </div>
 {% endblock %}

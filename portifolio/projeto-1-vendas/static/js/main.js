@@ -35,8 +35,8 @@ function carregarFaturamentoDiario() {
                     datasets: [{
                         label: 'Faturamento (R$)',
                         data: dados.valores,
-                        borderColor: 'rgba(233, 69, 96, 1)',
-                        backgroundColor: 'rgba(233, 69, 96, 0.1)',
+                        borderColor: '#008080',
+                        backgroundColor: 'rgba(0, 128, 128, 0.10)',
                         fill: true,
                         tension: 0.3,
                         pointRadius: 2,
@@ -76,15 +76,15 @@ function carregarCategorias() {
                     datasets: [{
                         data: dados.valores,
                         backgroundColor: [
-                            '#1a1a2e',
-                            '#e94560',
-                            '#28a745',
-                            '#ffc107',
-                            '#0dcaf0',
-                            '#6f42c1'
+                            '#1A365D',
+                            '#D35400',
+                            '#008080',
+                            '#2C3E50',
+                            '#E8731A',
+                            '#234782'
                         ],
                         borderWidth: 2,
-                        borderColor: '#f4f6f9'
+                        borderColor: '#F8F9FA'
                     }]
                 },
                 options: {
@@ -111,7 +111,7 @@ function carregarTopProdutos() {
                     datasets: [{
                         label: 'Receita (R$)',
                         data: dados.valores,
-                        backgroundColor: 'rgba(26, 26, 46, 0.8)',
+                        backgroundColor: 'rgba(26, 54, 93, 0.8)',
                         borderRadius: 4
                     }]
                 },

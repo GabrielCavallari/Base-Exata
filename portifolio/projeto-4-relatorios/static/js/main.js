@@ -47,8 +47,8 @@ function carregarVendasCategoria() {
             
             // Paleta fixa de 8 cores definida na documentação
             const coresCategorias = [
-                '#1a1a2e', '#e94560', '#2d6a4f', '#f4a261', 
-                '#457b9d', '#6d6875', '#2a9d8f', '#e76f51'
+                '#1A365D', '#D35400', '#008080', '#2C3E50',
+                '#E8731A', '#234782', '#00A3A3', '#5D7083'
             ];
 
             new Chart(ctx, {
@@ -111,15 +111,15 @@ function carregarFechamentoMensal() {
                         {
                             label: 'Total Vendas',
                             data: data.map(item => item.total_vendas),
-                            backgroundColor: 'rgba(26, 26, 46, 0.8)',
-                            borderColor: '#1a1a2e',
+                            backgroundColor: 'rgba(26, 54, 93, 0.8)',
+                            borderColor: '#1A365D',
                             borderWidth: 1
                         },
                         {
                             label: 'Margem Estimada',
                             data: data.map(item => item.margem_estimada),
-                            backgroundColor: 'rgba(233, 69, 96, 0.7)',
-                            borderColor: '#e94560',
+                            backgroundColor: 'rgba(211, 84, 0, 0.7)',
+                            borderColor: '#D35400',
                             borderWidth: 1
                         }
                     ]
@@ -178,12 +178,12 @@ function carregarTicket() {
                     datasets: [{
                         label: 'Ticket Médio (R$)',
                         data: data.map(item => item.ticket_medio),
-                        borderColor: '#e94560',
-                        backgroundColor: 'rgba(233, 69, 96, 0.08)',
+                        borderColor: '#008080',
+                        backgroundColor: 'rgba(0, 128, 128, 0.08)',
                         fill: true,
                         tension: 0.4,
                         pointRadius: 4,
-                        pointBackgroundColor: '#1a1a2e',
+                        pointBackgroundColor: '#1A365D',
                         borderWidth: 2
                     }]
                 },

@@ -1,128 +1,36 @@
 {% extends 'base.html' %}
-
 {% block title %}Dashboard de Sazonalidade{% endblock %}
+{% block page_title %}Dashboard de Sazonalidade{% endblock %}
 
 {% block content %}
-<!-- Seção 1 — Título da página -->
-<h5 class="mb-4"><i class="bi bi-bar-chart-line me-2"></i>Análise de Sazonalidade e Demanda</h5>
+<div class="intro-panel mb-4">
+  <span class="badge demo-badge mb-2">Cenário demonstrativo baseado em problemas comuns de empresas locais.</span>
+  <h5 class="mb-2"><i class="bi bi-calendar3 me-2" style="color:var(--teal)"></i>Previsão de demanda para compra e estoque</h5>
+  <p class="mb-0">Resolve a compra no escuro em negócios que vendem mais em certos meses, semanas ou datas. Serve para varejos, supermercados pequenos, distribuidores e operações que precisam antecipar demanda por produto.</p>
+  <div class="row g-3 mt-2">
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Problema</small><span>Evitar excesso de estoque em meses fracos e falta de produto em picos sazonais.</span></div>
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Empresa indicada</small><span>Comércios com giro variável por época do ano, campanha ou categoria.</span></div>
+    <div class="col-md-4"><small class="text-muted d-block fw-semibold">Decisão do gestor</small><span>Planejar compras, ajustar estoque e preparar campanhas com antecedência.</span></div>
+  </div>
+</div>
 
-<!-- Seção 2 — 4 Cards de KPI em linha -->
 <div class="row g-3 mb-4">
-    <!-- Card 1: Total de Produtos -->
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card shadow-sm h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
-                <i class="bi bi-box-seam kpi-icon"></i>
-                <div class="kpi-valor" id="kpi-total-produtos">-</div>
-                <div class="kpi-label">Total de Produtos</div>
-            </div>
-        </div>
-    </div>
-    <!-- Card 2: Vendas (30 dias) -->
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card shadow-sm h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
-                <i class="bi bi-currency-dollar kpi-icon text-success"></i>
-                <div class="kpi-valor" id="kpi-vendas-30d">-</div>
-                <div class="kpi-label">Vendas (30 dias)</div>
-            </div>
-        </div>
-    </div>
-    <!-- Card 3: Ticket Médio/Dia -->
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card shadow-sm h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
-                <i class="bi bi-receipt kpi-icon text-info"></i>
-                <div class="kpi-valor" id="kpi-ticket-30d">-</div>
-                <div class="kpi-label">Ticket Médio/Dia</div>
-            </div>
-        </div>
-    </div>
-    <!-- Card 4: Mais Vendido (30d) -->
-    <div class="col-6 col-md-3">
-        <div class="card kpi-card shadow-sm h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
-                <i class="bi bi-trophy kpi-icon text-warning"></i>
-                <div class="kpi-valor text-truncate fs-5" id="kpi-mais-vendido" style="min-height: 2.4rem; display: flex; align-items: center; justify-content: center;">-</div>
-                <div class="kpi-label">Mais Vendido (30d)</div>
-            </div>
-        </div>
-    </div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(0,128,128,.1); color:var(--teal)"><i class="bi bi-box-seam"></i></div><div><div class="stat-value" id="kpi-total-produtos">-</div><div class="stat-label">Total de Produtos</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(26,54,93,.1); color:var(--navy)"><i class="bi bi-currency-dollar"></i></div><div><div class="stat-value" id="kpi-vendas-30d">-</div><div class="stat-label">Vendas 30 dias</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(0,128,128,.1); color:var(--teal)"><i class="bi bi-receipt"></i></div><div><div class="stat-value" id="kpi-ticket-30d">-</div><div class="stat-label">Ticket Médio/Dia</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:rgba(211,84,0,.1); color:var(--brick)"><i class="bi bi-trophy"></i></div><div><div class="stat-value fs-5" id="kpi-mais-vendido">-</div><div class="stat-label">Mais Vendido 30d</div></div></div></div></div>
 </div>
 
-<!-- Seção 3 — Gráfico de barras: Sazonalidade Mensal -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header card-header-custom py-3">
-        <h6 class="m-0 fw-bold"><i class="bi bi-calendar3 me-2"></i>Sazonalidade Mensal — Quantidade Vendida</h6>
-    </div>
-    <div class="card-body">
-        <div class="grafico-container">
-            <canvas id="grafico-sazonalidade" height="100"></canvas>
-        </div>
-    </div>
+<div class="row g-3 mb-4">
+  <div class="col-12"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-calendar3 me-2"></i>Sazonalidade Mensal · Quantidade Vendida</h6><div style="position:relative; height:300px;"><canvas id="grafico-sazonalidade"></canvas></div></div></div>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-lg-6"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-graph-up me-2"></i>Evolução Semanal · Últimas 12 Semanas</h6><div style="position:relative; height:300px;"><canvas id="grafico-semanal"></canvas></div></div></div>
+  <div class="col-lg-6"><div class="chart-container"><h6 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Top 8 Produtos · Volume Total</h6><div style="position:relative; height:300px;"><canvas id="grafico-top-produtos"></canvas></div></div></div>
 </div>
 
-<!-- Seção 4 — Dois gráficos lado a lado -->
-<div class="row g-4 mb-4">
-    <!-- Coluna esquerda — Gráfico de linha: Evolução Semanal -->
-    <div class="col-12 col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-header card-header-custom py-3">
-                <h6 class="m-0 fw-bold"><i class="bi bi-graph-up me-2"></i>Evolução Semanal — Últimas 12 Semanas</h6>
-            </div>
-            <div class="card-body">
-                <div class="grafico-container">
-                    <canvas id="grafico-semanal" height="160"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Coluna direita — Gráfico de rosca: Top 8 Produtos por Volume -->
-    <div class="col-12 col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-header card-header-custom py-3">
-                <h6 class="m-0 fw-bold"><i class="bi bi-pie-chart me-2"></i>Top 8 Produtos — Volume Total</h6>
-            </div>
-            <div class="card-body">
-                <div class="grafico-container">
-                    <canvas id="grafico-top-produtos" height="160"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Seção 5 — Tabela: Previsão de Demanda Mensal -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header card-header-custom py-3">
-        <h6 class="m-0 fw-bold"><i class="bi bi-table me-2"></i>Previsão de Demanda Mensal por Produto</h6>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-striped table-hover tabela-previsao align-middle m-0">
-                <thead class="thead-custom">
-                    <tr>
-                        <th>Produto</th>
-                        <th>Categoria</th>
-                        <th>Jan</th>
-                        <th>Fev</th>
-                        <th>Mar</th>
-                        <th>Abr</th>
-                        <th>Mai</th>
-                        <th>Jun</th>
-                        <th>Jul</th>
-                        <th>Ago</th>
-                        <th>Set</th>
-                        <th>Out</th>
-                        <th>Nov</th>
-                        <th>Dez</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-previsao">
-                    <!-- Preenchido via Javascript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="table-container">
+  <div class="d-flex align-items-center justify-content-between p-3 pb-0"><h6 class="fw-bold mb-0" style="color:var(--navy); font-size:.85rem"><i class="bi bi-table me-2"></i>Previsão de Demanda Mensal por Produto</h6><a href="{{ url_for('previsao_demanda') }}" class="btn btn-sm btn-outline-secondary">Ver previsão</a></div>
+  <div class="table-responsive"><table class="table table-striped table-hover tabela-previsao align-middle"><thead><tr><th>Produto</th><th>Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th></tr></thead><tbody id="tbody-previsao"></tbody></table></div>
 </div>
 {% endblock %}

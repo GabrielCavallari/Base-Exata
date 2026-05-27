@@ -19,6 +19,7 @@ Guia para executar cada projeto do portfólio Base Exata durante o desenvolvimen
 - O banco SQLite (`database.db`) é criado e populado com dados demo automaticamente na primeira execução
 - `database.db` não é versionado — é descartável
 - O sistema de estoque oficial fica fora da pasta `portifolio`, em `estoque-app/`
+- Os dados demonstrativos usam datas relativas e são atualizados automaticamente para manter dashboards recentes em ambientes de demo.
 
 ---
 

@@ -109,10 +109,10 @@ def seed_database(database_path):
     conn.commit()
 
     # 2. Inserir vendas diárias
-    # 730 dias abrangendo o período de 2023-04-08 até 2025-04-07
+    # 730 dias encerrando hoje para manter a demo sempre recente em bancos novos.
     print("Semeando vendas diárias (7.300 registros)...")
     vendas_data = []
-    data_inicio = date(2023, 4, 8)
+    data_inicio = date.today() - timedelta(days=729)
 
     for i in range(730):
         data_atual = data_inicio + timedelta(days=i)

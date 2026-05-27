@@ -40,6 +40,11 @@ def criar_tabelas():
             status TEXT DEFAULT 'Concluída',
             FOREIGN KEY (produto_id) REFERENCES produtos(id)
         );
+
+        CREATE TABLE IF NOT EXISTS demo_meta (
+            chave TEXT PRIMARY KEY,
+            valor TEXT NOT NULL
+        );
     ''')
     conn.commit()
     conn.close()
@@ -61,7 +66,52 @@ def inicializar_banco():
         popular_banco(DATABASE)
 
 
+def atualizar_datas_demo():
+    """Desloca datas de vendas demo para manter graficos recentes preenchidos."""
+    conn = sqlite3.connect(DATABASE)
+    try:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS demo_meta (
+                chave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+        ''')
+        row = conn.execute('SELECT MAX(data_venda) FROM vendas').fetchone()
+        max_data = row[0] if row else None
+        if not max_data:
+            conn.commit()
+            return
+
+        hoje = datetime.now().date()
+        maior_data = datetime.strptime(max_data[:10], '%Y-%m-%d').date()
+        dias = (hoje - maior_data).days
+
+        if dias > 0:
+            conn.execute("UPDATE vendas SET data_venda = date(data_venda, ?)", (f"+{dias} days",))
+
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_demo_refresh_date', hoje.isoformat())
+        )
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_max_data_detected', max_data)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 inicializar_banco()
+atualizar_datas_demo()
+
+
+@app.before_request
+def refresh_demo_dates_once_per_day():
+    hoje = datetime.now().strftime('%Y-%m-%d')
+    if app.config.get('_demo_dates_checked_on') != hoje:
+        atualizar_datas_demo()
+        app.config['_demo_dates_checked_on'] = hoje
 
 
 @app.context_processor

@@ -8,7 +8,7 @@ executem o seed simultaneamente (race condition).
 import sqlite3
 import os
 import fcntl
-from app import app, init_db, DATABASE
+from app import app, init_db, atualizar_datas_demo, DATABASE
 
 LOCK_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".seed.lock")
 
@@ -29,7 +29,8 @@ def safe_init():
         if count == 0:
             from seed import seed_demo_data
             seed_demo_data(DATABASE)
-            print("✅ Dados de demonstração inseridos!")
+            print("Dados de demonstracao inseridos.")
+        atualizar_datas_demo()
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         lock_fd.close()

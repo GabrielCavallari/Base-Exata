@@ -361,6 +361,8 @@ O arquivo `database.db` é gerado automaticamente em ambiente local/produção e
 
 Os dados das aplicações são **simulados** e servem apenas para demonstração técnica e comercial.
 
+Os dados demonstrativos usam datas relativas e são atualizados automaticamente para manter dashboards recentes em ambientes de demo.
+
 Este repositório não deve armazenar:
 
 - dados reais de clientes;

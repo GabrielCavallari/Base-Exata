@@ -104,8 +104,8 @@ def seed_demo_data(db_path):
     ]
 
     movimentacoes = []
-    # Data base fixa para que os dados sejam idênticos em cada restart
-    data_base = datetime(2026, 5, 20, 12, 0, 0)
+    # Datas relativas mantem a demo atual em bancos novos.
+    data_base = datetime.now().replace(hour=12, minute=0, second=0, microsecond=0)
     for _ in range(220):
         prod_id = random.choice(prod_ids)
         tipo = random.choices(["entrada", "saida"], weights=[40, 60])[0]
@@ -120,6 +120,15 @@ def seed_demo_data(db_path):
             observacoes_entrada if tipo == "entrada" else observacoes_saida
         )
         movimentacoes.append((prod_id, tipo, quantidade, data, obs))
+
+    # Garante movimento no dia atual para KPIs e grafico dos ultimos 7 dias.
+    for tipo in ("entrada", "saida"):
+        data = data_base.replace(
+            hour=random.randint(9, 17), minute=random.randint(0, 59)
+        ).strftime("%Y-%m-%d %H:%M:%S")
+        obs = random.choice(observacoes_entrada if tipo == "entrada" else observacoes_saida)
+        quantidade = random.randint(3, 12)
+        movimentacoes.append((random.choice(prod_ids), tipo, quantidade, data, obs))
 
     # Sort by date for consistency
     movimentacoes.sort(key=lambda x: x[3])
@@ -152,7 +161,7 @@ def seed_demo_data(db_path):
 
     db.commit()
     db.close()
-    print(f"✅ Seed: {len(produtos)} produtos + {len(movimentacoes)} movimentações")
+    print(f"Seed: {len(produtos)} produtos + {len(movimentacoes)} movimentacoes")
 
 
 if __name__ == "__main__":

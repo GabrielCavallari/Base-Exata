@@ -43,6 +43,11 @@ def criar_tabelas():
             producao_aprovada INTEGER NOT NULL,
             FOREIGN KEY (maquina_id) REFERENCES maquinas(id)
         );
+
+        CREATE TABLE IF NOT EXISTS demo_meta (
+            chave TEXT PRIMARY KEY,
+            valor TEXT NOT NULL
+        );
     ''')
     conn.commit()
     conn.close()
@@ -64,8 +69,53 @@ def inicializar_banco():
         seed_database(DATABASE)
 
 
+def atualizar_datas_demo():
+    """Desloca datas de OEE demo para manter historico recente preenchido."""
+    conn = sqlite3.connect(DATABASE)
+    try:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS demo_meta (
+                chave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+        ''')
+        row = conn.execute('SELECT MAX(data) FROM registros_turno').fetchone()
+        max_data = row[0] if row else None
+        if not max_data:
+            conn.commit()
+            return
+
+        hoje = datetime.now().date()
+        maior_data = datetime.strptime(max_data[:10], '%Y-%m-%d').date()
+        dias = (hoje - maior_data).days
+
+        if dias > 0:
+            conn.execute("UPDATE registros_turno SET data = date(data, ?)", (f"+{dias} days",))
+
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_demo_refresh_date', hoje.isoformat())
+        )
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_max_data_detected', max_data)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # Inicializa banco na importação do módulo
 inicializar_banco()
+atualizar_datas_demo()
+
+
+@app.before_request
+def refresh_demo_dates_once_per_day():
+    hoje = datetime.now().strftime('%Y-%m-%d')
+    if app.config.get('_demo_dates_checked_on') != hoje:
+        atualizar_datas_demo()
+        app.config['_demo_dates_checked_on'] = hoje
 
 
 @app.context_processor

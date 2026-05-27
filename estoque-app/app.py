@@ -75,9 +75,62 @@ def init_db():
     CREATE INDEX IF NOT EXISTS idx_mov_data ON movimentacoes(data);
     CREATE INDEX IF NOT EXISTS idx_mov_produto ON movimentacoes(produto_id);
     CREATE INDEX IF NOT EXISTS idx_prod_categoria ON produtos(categoria_id);
+
+    CREATE TABLE IF NOT EXISTS demo_meta (
+        chave TEXT PRIMARY KEY,
+        valor TEXT NOT NULL
+    );
     """)
     db.commit()
     db.close()
+
+
+def atualizar_datas_demo():
+    """Mantem as datas demonstrativas alinhadas ao dia atual."""
+    db = sqlite3.connect(DATABASE)
+    try:
+        cur = db.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS demo_meta (
+                chave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+        """)
+        row = cur.execute("SELECT MAX(date(data)) FROM movimentacoes").fetchone()
+        max_data = row[0] if row else None
+
+        if not max_data:
+            db.commit()
+            return
+
+        hoje = datetime.now().date()
+        maior_data = datetime.strptime(max_data, "%Y-%m-%d").date()
+        dias = (hoje - maior_data).days
+
+        if dias > 0:
+            modificador = f"+{dias} days"
+            cur.execute("UPDATE movimentacoes SET data = datetime(data, ?)", (modificador,))
+            cur.execute("UPDATE produtos SET criado_em = datetime(criado_em, ?)", (modificador,))
+
+        cur.execute(
+            "INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)",
+            ("last_demo_refresh_date", hoje.isoformat()),
+        )
+        cur.execute(
+            "INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)",
+            ("last_max_data_detected", max_data),
+        )
+        db.commit()
+    finally:
+        db.close()
+
+
+@app.before_request
+def refresh_demo_dates_once_per_day():
+    hoje = datetime.now().strftime("%Y-%m-%d")
+    if app.config.get("_demo_dates_checked_on") != hoje:
+        atualizar_datas_demo()
+        app.config["_demo_dates_checked_on"] = hoje
 
 
 # ──────────────────────────────────────────────
@@ -559,7 +612,8 @@ if __name__ == "__main__":
     if count == 0:
         from seed import seed_demo_data
         seed_demo_data(DATABASE)
-        print("✅ Dados de demonstração inseridos com sucesso!")
+        print("Dados de demonstracao inseridos com sucesso.")
+    atualizar_datas_demo()
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG", "0") == "1")

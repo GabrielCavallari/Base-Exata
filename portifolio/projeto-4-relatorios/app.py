@@ -56,6 +56,11 @@ def criar_tabelas():
             num_transacoes INTEGER NOT NULL,
             ticket_medio REAL NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS demo_meta (
+            chave TEXT PRIMARY KEY,
+            valor TEXT NOT NULL
+        );
     ''')
     conn.commit()
     conn.close()
@@ -77,8 +82,61 @@ def inicializar_banco():
         seed_database(DATABASE)
 
 
+def atualizar_datas_demo():
+    """Desloca datas de relatorios demo para manter meses recentes preenchidos."""
+    conn = sqlite3.connect(DATABASE)
+    try:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS demo_meta (
+                chave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+        ''')
+        row = conn.execute('''
+            SELECT MAX(max_data) FROM (
+                SELECT MAX(data) AS max_data FROM vendas
+                UNION ALL
+                SELECT MAX(data) AS max_data FROM ticket_diario
+            )
+        ''').fetchone()
+        max_data = row[0] if row else None
+        if not max_data:
+            conn.commit()
+            return
+
+        hoje = datetime.now().date()
+        maior_data = datetime.strptime(max_data[:10], '%Y-%m-%d').date()
+        dias = (hoje - maior_data).days
+
+        if dias > 0:
+            modificador = f"+{dias} days"
+            conn.execute("UPDATE vendas SET data = date(data, ?)", (modificador,))
+            conn.execute("UPDATE ticket_diario SET data = date(data, ?)", (modificador,))
+
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_demo_refresh_date', hoje.isoformat())
+        )
+        conn.execute(
+            'INSERT OR REPLACE INTO demo_meta (chave, valor) VALUES (?, ?)',
+            ('last_max_data_detected', max_data)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # Inicializa banco na importação do módulo
 inicializar_banco()
+atualizar_datas_demo()
+
+
+@app.before_request
+def refresh_demo_dates_once_per_day():
+    hoje = datetime.now().strftime('%Y-%m-%d')
+    if app.config.get('_demo_dates_checked_on') != hoje:
+        atualizar_datas_demo()
+        app.config['_demo_dates_checked_on'] = hoje
 
 
 @app.context_processor

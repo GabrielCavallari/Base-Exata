@@ -68,6 +68,8 @@ O sistema vem pré-carregado com:
 - **30 produtos** reais de comércio varejista
 - **220 movimentações** simuladas nos últimos 45 dias
 
+Os dados demonstrativos usam datas relativas e são atualizados automaticamente para manter dashboards recentes em ambientes de demo.
+
 ---
 
 **Base Exata Consultoria** — Dados e Automação para empresas de Capivari, SP.

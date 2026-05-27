@@ -58,6 +58,7 @@ Base-Exata/
 │   ├── templates/
 │   └── static/
 ├── docs/
+│   ├── apresentacao/
 │   ├── comercial/
 │   └── design-system/
 └── portifolio/
@@ -425,8 +426,8 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 - [x] Páginas secundárias dos menus laterais evoluídas com KPIs, gráficos, tabelas e leituras comerciais
 - [x] Kit de apresentação comercial criado
 - [x] Demos estabilizadas como vitrine comercial
-- [x] Screenshots das aplicações no README
-- [x] Dashboard interno de prospecção
+- [ ] Adicionar screenshots das aplicações no README
+- [ ] Criar dashboard interno de prospecção
 - [ ] Evoluir processo de captação com Apify + Google Sheets
 - [ ] Documentar estudos de caso reais de forma anonimizada
 

@@ -52,11 +52,14 @@ Base-Exata/
 │   └── sucesso.html
 ├── estoque-app/
 │   ├── app.py
-│   ├── seed_data.py
+│   ├── seed.py
 │   ├── requirements.txt
 │   ├── Procfile
 │   ├── templates/
 │   └── static/
+├── docs/
+│   ├── comercial/
+│   └── design-system/
 └── portifolio/
     ├── COMO_RODAR.md
     ├── CLAUDE.md
@@ -70,6 +73,16 @@ Base-Exata/
 ```
 
 > Observação: a pasta está nomeada como `portifolio/` no repositório. Mantive esse nome aqui para refletir a estrutura real do projeto.
+
+---
+
+## Documentação comercial e design system
+
+A pasta `docs/comercial/` reúne materiais de apoio para reuniões, propostas comerciais e apresentação das demos com dados simulados.
+
+A pasta `docs/design-system/` define o padrão visual dos apps Flask da Base Exata, tomando o `estoque-app` como referência para paleta, tipografia, sidebar, topbar, KPIs, gráficos, tabelas e componentes.
+
+A pasta `.codex/`, quando presente, contém anotações operacionais usadas pelo Codex no fluxo de trabalho do repositório e não deve armazenar dados sensíveis.
 
 ---
 
@@ -389,9 +402,10 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 - [x] Portfólio com 6 micro-aplicações definido
 - [x] Apps Flask com SQLite e dados simulados
 - [x] Demos referenciadas na landing page
+- [x] Documentação comercial dos serviços
+- [x] Modelo de proposta comercial
+- [x] Design system dos apps Flask
 - [ ] Adicionar screenshots das aplicações no README
-- [ ] Criar documentação comercial dos serviços
-- [ ] Criar modelo de proposta comercial
 - [ ] Criar dashboard interno de prospecção
 - [ ] Evoluir processo de captação com Apify + Google Sheets
 - [ ] Documentar estudos de caso reais de forma anonimizada
@@ -401,7 +415,7 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 ## Próximos passos sugeridos
 
 1. Adicionar imagens ou GIFs das demos no README.
-2. Criar uma pasta `docs/` com materiais comerciais, proposta, diagnóstico e roteiro de atendimento.
+2. Aplicar o design system nos projetos do portfólio.
 3. Separar dados reais de prospecção em ambiente privado.
 4. Criar um painel interno para acompanhar leads, status de contato e conversão.
 5. Padronizar nomes de pastas e deploys conforme o projeto crescer.

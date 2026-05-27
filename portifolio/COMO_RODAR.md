@@ -71,25 +71,97 @@ python app.py
 
 ## Projeto 3 — Monitor de Eficiência Industrial OEE
 
-Em desenvolvimento.
+```bash
+cd projeto-3-oee
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse: http://localhost:5000
+
+**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
+
+**Resetar dados demo:**
+```bash
+del database.db
+python app.py
+```
 
 ---
 
 ## Projeto 4 — Automação de Relatórios
 
-Em desenvolvimento.
+```bash
+cd projeto-4-relatorios
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse: http://localhost:5000
+
+**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
+
+**Resetar dados demo:**
+```bash
+del database.db
+python app.py
+```
 
 ---
 
 ## Projeto 5 — Análise de Sazonalidade e Demanda
 
-Em desenvolvimento.
+```bash
+cd projeto-5-sazonalidade
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse: http://localhost:5000
+
+**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
+
+**Resetar dados demo:**
+```bash
+del database.db
+python app.py
+```
 
 ---
 
 ## Projeto 6 — Painel de Performance Comercial
 
-Em desenvolvimento.
+```bash
+cd projeto-6-performance
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse: http://localhost:5000
+
+**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
+
+**Resetar dados demo:**
+```bash
+del database.db
+python app.py
+```
 
 ---
 

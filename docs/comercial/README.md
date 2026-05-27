@@ -10,7 +10,7 @@ Esta pasta reúne materiais práticos para usar em reuniões, diagnósticos, pro
 4. Use `04-modelo-proposta-comercial.md` como base editável para enviar propostas.
 5. Use `05-pacotes-de-servico.md` para apresentar formatos de entrega mais comuns.
 6. Use `06-perguntas-frequentes.md` para responder dúvidas recorrentes de forma simples.
-7. Use `07-objeções-e-respostas.md` para tratar resistências sem pressionar o cliente.
+7. Use `07-objecoes-e-respostas.md` para tratar resistências sem pressionar o cliente.
 8. Use `08-roteiro-apresentacao-demos.md` para conduzir demos do portfólio conforme a dor do cliente.
 
 ## Observações importantes

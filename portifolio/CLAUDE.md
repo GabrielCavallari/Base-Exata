@@ -23,7 +23,7 @@ Portfólio de 6 micro-aplicações web standalone representando os serviços rea
 | Pasta | Nome | Observação |
 |---|---|---|
 | `projeto-1-vendas/` | Dashboard de Inteligência de Vendas | Flask + Chart.js + SQLite |
-| `projeto-2-estoque/` | Sistema de Gestão de Estoque | **Referência — implementar primeiro** |
+| `estoque-app/` | Sistema de Gestão de Estoque | **Referência oficial de estoque** |
 | `projeto-3-oee/` | Monitor de Eficiência Industrial OEE | Dark theme |
 | `projeto-4-relatorios/` | Automação de Relatórios | Flask + Bootstrap 5 + Chart.js |
 | `projeto-5-sazonalidade/` | Análise de Sazonalidade e Demanda | Flask + Chart.js + SQLite |
@@ -31,7 +31,7 @@ Portfólio de 6 micro-aplicações web standalone representando os serviços rea
 
 ### Ordem de implementação obrigatória
 
-1. `projeto-2-estoque` — serve como referência estrutural para os demais
+1. `estoque-app` — serve como referência estrutural oficial do sistema de estoque
 2. `projeto-1-vendas`
 3. `projeto-3-oee`
 4. `projeto-4-relatorios`
@@ -117,7 +117,7 @@ CDNs usadas (apenas leitura, sem chave):
 
 ```bash
 # Dentro da pasta de um projeto específico
-cd projeto-2-estoque
+cd ..\estoque-app
 
 pip install -r requirements.txt
 python app.py

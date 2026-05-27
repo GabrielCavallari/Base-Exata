@@ -18,6 +18,7 @@ Guia para executar cada projeto do portfólio Base Exata durante o desenvolvimen
 - Todos rodam em `http://localhost:5000` — execute **um projeto por vez** localmente
 - O banco SQLite (`database.db`) é criado e populado com dados demo automaticamente na primeira execução
 - `database.db` não é versionado — é descartável
+- O sistema de estoque oficial fica fora da pasta `portifolio`, em `estoque-app/`
 
 ---
 
@@ -25,30 +26,6 @@ Guia para executar cada projeto do portfólio Base Exata durante o desenvolvimen
 
 ```bash
 cd projeto-1-vendas
-
-python -m venv venv
-venv\Scripts\activate
-
-pip install -r requirements.txt
-python app.py
-```
-
-Acesse: http://localhost:5000
-
-**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
-
-**Resetar dados demo:**
-```bash
-del database.db
-python app.py
-```
-
----
-
-## Projeto 2 — Sistema de Gestão de Estoque
-
-```bash
-cd projeto-2-estoque
 
 python -m venv venv
 venv\Scripts\activate
@@ -145,6 +122,32 @@ python app.py
 
 ```bash
 cd projeto-6-performance
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+python app.py
+```
+
+Acesse: http://localhost:5000
+
+**Seed automático:** na primeira execução, o banco é criado e os dados demo são populados automaticamente. Nenhuma ação manual necessária.
+
+**Resetar dados demo:**
+```bash
+del database.db
+python app.py
+```
+
+---
+
+## Sistema de Gestão de Estoque Oficial
+
+O sistema de estoque oficial da Base Exata não fica em `portifolio/`. Use a pasta `estoque-app/`.
+
+```bash
+cd ../estoque-app
 
 python -m venv venv
 venv\Scripts\activate

@@ -72,7 +72,7 @@ Padrao:
     <h6 class="mb-0 fw-bold" style="color:var(--navy)">Dashboard</h6>
   </div>
   <div class="d-flex align-items-center gap-2">
-    <span class="badge bg-light text-dark">27/05/2026</span>
+    <span class="badge bg-light text-dark">{{ data_atual }}</span>
   </div>
 </div>
 ```

@@ -8,7 +8,7 @@
 
 | Módulo | Status | O que falta |
 |--------|--------|-------------|
-| `projeto-2-estoque` | Completo (referência) | — |
+| `estoque-app` | Completo (referência oficial) | — |
 | `projeto-3-oee` | Completo | — |
 | `projeto-4-relatorios` | Pendente | Pasta não existe, todos os arquivos faltam |
 
@@ -33,8 +33,8 @@ Você é o backend-architect. Crie todos os arquivos do backend do projeto-4-rel
 dentro de C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-4-relatorios/
 
 Antes de começar, leia os dois arquivos abaixo para entender o padrão do portfólio:
-- C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/app.py
-- C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/seed_data.py
+- C:/Users/Gabriel/Documents/Base Exata/estoque-app/app.py
+- C:/Users/Gabriel/Documents/Base Exata/estoque-app/seed.py
 
 Replique exatamente o mesmo padrão estrutural desses arquivos. Não invente variações.
 
@@ -56,7 +56,7 @@ Os dados são demo — gerados pelo seed, sem input do usuário.
 
 ARQUIVO: app.py
 
-Siga exatamente o padrão do projeto-2-estoque/app.py:
+Siga exatamente o padrão do estoque-app/app.py:
 - Cabeçalho: "# Projeto 4 — Automação de Relatórios\n# Base Exata | Flask + SQLite"
 - Importações: sqlite3, os, datetime/timedelta, Flask/render_template/jsonify
 - BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -238,7 +238,7 @@ CONVENÇÕES OBRIGATÓRIAS
 - Sem autenticação, sem login
 - Não criar templates HTML — isso é escopo da Sessão B
 - Não instalar nenhuma dependência além de Flask e gunicorn
-- Este projeto usa fundo claro (mesmo padrão do projeto-2-estoque) — não usar dark theme
+- Este projeto usa fundo claro (mesmo padrão do estoque-app) — não usar dark theme
 
 ---
 
@@ -250,10 +250,10 @@ dentro de C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-4-relatorios
 OBRIGATÓRIO: leia os seguintes arquivos antes de criar qualquer arquivo:
 1. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-4-relatorios/app.py
    -- para conhecer as rotas /api/* exatas que o backend expõe
-2. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/templates/base.html
-   -- para entender o padrão de estrutura HTML do portfólio
-3. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/static/css/style.css
-   -- para entender o padrão de CSS e nomes de classes do portfólio
+2. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   -- para entender o padrão de estrutura HTML e estilos inline do portfólio
+3. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   -- para entender o padrão visual consolidado do sistema oficial de estoque
 
 ---
 
@@ -264,14 +264,14 @@ Base Exata (Capivari, SP). O projeto-4-relatorios é um painel de "Automação d
 Relatórios Gerenciais" para varejo — exibe dados que antes eram gerados manualmente
 no Excel: fechamento mensal, ranking de fornecedores, ticket médio e vendas por categoria.
 
-IMPORTANTE: este projeto usa fundo CLARO, igual ao projeto-2-estoque. Não usar dark theme.
+IMPORTANTE: este projeto usa fundo CLARO, igual ao estoque-app. Não usar dark theme.
 Paleta: fundo #f4f6f9, navbar e elementos de destaque em #1a1a2e, acento em #e94560.
 
 ---
 
 ARQUIVO: templates/base.html
 
-Estrutura idêntica ao projeto-2-estoque/templates/base.html, com estas diferenças:
+Estrutura idêntica ao estoque-app/templates/base.html, com estas diferenças:
 
 - Title block padrão: "Automação de Relatórios | Base Exata"
 - CDNs (mesmas versões do projeto-2):
@@ -342,7 +342,7 @@ Seção 5 — Tabela de ranking de fornecedores (row g-3):
 
 ARQUIVO: static/css/style.css
 
-Fundo claro — mesmo padrão visual do projeto-2-estoque. Copiar e adaptar as mesmas
+Fundo claro — mesmo padrão visual do estoque-app. Copiar e adaptar as mesmas
 classes, apenas ajustando nomes de projeto e mantendo a paleta abaixo:
 
 Paleta de variáveis CSS:

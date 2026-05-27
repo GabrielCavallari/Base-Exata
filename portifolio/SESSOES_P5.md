@@ -212,10 +212,10 @@ C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-5-sazonalidade/
 IMPORTANTE: Leia os arquivos abaixo antes de criar qualquer arquivo:
 1. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-5-sazonalidade/app.py
    — as rotas de API estão definidas lá; não invente endpoints
-2. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/templates/base.html
-   — padrão de layout do portfólio (banner-demo, navbar, footer, CDN links)
-3. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/static/css/style.css
-   — variáveis CSS e classes reutilizáveis (kpi-card, kpi-valor, card-header-custom, etc.)
+2. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   — padrão de layout do portfólio (banner demo, sidebar, topbar, footer e estilos inline)
+3. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   — variáveis visuais e classes consolidadas no sistema oficial de estoque
 4. C:/Users/Gabriel/Documents/Base Exata/portifólio/CLAUDE.md
    — regras do portfólio (sem npm/node, dark theme não se aplica aqui, CDN obrigatório)
 
@@ -223,11 +223,11 @@ IMPORTANTE: Leia os arquivos abaixo antes de criar qualquer arquivo:
 
 ### templates/base.html
 
-Siga o mesmo padrão do projeto-2-estoque/templates/base.html com as seguintes adaptações:
+Siga o mesmo padrão do estoque-app/templates/base.html com as seguintes adaptações:
 
-- <html lang="pt-BR"> — sem data-bs-theme (este projeto usa tema claro como projeto-2 e projeto-4)
+- <html lang="pt-BR"> — sem data-bs-theme (este projeto usa tema claro como estoque-app e projeto-4)
 - <title>{% block title %}Sazonalidade e Demanda{% endblock %} | Base Exata</title>
-- CDNs obrigatórias (mesmas versões do projeto-2):
+- CDNs obrigatórias (mesmas versões do estoque-app):
     Bootstrap 5.3.3 CSS: https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
     Bootstrap Icons 1.11.3: https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css
     Bootstrap 5.3.3 JS: https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js
@@ -298,7 +298,7 @@ Seção 5 — Tabela: Previsão de Demanda Mensal
 
 ### static/css/style.css
 
-Copie integralmente as variáveis e classes do projeto-2-estoque/static/css/style.css
+Use como referência as variáveis e classes consolidadas em estoque-app/templates/base.html
 (todas as classes: .banner-demo, .navbar-custom, .kpi-card, .kpi-icon, .kpi-valor, .kpi-label,
 .card-header-custom, .thead-custom, .footer-custom e o bloco @media (max-width: 576px)).
 

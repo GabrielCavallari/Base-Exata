@@ -11,7 +11,14 @@ __pycache__/
 
 # Bancos de dados SQLite locais (gerados automaticamente via seed)
 *.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
 database.db
+
+# Logs do Codex
+.codex/server-logs/
 
 # Arquivos de IDEs e do Sistema Operacional
 .vscode/

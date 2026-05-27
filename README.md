@@ -65,7 +65,6 @@ Base-Exata/
     ├── CLAUDE.md
     ├── SESSOES.md
     ├── projeto-1-vendas/
-    ├── projeto-2-estoque/
     ├── projeto-3-oee/
     ├── projeto-4-relatorios/
     ├── projeto-5-sazonalidade/
@@ -135,12 +134,11 @@ Principais recursos:
 
 ### 2. Sistema de Gestão de Estoque
 
-**Pastas:**
-
-- `estoque-app/`
-- `portifolio/projeto-2-estoque/`
+**Pasta:** `estoque-app/`
 
 **Objetivo:** simular um sistema simples para controle de produtos, movimentações, entradas, saídas e alertas de estoque mínimo.
+
+O `estoque-app/` é a versão oficial, mais completa e mais apresentável do sistema de estoque da Base Exata. Ele substitui o antigo projeto duplicado que existia dentro de `portifolio/`.
 
 **Principais pontos técnicos:**
 
@@ -287,7 +285,6 @@ http://localhost:5000
 Para rodar outro projeto, entre na pasta correspondente:
 
 ```bash
-cd portifolio/projeto-2-estoque
 cd portifolio/projeto-3-oee
 cd portifolio/projeto-4-relatorios
 cd portifolio/projeto-5-sazonalidade
@@ -405,6 +402,7 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 - [x] Documentação comercial dos serviços
 - [x] Modelo de proposta comercial
 - [x] Design system dos apps Flask
+- [x] Layout dos projetos do portfólio padronizado com sidebar, topbar e identidade Base Exata
 - [ ] Adicionar screenshots das aplicações no README
 - [ ] Criar dashboard interno de prospecção
 - [ ] Evoluir processo de captação com Apify + Google Sheets
@@ -415,7 +413,7 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 ## Próximos passos sugeridos
 
 1. Adicionar imagens ou GIFs das demos no README.
-2. Aplicar o design system nos projetos do portfólio.
+2. Evoluir as páginas simples dos menus laterais para telas funcionais com dados, filtros e tabelas específicas.
 3. Separar dados reais de prospecção em ambiente privado.
 4. Criar um painel interno para acompanhar leads, status de contato e conversão.
 5. Padronizar nomes de pastas e deploys conforme o projeto crescer.

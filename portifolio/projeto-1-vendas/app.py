@@ -64,6 +64,11 @@ def inicializar_banco():
 inicializar_banco()
 
 
+@app.context_processor
+def inject_now():
+    return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
+
+
 @app.route('/')
 def dashboard():
     """Página principal com KPIs e narrativa do case."""

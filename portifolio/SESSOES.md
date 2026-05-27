@@ -9,7 +9,7 @@
 | Módulo | Status | O que falta |
 |--------|--------|-------------|
 | `projeto-1-vendas` | Completo | — |
-| `projeto-2-estoque` | Completo (referência) | — |
+| `estoque-app` | Completo (referência oficial) | — |
 | `projeto-3-oee` | Pendente | Pasta não existe, todos os arquivos faltam |
 | `projeto-4-relatorios` | Pendente | — |
 | `projeto-5-sazonalidade` | Pendente | — |
@@ -36,8 +36,8 @@ Você é o backend-architect. Crie todos os arquivos do backend do projeto-3-oee
 dentro de C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-3-oee/
 
 Antes de começar, leia os dois arquivos abaixo para entender o padrão do portfólio:
-- C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/app.py
-- C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/seed_data.py
+- C:/Users/Gabriel/Documents/Base Exata/estoque-app/app.py
+- C:/Users/Gabriel/Documents/Base Exata/estoque-app/seed.py
 
 Replique exatamente o mesmo padrão estrutural desses arquivos. Não invente variações.
 
@@ -56,7 +56,7 @@ com dados simulados de uma pequena indústria do interior de SP.
 
 ARQUIVO: app.py
 
-Siga exatamente o padrão do projeto-2-estoque/app.py:
+Siga exatamente o padrão do estoque-app/app.py:
 - Cabeçalho de comentário: "# Projeto 3 — Monitor de Eficiência Industrial OEE\n# Base Exata | Flask + SQLite"
 - Importações: sqlite3, os, datetime/timedelta, Flask/render_template/jsonify
 - BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -211,10 +211,10 @@ dentro de C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-3-oee/
 OBRIGATÓRIO: leia os seguintes arquivos antes de criar qualquer arquivo:
 1. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-3-oee/app.py
    -- para conhecer as rotas /api/* exatas que o backend expõe
-2. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/templates/base.html
-   -- para entender o padrão de estrutura HTML do portfólio
-3. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-2-estoque/static/css/style.css
-   -- para entender o padrão de CSS e nomes de classes do portfólio
+2. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   -- para entender o padrão de estrutura HTML e estilos inline do portfólio
+3. C:/Users/Gabriel/Documents/Base Exata/estoque-app/templates/base.html
+   -- para entender o padrão visual consolidado do sistema oficial de estoque
 4. C:/Users/Gabriel/Documents/Base Exata/portifólio/projeto-1-vendas/static/js/main.js
    -- para entender o padrão de organização do JavaScript
 
@@ -233,7 +233,7 @@ todo o body, cards, tabelas e gráficos.
 
 ARQUIVO: templates/base.html
 
-Estrutura idêntica ao projeto-2-estoque/templates/base.html, com estas diferenças:
+Estrutura idêntica ao estoque-app/templates/base.html, com estas diferenças:
 
 - <html lang="pt-BR"> — sem data-bs-theme (o dark theme é feito via CSS próprio, não Bootstrap)
 - Title block padrão: "Monitor OEE | Base Exata"

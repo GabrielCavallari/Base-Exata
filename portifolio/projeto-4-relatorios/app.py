@@ -144,6 +144,14 @@ def inject_now():
     return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
 
 
+def format_brl(valor):
+    return f"R$ {float(valor or 0):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def format_pct(valor):
+    return f"{float(valor or 0):.1f}%".replace(".", ",")
+
+
 @app.route('/')
 def dashboard():
     """Página principal do painel de relatórios gerenciais."""
@@ -152,41 +160,213 @@ def dashboard():
 
 @app.route('/categorias')
 def categorias():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT c.nome,
+               c.margem_media,
+               COUNT(v.id) AS registros,
+               SUM(v.quantidade_itens) AS itens,
+               SUM(v.valor_total) AS faturamento,
+               SUM(v.valor_total * c.margem_media) AS margem_estimada
+        FROM categorias c
+        LEFT JOIN vendas v ON v.categoria_id = c.id
+        GROUP BY c.id, c.nome, c.margem_media
+        ORDER BY faturamento DESC
+    ''').fetchall()
+    total = sum(row['faturamento'] or 0 for row in rows)
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Categorias',
         icon='bi-tags-fill',
-        description='Visão preparada para detalhar participação por categoria, margem estimada e variações de compra e venda.'
+        subtitle='Faturamento por categoria',
+        description='Visão para detalhar participação por categoria, margem estimada e variações de compra e venda.',
+        kpis=[
+            {'label': 'Faturamento total', 'value': format_brl(total), 'hint': 'Soma dos registros de venda cadastrados.', 'icon': 'bi-cash-stack'},
+            {'label': 'Categoria líder', 'value': rows[0]['nome'] if rows else '-', 'hint': format_brl(rows[0]['faturamento']) if rows else 'Sem dados.', 'icon': 'bi-trophy'},
+            {'label': 'Categorias', 'value': len(rows), 'hint': 'Grupos ativos no relatório.', 'icon': 'bi-tags'},
+            {'label': 'Margem estimada', 'value': format_brl(sum(row['margem_estimada'] or 0 for row in rows)), 'hint': 'Cálculo simulado por margem média.', 'icon': 'bi-percent'},
+        ],
+        chart={
+            'title': 'Participação por categoria',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in rows],
+            'datasets': [{'label': 'Faturamento', 'data': [round(row['faturamento'] or 0, 2) for row in rows], 'backgroundColor': '#008080'}]
+        },
+        insights=[
+            {'title': 'Leitura gerencial', 'text': 'A tela transforma vendas dispersas em categorias claras para reunião de fechamento.'},
+            {'title': 'Ação sugerida', 'text': 'Comparar categoria líder com margem estimada para priorizar compra e negociação.'},
+        ],
+        table={
+            'title': 'Categorias consolidadas',
+            'headers': ['Categoria', 'Registros', 'Itens', 'Faturamento', 'Margem média', 'Margem estimada'],
+            'rows': [[row['nome'], row['registros'], row['itens'], format_brl(row['faturamento']), format_pct((row['margem_media'] or 0) * 100), format_brl(row['margem_estimada'])] for row in rows]
+        }
     )
 
 
 @app.route('/fornecedores')
 def fornecedores():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT f.nome, f.cidade, c.nome AS categoria,
+               COUNT(v.id) AS pedidos,
+               SUM(v.quantidade_itens) AS itens,
+               SUM(v.valor_total) AS total
+        FROM fornecedores f
+        JOIN categorias c ON c.id = f.categoria_id
+        LEFT JOIN vendas v ON v.fornecedor_id = f.id
+        GROUP BY f.id, f.nome, f.cidade, c.nome
+        ORDER BY total DESC
+        LIMIT 12
+    ''').fetchall()
+    cidades = conn.execute('SELECT COUNT(DISTINCT cidade) FROM fornecedores').fetchone()[0]
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Fornecedores',
         icon='bi-truck',
-        description='Área para acompanhar fornecedores com maior volume, recorrência de pedidos e concentração de compras.'
+        subtitle='Ranking de fornecedores por volume',
+        description='Área para acompanhar fornecedores com maior volume, recorrência de pedidos e concentração de compras.',
+        kpis=[
+            {'label': 'Fornecedor líder', 'value': rows[0]['nome'] if rows else '-', 'hint': format_brl(rows[0]['total']) if rows else 'Sem dados.', 'icon': 'bi-truck-front'},
+            {'label': 'Pedidos analisados', 'value': sum(row['pedidos'] or 0 for row in rows), 'hint': 'Pedidos dos fornecedores listados.', 'icon': 'bi-receipt'},
+            {'label': 'Cidades', 'value': cidades, 'hint': 'Origem dos fornecedores cadastrados.', 'icon': 'bi-geo-alt'},
+            {'label': 'Concentração top 3', 'value': format_brl(sum(row['total'] or 0 for row in rows[:3])), 'hint': 'Volume concentrado nos maiores fornecedores.', 'icon': 'bi-diagram-3'},
+        ],
+        chart={
+            'title': 'Top fornecedores',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in rows[:8]],
+            'datasets': [{'label': 'Compras', 'data': [round(row['total'] or 0, 2) for row in rows[:8]], 'backgroundColor': '#1A365D'}]
+        },
+        insights=[
+            {'title': 'Negociação', 'text': 'O ranking ajuda a identificar fornecedores com peso real na operação.'},
+            {'title': 'Risco de dependência', 'text': 'Alta concentração nos três primeiros pode orientar plano de cotação alternativa.'},
+        ],
+        table={
+            'title': 'Fornecedores priorizados',
+            'headers': ['Fornecedor', 'Cidade', 'Categoria', 'Pedidos', 'Itens', 'Total'],
+            'rows': [[row['nome'], row['cidade'], row['categoria'], row['pedidos'], row['itens'], format_brl(row['total'])] for row in rows]
+        }
     )
 
 
 @app.route('/fechamento-mensal')
 def fechamento_mensal():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT strftime('%Y-%m', v.data) AS mes,
+               COUNT(v.id) AS registros,
+               SUM(v.quantidade_itens) AS itens,
+               SUM(v.valor_total) AS vendas,
+               SUM(v.valor_total * c.margem_media) AS margem
+        FROM vendas v
+        JOIN categorias c ON c.id = v.categoria_id
+        GROUP BY mes
+        ORDER BY mes DESC
+        LIMIT 12
+    ''').fetchall()
+    rows = list(reversed(rows))
+    ticket = conn.execute('SELECT AVG(ticket_medio) FROM ticket_diario WHERE data >= date("now", "-29 days")').fetchone()[0]
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Fechamento Mensal',
         icon='bi-calendar-month-fill',
-        description='Resumo mensal para validar evolução de vendas, margem estimada e indicadores usados em reuniões gerenciais.'
+        subtitle='Fechamento dos últimos 12 meses',
+        description='Resumo mensal para validar evolução de vendas, margem estimada e indicadores usados em reuniões gerenciais.',
+        kpis=[
+            {'label': 'Mês atual', 'value': format_brl(rows[-1]['vendas'] if rows else 0), 'hint': rows[-1]['mes'] if rows else 'Sem dados.', 'icon': 'bi-calendar-check'},
+            {'label': 'Margem atual', 'value': format_brl(rows[-1]['margem'] if rows else 0), 'hint': 'Estimativa pelo mix vendido.', 'icon': 'bi-piggy-bank'},
+            {'label': 'Ticket 30 dias', 'value': format_brl(ticket), 'hint': 'Média recente do ticket diário.', 'icon': 'bi-receipt'},
+            {'label': 'Meses fechados', 'value': len(rows), 'hint': 'Histórico disponível na demo.', 'icon': 'bi-calendar3'},
+        ],
+        chart={
+            'title': 'Vendas e margem mensal',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [datetime.strptime(row['mes'], '%Y-%m').strftime('%m/%y') for row in rows],
+            'datasets': [
+                {'label': 'Vendas', 'data': [round(row['vendas'] or 0, 2) for row in rows], 'backgroundColor': '#1A365D'},
+                {'label': 'Margem estimada', 'data': [round(row['margem'] or 0, 2) for row in rows], 'backgroundColor': '#D35400'},
+            ]
+        },
+        insights=[
+            {'title': 'Fechamento mais rápido', 'text': 'A visão mensal reduz consolidação manual e acelera a reunião gerencial.'},
+            {'title': 'Comparação simples', 'text': 'Vendas e margem lado a lado deixam claro se crescimento está vindo com rentabilidade.'},
+        ],
+        table={
+            'title': 'Histórico mensal',
+            'headers': ['Mês', 'Registros', 'Itens', 'Vendas', 'Margem estimada'],
+            'rows': [[datetime.strptime(row['mes'], '%Y-%m').strftime('%m/%Y'), row['registros'], row['itens'], format_brl(row['vendas']), format_brl(row['margem'])] for row in reversed(rows)]
+        }
     )
 
 
 @app.route('/relatorio-executivo')
 def relatorio_executivo():
+    conn = get_db()
+    resumo = conn.execute('''
+        SELECT SUM(valor_total) AS vendas,
+               COUNT(*) AS registros,
+               SUM(quantidade_itens) AS itens
+        FROM vendas
+    ''').fetchone()
+    categorias_top = conn.execute('''
+        SELECT c.nome, SUM(v.valor_total) AS total
+        FROM vendas v
+        JOIN categorias c ON c.id = v.categoria_id
+        GROUP BY c.id, c.nome
+        ORDER BY total DESC
+        LIMIT 6
+    ''').fetchall()
+    fornecedores_top = conn.execute('''
+        SELECT f.nome, SUM(v.valor_total) AS total
+        FROM vendas v
+        JOIN fornecedores f ON f.id = v.fornecedor_id
+        GROUP BY f.id, f.nome
+        ORDER BY total DESC
+        LIMIT 5
+    ''').fetchall()
+    conn.close()
+    horas_manual = 12
+    horas_automatizado = 1.5
+    economia = (1 - horas_automatizado / horas_manual) * 100
+
     return render_template(
         'simple_page.html',
         title='Relatório Executivo',
         icon='bi-file-earmark-bar-graph-fill',
-        description='Página de síntese para consolidar categorias, fornecedores, ticket e fechamento em uma leitura executiva.'
+        subtitle='Resumo gerencial pronto para apresentação',
+        description='Página de síntese para consolidar categorias, fornecedores, ticket e fechamento em uma leitura executiva.',
+        kpis=[
+            {'label': 'Vendas consolidadas', 'value': format_brl(resumo['vendas']), 'hint': f"{resumo['registros']} registros processados.", 'icon': 'bi-bar-chart'},
+            {'label': 'Itens analisados', 'value': f"{resumo['itens']:,.0f}".replace(",", "."), 'hint': 'Volume operacional consolidado.', 'icon': 'bi-box-seam'},
+            {'label': 'Economia simulada', 'value': format_pct(economia), 'hint': 'Comparação 12h manual vs. 1,5h automatizada.', 'icon': 'bi-lightning-charge'},
+            {'label': 'Top fornecedor', 'value': fornecedores_top[0]['nome'] if fornecedores_top else '-', 'hint': format_brl(fornecedores_top[0]['total']) if fornecedores_top else 'Sem dados.', 'icon': 'bi-truck'},
+        ],
+        chart={
+            'title': 'Categorias prioritárias',
+            'type': 'doughnut',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in categorias_top],
+            'datasets': [{'label': 'Vendas', 'data': [round(row['total'] or 0, 2) for row in categorias_top], 'backgroundColor': ['#1A365D', '#008080', '#D35400', '#234782', '#E8731A', '#6c757d']}]
+        },
+        insights=[
+            {'title': 'Mensagem comercial', 'text': 'A demo evidencia ganho de rotina: menos tempo consolidando planilhas e mais tempo decidindo.'},
+            {'title': 'Próxima ação', 'text': 'Automatizar a geração recorrente do relatório e revisar fornecedores com maior concentração.'},
+        ],
+        table={
+            'title': 'Fornecedores para reunião',
+            'headers': ['Prioridade', 'Fornecedor', 'Volume consolidado', 'Ação sugerida'],
+            'rows': [[idx + 1, row['nome'], format_brl(row['total']), 'Renegociar condição' if idx < 2 else 'Monitorar recorrência'] for idx, row in enumerate(fornecedores_top)]
+        }
     )
 
 

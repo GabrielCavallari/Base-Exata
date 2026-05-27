@@ -119,6 +119,23 @@ def inject_now():
     return {'data_atual': datetime.now().strftime('%d/%m/%Y')}
 
 
+def format_brl(valor):
+    return f"R$ {float(valor or 0):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def format_pct(valor):
+    return f"{float(valor or 0):.1f}%".replace(".", ",")
+
+
+def badge_status(status):
+    classes = {
+        'Concluída': 'badge-entrada',
+        'Cancelada': 'badge-saida',
+        'Em processamento': 'badge-alerta',
+    }
+    return f'<span class="badge {classes.get(status, "bg-light text-dark")}">{status}</span>'
+
+
 @app.route('/')
 def dashboard():
     """Página principal com KPIs e narrativa do case."""
@@ -174,41 +191,220 @@ def dashboard():
 
 @app.route('/faturamento')
 def faturamento():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT data_venda,
+               COUNT(*) AS pedidos,
+               SUM(quantidade) AS unidades,
+               SUM(quantidade * preco_unitario) AS receita
+        FROM vendas
+        WHERE data_venda >= date('now', '-29 days')
+        GROUP BY data_venda
+        ORDER BY data_venda
+    ''').fetchall()
+    total = sum(row['receita'] or 0 for row in rows)
+    pedidos = sum(row['pedidos'] or 0 for row in rows)
+    melhor_dia = max(rows, key=lambda row: row['receita'] or 0) if rows else None
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Faturamento',
         icon='bi-currency-dollar',
-        description='Visão dedicada para acompanhar evolução de receita, ticket médio e períodos com maior impacto no caixa.'
+        subtitle='Evolução de receita dos últimos 30 dias',
+        description='Visão dedicada para acompanhar evolução de receita, ticket médio e períodos com maior impacto no caixa.',
+        kpis=[
+            {'label': 'Receita no período', 'value': format_brl(total), 'hint': 'Soma das vendas registradas no SQLite.', 'icon': 'bi-cash-stack'},
+            {'label': 'Pedidos', 'value': pedidos, 'hint': 'Volume de vendas no recorte recente.', 'icon': 'bi-receipt'},
+            {'label': 'Ticket médio', 'value': format_brl(total / pedidos if pedidos else 0), 'hint': 'Receita dividida pelo número de pedidos.', 'icon': 'bi-bag-check'},
+            {'label': 'Melhor dia', 'value': datetime.strptime(melhor_dia['data_venda'], '%Y-%m-%d').strftime('%d/%m') if melhor_dia else '-', 'hint': format_brl(melhor_dia['receita']) if melhor_dia else 'Sem vendas no período.', 'icon': 'bi-calendar-check'},
+        ],
+        chart={
+            'title': 'Faturamento diário',
+            'type': 'line',
+            'prefix': 'R$ ',
+            'labels': [datetime.strptime(row['data_venda'], '%Y-%m-%d').strftime('%d/%m') for row in rows],
+            'datasets': [{'label': 'Receita', 'data': [round(row['receita'] or 0, 2) for row in rows], 'borderColor': '#008080', 'backgroundColor': 'rgba(0,128,128,.14)', 'tension': .35, 'fill': True}]
+        },
+        insights=[
+            {'title': 'Uso em reunião', 'text': 'Mostra rapidamente se o caixa recente está subindo, estável ou exigindo ação comercial.'},
+            {'title': 'Próxima decisão', 'text': 'Cruzar os dias de pico com mix de produtos ajuda a planejar campanhas e compras.'},
+        ],
+        table={
+            'title': 'Resumo diário',
+            'headers': ['Data', 'Pedidos', 'Unidades', 'Receita'],
+            'rows': [[datetime.strptime(row['data_venda'], '%Y-%m-%d').strftime('%d/%m/%Y'), row['pedidos'], row['unidades'], format_brl(row['receita'])] for row in reversed(rows[-10:])]
+        }
     )
 
 
 @app.route('/produtos')
 def produtos():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT p.nome, p.categoria,
+               SUM(v.quantidade) AS unidades,
+               SUM(v.quantidade * v.preco_unitario) AS receita,
+               AVG((v.preco_unitario - p.custo) / v.preco_unitario * 100) AS margem,
+               COUNT(v.id) AS vendas
+        FROM produtos p
+        JOIN vendas v ON v.produto_id = p.id
+        GROUP BY p.id, p.nome, p.categoria
+        ORDER BY receita DESC
+        LIMIT 10
+    ''').fetchall()
+    resumo = conn.execute('''
+        SELECT COUNT(*) AS produtos,
+               COUNT(DISTINCT categoria) AS categorias,
+               SUM(CASE WHEN custo > (
+                   SELECT AVG(v.preco_unitario) FROM vendas v WHERE v.produto_id = produtos.id
+               ) THEN 1 ELSE 0 END) AS margem_negativa
+        FROM produtos
+    ''').fetchone()
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Produtos',
         icon='bi-box-seam-fill',
-        description='Área preparada para analisar mix, categorias, produtos mais vendidos e itens que exigem revisão de margem.'
+        subtitle='Ranking de produtos por receita',
+        description='Área para analisar mix, categorias, produtos mais vendidos e itens que exigem revisão de margem.',
+        kpis=[
+            {'label': 'Produtos cadastrados', 'value': resumo['produtos'], 'hint': 'SKUs simulados no banco demo.', 'icon': 'bi-boxes'},
+            {'label': 'Categorias ativas', 'value': resumo['categorias'], 'hint': 'Agrupamentos comerciais do varejo.', 'icon': 'bi-tags'},
+            {'label': 'Produto líder', 'value': rows[0]['nome'] if rows else '-', 'hint': format_brl(rows[0]['receita']) if rows else 'Sem vendas.', 'icon': 'bi-trophy'},
+            {'label': 'Margem negativa', 'value': resumo['margem_negativa'] or 0, 'hint': 'Itens que pedem revisão de preço.', 'icon': 'bi-exclamation-triangle'},
+        ],
+        chart={
+            'title': 'Top produtos por faturamento',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['nome'] for row in rows[:8]],
+            'datasets': [{'label': 'Receita', 'data': [round(row['receita'] or 0, 2) for row in rows[:8]], 'backgroundColor': '#1A365D'}]
+        },
+        insights=[
+            {'title': 'Mix com foco', 'text': 'O ranking separa itens que puxam faturamento dos itens que apenas ocupam espaço no cadastro.'},
+            {'title': 'Margem visível', 'text': 'A tela apoia uma conversa objetiva sobre preço, custo e prioridade de compra.'},
+        ],
+        table={
+            'title': 'Produtos com maior impacto',
+            'headers': ['Produto', 'Categoria', 'Unidades', 'Receita', 'Margem média'],
+            'rows': [[row['nome'], row['categoria'], row['unidades'], format_brl(row['receita']), format_pct(row['margem'])] for row in rows]
+        }
     )
 
 
 @app.route('/ultimas-vendas')
 def ultimas_vendas():
+    conn = get_db()
+    rows = conn.execute('''
+        SELECT v.id, p.nome AS produto, p.categoria, v.quantidade, v.preco_unitario,
+               v.quantidade * v.preco_unitario AS total, v.data_venda, v.status
+        FROM vendas v
+        JOIN produtos p ON p.id = v.produto_id
+        ORDER BY v.data_venda DESC, v.id DESC
+        LIMIT 15
+    ''').fetchall()
+    status_rows = conn.execute('''
+        SELECT status, COUNT(*) AS total
+        FROM vendas
+        WHERE data_venda >= date('now', '-29 days')
+        GROUP BY status
+        ORDER BY total DESC
+    ''').fetchall()
+    hoje = conn.execute('''
+        SELECT COUNT(*) AS pedidos, COALESCE(SUM(quantidade * preco_unitario), 0) AS receita
+        FROM vendas
+        WHERE data_venda = date('now')
+    ''').fetchone()
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Últimas Vendas',
         icon='bi-clock-history',
-        description='Lista operacional para consultar vendas recentes, status e comportamento de compra em ordem cronológica.'
+        subtitle='Consulta operacional de vendas recentes',
+        description='Lista operacional para consultar vendas recentes, status e comportamento de compra em ordem cronológica.',
+        kpis=[
+            {'label': 'Vendas hoje', 'value': hoje['pedidos'], 'hint': format_brl(hoje['receita']), 'icon': 'bi-calendar-day'},
+            {'label': 'Último pedido', 'value': f"#{rows[0]['id']}" if rows else '-', 'hint': rows[0]['produto'] if rows else 'Sem registros.', 'icon': 'bi-receipt-cutoff'},
+            {'label': 'Ticket recente', 'value': format_brl(sum(row['total'] for row in rows) / len(rows) if rows else 0), 'hint': 'Média das últimas vendas listadas.', 'icon': 'bi-calculator'},
+            {'label': 'Status no período', 'value': len(status_rows), 'hint': 'Tipos de status encontrados nos últimos 30 dias.', 'icon': 'bi-ui-checks'},
+        ],
+        chart={
+            'title': 'Distribuição por status nos últimos 30 dias',
+            'type': 'doughnut',
+            'labels': [row['status'] for row in status_rows],
+            'datasets': [{'label': 'Vendas', 'data': [row['total'] for row in status_rows], 'backgroundColor': ['#008080', '#D35400', '#1A365D']}]
+        },
+        insights=[
+            {'title': 'Rastreabilidade', 'text': 'A lista ajuda a demonstrar consulta operacional simples sem precisar de planilha paralela.'},
+            {'title': 'Atenção comercial', 'text': 'Status cancelado ou em processamento fica evidente para acompanhamento rápido.'},
+        ],
+        table={
+            'title': 'Vendas mais recentes',
+            'headers': ['Data', 'Pedido', 'Produto', 'Qtd.', 'Total', 'Status'],
+            'rows': [[datetime.strptime(row['data_venda'], '%Y-%m-%d').strftime('%d/%m/%Y'), f"#{row['id']}", row['produto'], row['quantidade'], format_brl(row['total']), badge_status(row['status'])] for row in rows]
+        }
     )
 
 
 @app.route('/relatorio-executivo')
 def relatorio_executivo():
+    conn = get_db()
+    mes_atual = datetime.now().strftime('%Y-%m')
+    categorias = conn.execute('''
+        SELECT p.categoria,
+               SUM(v.quantidade * v.preco_unitario) AS receita,
+               SUM(v.quantidade) AS unidades,
+               AVG((v.preco_unitario - p.custo) / v.preco_unitario * 100) AS margem
+        FROM vendas v
+        JOIN produtos p ON p.id = v.produto_id
+        GROUP BY p.categoria
+        ORDER BY receita DESC
+    ''').fetchall()
+    mes = conn.execute('''
+        SELECT COALESCE(SUM(v.quantidade * v.preco_unitario), 0) AS receita,
+               COUNT(*) AS pedidos,
+               AVG((v.preco_unitario - p.custo) / v.preco_unitario * 100) AS margem
+        FROM vendas v
+        JOIN produtos p ON p.id = v.produto_id
+        WHERE strftime('%Y-%m', v.data_venda) = ?
+    ''', (mes_atual,)).fetchone()
+    negativos = conn.execute('''
+        SELECT COUNT(*) FROM produtos p
+        WHERE p.custo > (SELECT AVG(v.preco_unitario) FROM vendas v WHERE v.produto_id = p.id)
+    ''').fetchone()[0]
+    conn.close()
+
     return render_template(
         'simple_page.html',
         title='Relatório Executivo',
         icon='bi-file-earmark-bar-graph-fill',
-        description='Resumo gerencial para apresentar faturamento, margem, produtos relevantes e recomendações de decisão.'
+        subtitle='Resumo para apresentação de decisão',
+        description='Resumo gerencial para apresentar faturamento, margem, produtos relevantes e recomendações de decisão.',
+        kpis=[
+            {'label': 'Receita do mês', 'value': format_brl(mes['receita']), 'hint': f"{mes['pedidos']} vendas no mês atual.", 'icon': 'bi-graph-up-arrow'},
+            {'label': 'Margem média', 'value': format_pct(mes['margem']), 'hint': 'Estimativa com base em custo cadastrado.', 'icon': 'bi-percent'},
+            {'label': 'Categoria líder', 'value': categorias[0]['categoria'] if categorias else '-', 'hint': format_brl(categorias[0]['receita']) if categorias else 'Sem vendas.', 'icon': 'bi-award'},
+            {'label': 'Alertas de preço', 'value': negativos, 'hint': 'Produtos com custo acima do preço médio praticado.', 'icon': 'bi-bell'},
+        ],
+        chart={
+            'title': 'Participação por categoria',
+            'type': 'bar',
+            'prefix': 'R$ ',
+            'labels': [row['categoria'] for row in categorias],
+            'datasets': [{'label': 'Receita', 'data': [round(row['receita'] or 0, 2) for row in categorias], 'backgroundColor': '#D35400'}]
+        },
+        insights=[
+            {'title': 'Mensagem executiva', 'text': 'O dashboard transforma venda operacional em pauta de reunião: receita, margem, mix e alertas.'},
+            {'title': 'Ação sugerida', 'text': 'Priorizar revisão dos itens de margem negativa e reforçar compra das categorias líderes.'},
+        ],
+        table={
+            'title': 'Categorias para decisão',
+            'headers': ['Categoria', 'Receita', 'Unidades', 'Margem média'],
+            'rows': [[row['categoria'], format_brl(row['receita']), row['unidades'], format_pct(row['margem'])] for row in categorias]
+        }
     )
 
 

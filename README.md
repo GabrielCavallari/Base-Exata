@@ -405,6 +405,7 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 - [x] Modelo de proposta comercial
 - [x] Design system dos apps Flask
 - [x] Layout dos projetos do portfólio padronizado com sidebar, topbar e identidade Base Exata
+- [x] Páginas secundárias dos menus laterais evoluídas com KPIs, gráficos, tabelas e leituras comerciais
 - [ ] Adicionar screenshots das aplicações no README
 - [ ] Criar dashboard interno de prospecção
 - [ ] Evoluir processo de captação com Apify + Google Sheets
@@ -415,9 +416,9 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 ## Próximos passos sugeridos
 
 1. Adicionar imagens ou GIFs das demos no README.
-2. Evoluir as páginas simples dos menus laterais para telas funcionais com dados, filtros e tabelas específicas.
-3. Separar dados reais de prospecção em ambiente privado.
-4. Criar um painel interno para acompanhar leads, status de contato e conversão.
+2. Separar dados reais de prospecção em ambiente privado.
+3. Criar um painel interno para acompanhar leads, status de contato e conversão.
+4. Evoluir filtros e exportações nas telas secundárias dos apps Flask.
 5. Padronizar nomes de pastas e deploys conforme o projeto crescer.
 6. Criar issues no GitHub para organizar melhorias técnicas e comerciais.
 

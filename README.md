@@ -85,6 +85,20 @@ A pasta `.codex/`, quando presente, contém anotações operacionais usadas pelo
 
 ---
 
+## Kit de apresentação comercial
+
+A pasta `docs/apresentacao/` contém o kit completo para apoiar as reuniões de vendas e o processo de prospecção da Base Exata.
+
+O material foi estruturado para dar suporte a uma abordagem de venda consultiva e engloba:
+- **Planejamento**: Checklist pré-reunião e checklist técnico de teste das demos.
+- **Execução**: Roteiro de apresentação geral e guias detalhados de como apresentar cada demo com foco nas dores do cliente.
+- **Diagnóstico**: Banco de perguntas consultivas para extrair as principais dores do negócio (vendas, estoque, burocracia manual, produção, etc.).
+- **Pós-reunião e Follow-up**: Checklist pós-reunião e modelos práticos de follow-up para WhatsApp e e-mail.
+
+Para detalhes completos de como e quando utilizar cada documento, consulte o [README do Kit de Apresentação](docs/apresentacao/README.md).
+
+---
+
 ## Landing page
 
 A pasta `landing-page/` contém a página institucional da Base Exata.
@@ -116,6 +130,9 @@ Principais recursos:
 ---
 
 ## Aplicações e demos
+
+> [!IMPORTANT]
+> **Observação sobre as demonstrações**: As aplicações do portfólio são demonstrações comerciais com dados simulados. Elas mostram possibilidades de dashboards, sistemas internos e automações, mas não representam produtos finais prontos para uso em produção. As demonstrações estão estabilizadas como vitrines comerciais, e o desenvolvimento de novas funcionalidades técnicas nelas está pausado. Novas demandas técnicas de maior complexidade serão priorizadas e implementadas em projetos reais de clientes ou sob demanda específica.
 
 ### 1. Dashboard de Inteligência de Vendas
 
@@ -406,8 +423,10 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 - [x] Design system dos apps Flask
 - [x] Layout dos projetos do portfólio padronizado com sidebar, topbar e identidade Base Exata
 - [x] Páginas secundárias dos menus laterais evoluídas com KPIs, gráficos, tabelas e leituras comerciais
-- [ ] Adicionar screenshots das aplicações no README
-- [ ] Criar dashboard interno de prospecção
+- [x] Kit de apresentação comercial criado
+- [x] Demos estabilizadas como vitrine comercial
+- [x] Screenshots das aplicações no README
+- [x] Dashboard interno de prospecção
 - [ ] Evoluir processo de captação com Apify + Google Sheets
 - [ ] Documentar estudos de caso reais de forma anonimizada
 
@@ -418,13 +437,9 @@ A comunicação do projeto prioriza clareza, linguagem simples e foco na dor rea
 1. Adicionar imagens ou GIFs das demos no README.
 2. Separar dados reais de prospecção em ambiente privado.
 3. Criar um painel interno para acompanhar leads, status de contato e conversão.
-4. Evoluir filtros e exportações nas telas secundárias dos apps Flask.
+4. Preparar material de apresentação comercial, screenshots e roteiro de demonstração.
 5. Padronizar nomes de pastas e deploys conforme o projeto crescer.
 6. Criar issues no GitHub para organizar melhorias técnicas e comerciais.
-
----
-
-## Autor
 
 Desenvolvido por **Gabriel Lopes Cavallari**.
 

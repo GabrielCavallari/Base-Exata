@@ -6,6 +6,20 @@
   <title>Mensagem Recebida com Sucesso! | Base Exata Consultoria</title>
   <meta name="description" content="Agradecemos o seu contato. Entraremos em contato com você o mais rápido possível.">
   <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="logo-base-exata.png">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-46N82CWPR2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-46N82CWPR2');
+    gtag('event', 'generate_lead', {
+      form_id: 'form_contato_principal',
+      cta_location: 'sucesso_page'
+    });
+  </script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,7 +152,8 @@
     <!-- Buttons Section -->
     <div class="space-y-4">
       <!-- WhatsApp Premium Button (Primary CTA) -->
-      <a href="https://api.whatsapp.com/send?phone=551999917531&text=Ol%C3%A1%2C%20acabei%20de%20preencher%20o%20formul%C3%A1rio%20no%20site%20da%20Base%20Exata%20e%20gostaria%20de%20conversar."
+      <a href="https://api.whatsapp.com/send?phone=5519992917531&text=Ol%C3%A1%2C%20acabei%20de%20preencher%20o%20formul%C3%A1rio%20no%20site%20da%20Base%20Exata%20e%20gostaria%20de%20conversar."
+         onclick="if(typeof gtag==='function'){gtag('event','click_whatsapp',{cta_location:'sucesso_page',transport_type:'beacon'});}"
          target="_blank" rel="noopener noreferrer"
          class="whatsapp-pulse-btn w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-heading font-bold text-base px-6 py-4 rounded-xl flex items-center justify-center gap-3">
         <!-- WhatsApp Icon -->

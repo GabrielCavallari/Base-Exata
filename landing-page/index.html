@@ -8,10 +8,13 @@
   <meta name="keywords" content="análise de dados Capivari, automação comercial Capivari, dashboard para empresas, controle de estoque, Power BI, consultoria dados interior SP">
   <meta name="author" content="Base Exata Consultoria">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://baseexata.com.br">
+  <link rel="canonical" href="https://base-exata.onrender.com/">
+  <link rel="icon" type="image/png" href="logo-base-exata.png">
   <meta property="og:title" content="Base Exata Consultoria | Dados e Automação em Capivari">
   <meta property="og:description" content="Substitua cadernos e planilhas confusas por painéis automáticos. Consultoria local em análise de dados para comércios e indústrias.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://base-exata.onrender.com/">
+  <meta property="og:image" content="https://base-exata.onrender.com/logo-base-exata.png">
   <meta property="og:locale" content="pt_BR">
 
   <!-- Google Analytics 4 -->
@@ -30,8 +33,9 @@
     "@type": "LocalBusiness",
     "name": "Base Exata Consultoria",
     "description": "Consultoria em análise de dados e automação para comércios e indústrias de Capivari, SP.",
-    "url": "https://baseexata.com.br",
-    "telephone": "+551999917531",
+    "url": "https://base-exata.onrender.com/",
+    "image": "https://base-exata.onrender.com/logo-base-exata.png",
+    "telephone": "+5519992917531",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Capivari",
@@ -80,7 +84,8 @@
     }
   </script>
 
-  <!-- Alpine.js -->
+  <!-- Alpine.js + Intersect Plugin -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <style>
@@ -225,7 +230,7 @@
           <a href="#servicos" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Serviços</a>
           <a href="#portfolio" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Portfólio</a>
           <a href="#sobre" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Sobre</a>
-          <a href="#contato" class="inline-flex items-center gap-2 bg-brick hover:bg-brick-light text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
+          <a href="#contato" @click="trackCta('navbar_desktop', 'Geral')" class="inline-flex items-center gap-2 bg-brick hover:bg-brick-light text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
             Fale Conosco
           </a>
         </div>
@@ -244,7 +249,7 @@
           <a @click="open = false" href="#servicos" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Serviços</a>
           <a @click="open = false" href="#portfolio" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Portfólio</a>
           <a @click="open = false" href="#sobre" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Sobre</a>
-          <a @click="open = false" href="#contato" class="inline-flex items-center justify-center bg-brick text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg mt-2">Fale Conosco</a>
+          <a @click="open = false; trackCta('navbar_mobile', 'Geral')" href="#contato" class="inline-flex items-center justify-center bg-brick text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg mt-2">Fale Conosco</a>
         </div>
       </div>
     </div>
@@ -262,7 +267,7 @@
 
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-20 md:pt-32 md:pb-28 w-full">
       <div class="max-w-3xl"
-           x-intersect.once="$el.classList.add('animate-fade-up')">
+           x-intersect.once="$el.classList.add('animate-fade-up'); trackSection('hero')">
         <!-- Badge -->
         <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-1.5 mb-8">
           <div class="w-2 h-2 rounded-full bg-brick animate-pulse"></div>
@@ -285,11 +290,11 @@
 
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row gap-4">
-          <a href="#contato" class="inline-flex items-center justify-center gap-2 bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 group">
+          <a href="#contato" @click="trackCta('hero_primary', 'Diagnóstico Geral')" class="inline-flex items-center justify-center gap-2 bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 group">
             Quero organizar minha empresa
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
           </a>
-          <a href="#problemas" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-heading font-semibold text-base px-8 py-4 rounded-xl border border-white/15 transition-all">
+          <a href="#problemas" @click="trackCta('hero_secondary', 'Explorar Problemas')" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-heading font-semibold text-base px-8 py-4 rounded-xl border border-white/15 transition-all">
             Entenda como funciona
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
           </a>
@@ -327,7 +332,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <!-- Section header -->
       <div class="text-center mb-16"
-           x-intersect.once="$el.classList.add('animate-fade-up')">
+           x-intersect.once="$el.classList.add('animate-fade-up'); trackSection('problemas')">
         <div class="accent-line mx-auto mb-5"></div>
         <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
           Isso te parece familiar?
@@ -388,7 +393,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <!-- Section header -->
       <div class="text-center mb-16"
-           x-intersect.once="$el.classList.add('animate-fade-up')">
+           x-intersect.once="$el.classList.add('animate-fade-up'); trackSection('servicos')">
         <div class="accent-line mx-auto mb-5"></div>
         <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
           Como transformamos sua operação
@@ -412,7 +417,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Acompanhe em tempo real os produtos que mais saem e o faturamento do mês. Tudo em uma tela simples e automática.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Painéis de Vendas e Faturamento', 'Gostaria de ter um painel automático para acompanhar minhas vendas e faturamento em tempo real.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Entender minhas vendas
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -432,7 +437,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Chega de contagem manual. Rastreie entradas e saídas com alertas na sua tela quando um item estiver acabando.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Automação e Controle de Estoque', 'Quero organizar entradas e saídas do meu estoque e receber alertas de reposição.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Proteger meu estoque
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -452,7 +457,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Meça a produtividade da sua fábrica e identifique gargalos operacionais para garantir que as metas sejam atingidas.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Monitoramento de Eficiência Industrial (OEE)', 'Gostaria de medir a produtividade da fábrica e identificar gargalos operacionais.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Otimizar minha fábrica
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -472,7 +477,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Transformamos dados dispersos em relatórios claros e diretos em PDF, gerados de forma automática para embasar reuniões.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Relatórios Executivos Inteligentes', 'Preciso automatizar nossos fechamentos e relatórios gerenciais para ganhar tempo.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Receber relatórios claros
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -492,7 +497,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Sua empresa precisa de um vendedor que trabalhe 24 horas por dia. Criamos páginas de vendas rápidas, modernas e otimizadas para transformar visitantes em orçamentos reais no seu WhatsApp.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Criação de Landing Pages', 'Quero criar uma página profissional de alta conversão para captar clientes.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Quero atrair mais clientes
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -512,7 +517,7 @@
               <p class="font-body text-graphite-light text-sm leading-relaxed mb-4">
                 Pare de perder vendas por demora nas respostas. Criamos automações inteligentes no seu WhatsApp para responder dúvidas frequentes, catalogar pedidos e direcionar o cliente, economizando horas do seu dia.
               </p>
-              <a href="#contato" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
+              <a href="#contato" @click="selectService('Automação de WhatsApp e Atendimento', 'Quero automatizar o atendimento no WhatsApp para responder clientes com agilidade.', 'servicos_card')" class="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-brick hover:text-brick-light transition-colors group/link">
                 Automatizar meu atendimento
                 <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </a>
@@ -530,7 +535,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <!-- Section header -->
       <div class="text-center mb-16"
-           x-intersect.once="$el.classList.add('animate-fade-up')">
+           x-intersect.once="$el.classList.add('animate-fade-up'); trackSection('portfolio')">
         <div class="accent-line mx-auto mb-5"></div>
         <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-4">
           Nossa Vitrine de Soluções Reais
@@ -593,7 +598,7 @@
       <!-- CTA -->
       <div class="text-center mt-14"
            x-intersect.once="$el.classList.add('animate-fade-up')">
-        <a href="#contato" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-colors shadow-lg shadow-navy/10">
+        <a href="#contato" @click="selectService('Painel Sob Medida', 'Vi o portfólio da Base Exata e preciso de um painel sob medida para minha empresa.', 'portfolio_bottom_cta')" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-colors shadow-lg shadow-navy/10">
           Precisa de um painel sob medida? Fale Conosco
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
         </a>
@@ -632,11 +637,11 @@
         </div>
         <!-- Botões de Ação -->
         <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8">
-          <a href="#contato" @click="modalOpen = false" class="order-2 sm:order-1 inline-flex items-center gap-1.5 justify-center bg-snow hover:bg-navy/5 text-navy font-heading font-semibold text-sm px-5 py-2.5 rounded-xl border border-navy/10 transition-colors">
+          <a href="#contato" @click="contactAboutCase()" class="order-2 sm:order-1 inline-flex items-center gap-1.5 justify-center bg-snow hover:bg-navy/5 text-navy font-heading font-semibold text-sm px-5 py-2.5 rounded-xl border border-navy/10 transition-colors">
             Falar do Projeto
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
           </a>
-          <a :href="cases[activeCase]?.url" target="_blank" rel="noopener noreferrer" class="order-1 sm:order-2 inline-flex items-center gap-1.5 justify-center bg-brick hover:bg-brick-light text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md shadow-brick/5 group/btn">
+          <a :href="cases[activeCase]?.url" @click="trackDemoAccess()" target="_blank" rel="noopener noreferrer" class="order-1 sm:order-2 inline-flex items-center gap-1.5 justify-center bg-brick hover:bg-brick-light text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md shadow-brick/5 group/btn">
             Acessar Sistema
             <svg class="w-4 h-4 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
           </a>
@@ -666,13 +671,13 @@
           <!-- Redes Sociais (LinkedIn & GitHub) -->
           <div class="flex justify-center gap-4 mt-6">
             <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/in/gabriel-lopes-cavallari-18106020a/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-navy/5 text-navy hover:bg-navy hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/gabriel-lopes-cavallari-18106020a/" @click="trackCta('sobre_social_linkedin', 'LinkedIn')" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-navy/5 text-navy hover:bg-navy hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm" aria-label="LinkedIn">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
               </svg>
             </a>
             <!-- GitHub -->
-            <a href="https://github.com/GabrielCavallari" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-navy/5 text-navy hover:bg-navy hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm" aria-label="GitHub">
+            <a href="https://github.com/GabrielCavallari" @click="trackCta('sobre_social_github', 'GitHub')" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-navy/5 text-navy hover:bg-navy hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm" aria-label="GitHub">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
               </svg>
@@ -682,7 +687,7 @@
 
         <!-- Bio side -->
         <div class="sm:col-span-3 text-left"
-             x-intersect.once="$el.classList.add('animate-slide-right')">
+             x-intersect.once="$el.classList.add('animate-slide-right'); trackSection('sobre')">
           <div class="accent-line mb-5"></div>
           <h2 class="font-heading font-800 text-3xl sm:text-4xl text-navy mb-6">
             Quem está por trás dos dados
@@ -726,7 +731,7 @@
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
       <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
         <!-- Left text -->
-        <div x-intersect.once="$el.classList.add('animate-slide-left')">
+        <div x-intersect.once="$el.classList.add('animate-slide-left'); trackSection('contato')">
           <div class="w-12 h-1 bg-brick rounded mb-6"></div>
           <h2 class="font-heading font-800 text-3xl sm:text-4xl text-white mb-4 leading-tight">
             Pronto para assumir o controle total da sua empresa?
@@ -756,15 +761,39 @@
               <span class="font-body text-white/70">Atendimento presencial em Capivari e região</span>
             </div>
           </div>
+
+          <!-- Direct WhatsApp option in Contact section -->
+          <div class="mt-8 pt-8 border-t border-white/10">
+            <p class="font-body text-xs text-white/50 uppercase tracking-wider mb-3">Prefere atendimento imediato?</p>
+            <a :href="whatsappUrl()"
+               @click="trackWhatsApp('contato_section')"
+               target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2.5 bg-[#25D366]/15 hover:bg-[#25D366]/25 text-white border border-[#25D366]/30 font-heading text-sm font-semibold px-5 py-3 rounded-xl transition-all">
+              <svg class="w-5 h-5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Chamar direto no WhatsApp
+            </a>
+          </div>
         </div>
 
         <!-- Form -->
         <div x-intersect.once="$el.classList.add('animate-slide-right')">
-          <form action="https://formsubmit.co/gabriel.cavallari2003@gmail.com" method="POST" class="bg-white rounded-2xl p-8 shadow-2xl shadow-black/20">
+          <form id="form_contato_principal"
+                action="https://formsubmit.co/gabriel.cavallari2003@gmail.com"
+                method="POST"
+                @focusin.once="trackFormStart()"
+                @submit="trackFormSubmit()"
+                class="bg-white rounded-2xl p-8 shadow-2xl shadow-black/20">
             <!-- Configurações do FormSubmit -->
-            <input type="hidden" name="_subject" value="Novo Contato - Base Exata Consultoria">
+            <input type="hidden" name="_subject" :value="selectedService ? 'Novo Contato (' + selectedService + ') - Base Exata' : 'Novo Contato - Base Exata Consultoria'">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="sucesso.html">
+            <input type="hidden" name="_next" value="https://base-exata.onrender.com/sucesso.html">
+            <input type="hidden" name="_url" value="https://base-exata.onrender.com/">
+            <!-- Metadados de Rastreamento (GA4 / Google Ads / Serviço) -->
+            <input type="hidden" name="servico_interesse" :value="selectedService || 'Geral'">
+            <input type="hidden" name="utm_source" :value="utmParams.utm_source">
+            <input type="hidden" name="utm_medium" :value="utmParams.utm_medium">
+            <input type="hidden" name="utm_campaign" :value="utmParams.utm_campaign">
+            <input type="hidden" name="gclid" :value="utmParams.gclid">
             <div class="space-y-5">
               <div>
                 <label for="nome" class="block font-heading text-sm font-semibold text-navy mb-1.5">Nome</label>
@@ -830,7 +859,8 @@
   <!-- ============================================ -->
   <!--  WHATSAPP FLUTUANTE                          -->
   <!-- ============================================ -->
-  <a href="https://api.whatsapp.com/send?phone=551999917531&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Base%20Exata%20e%20gostaria%20de%20organizar%20minha%20empresa."
+  <a :href="whatsappUrl()"
+     @click="trackWhatsApp('floating_button')"
      target="_blank" rel="noopener noreferrer"
      class="fixed bottom-6 right-6 z-50 whatsapp-pulse"
      aria-label="Fale conosco pelo WhatsApp">
@@ -844,9 +874,17 @@
   <!-- ============================================ -->
   <script>
     function siteApp() {
+      const params = new URLSearchParams(window.location.search);
       return {
         modalOpen: false,
         activeCase: 0,
+        selectedService: '',
+        utmParams: {
+          utm_source: params.get('utm_source') || '(direct)',
+          utm_medium: params.get('utm_medium') || '(none)',
+          utm_campaign: params.get('utm_campaign') || '(not set)',
+          gclid: params.get('gclid') || ''
+        },
         cases: [
           {
             tag: 'Inteligência Comercial',
@@ -906,6 +944,107 @@
         openModal(index) {
           this.activeCase = index;
           this.modalOpen = true;
+          const item = this.cases[index];
+          if (item) {
+            this.selectedService = item.title;
+            if (typeof gtag === 'function') {
+              gtag('event', 'view_item', {
+                cta_location: 'portfolio_card',
+                service_interest: item.title,
+                item_category: item.tag
+              });
+            }
+          }
+        },
+        trackSection(sectionName) {
+          if (typeof gtag === 'function') {
+            gtag('event', 'section_view', {
+              section_name: sectionName
+            });
+          }
+        },
+        trackCta(location, interest) {
+          if (interest) {
+            this.selectedService = interest;
+          }
+          if (typeof gtag === 'function') {
+            gtag('event', 'cta_click', {
+              cta_location: location,
+              service_interest: interest || this.selectedService || 'Geral'
+            });
+          }
+        },
+        selectService(serviceName, promptText, ctaLocation) {
+          this.selectedService = serviceName;
+          if (typeof gtag === 'function') {
+            gtag('event', 'cta_click', {
+              cta_location: ctaLocation || 'servicos_card',
+              service_interest: serviceName
+            });
+          }
+          const textarea = document.getElementById('desafio');
+          if (textarea && (!textarea.value || textarea.dataset.autofilled === 'true')) {
+            textarea.value = promptText;
+            textarea.dataset.autofilled = 'true';
+          }
+        },
+        contactAboutCase() {
+          const item = this.cases[this.activeCase];
+          this.modalOpen = false;
+          if (item) {
+            this.selectService(
+              item.title,
+              'Vi o projeto "' + item.title + '" no portfólio da Base Exata e gostaria de conversar sobre algo semelhante para minha empresa.',
+              'portfolio_modal_contact'
+            );
+          }
+        },
+        trackDemoAccess() {
+          const item = this.cases[this.activeCase];
+          if (item && typeof gtag === 'function') {
+            gtag('event', 'view_portfolio_demo', {
+              cta_location: 'portfolio_modal_demo',
+              service_interest: item.title,
+              link_url: item.url,
+              transport_type: 'beacon'
+            });
+          }
+        },
+        whatsappUrl() {
+          const base = 'https://api.whatsapp.com/send?phone=5519992917531&text=';
+          const msg = this.selectedService
+            ? 'Olá, vim pelo site da Base Exata (interesse em ' + this.selectedService + ') e gostaria de organizar minha empresa.'
+            : 'Olá, vim pelo site da Base Exata e gostaria de organizar minha empresa.';
+          return base + encodeURIComponent(msg);
+        },
+        trackWhatsApp(location) {
+          if (typeof gtag === 'function') {
+            gtag('event', 'click_whatsapp', {
+              cta_location: location,
+              service_interest: this.selectedService || 'Geral',
+              transport_type: 'beacon'
+            });
+          }
+        },
+        trackFormStart() {
+          if (typeof gtag === 'function') {
+            gtag('event', 'form_start', {
+              form_id: 'form_contato_principal',
+              cta_location: 'contact_form',
+              service_interest: this.selectedService || 'Geral'
+            });
+          }
+        },
+        trackFormSubmit() {
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              form_id: 'form_contato_principal',
+              form_destination: 'https://formsubmit.co/gabriel.cavallari2003@gmail.com',
+              cta_location: 'contact_form',
+              service_interest: this.selectedService || 'Geral',
+              transport_type: 'beacon'
+            });
+          }
         }
       }
     }

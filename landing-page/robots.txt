@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /sucesso.html
+
+Sitemap: https://base-exata.onrender.com/sitemap.xml

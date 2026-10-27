@@ -42,10 +42,18 @@
       "addressRegion": "SP",
       "addressCountry": "BR"
     },
-    "areaServed": {
-      "@type": "Place",
-      "name": "Capivari, SP"
-    },
+    "areaServed": [
+      { "@type": "City", "name": "Capivari, SP" },
+      { "@type": "City", "name": "Piracicaba, SP" },
+      { "@type": "City", "name": "Monte Mor, SP" },
+      { "@type": "City", "name": "Tietê, SP" },
+      { "@type": "City", "name": "Indaiatuba, SP" },
+      { "@type": "City", "name": "Elias Fausto, SP" },
+      { "@type": "City", "name": "Rafard, SP" },
+      { "@type": "City", "name": "Rio das Pedras, SP" },
+      { "@type": "City", "name": "Porto Feliz, SP" },
+      { "@type": "City", "name": "Boituva, SP" }
+    ],
     "priceRange": "$$",
     "serviceType": ["Análise de Dados", "Automação Comercial", "Dashboards", "Controle de Estoque"]
   }
@@ -758,7 +766,7 @@
               <div class="w-8 h-8 rounded-full bg-teal/15 flex items-center justify-center flex-shrink-0">
                 <svg class="w-4 h-4 text-teal-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
               </div>
-              <span class="font-body text-white/70">Atendimento presencial em Capivari e região</span>
+              <span class="font-body text-white/70">Atendimento presencial em Capivari, Piracicaba, Monte Mor, Tietê, Indaiatuba e região</span>
             </div>
           </div>
 
@@ -793,7 +801,9 @@
             <input type="hidden" name="utm_source" :value="utmParams.utm_source">
             <input type="hidden" name="utm_medium" :value="utmParams.utm_medium">
             <input type="hidden" name="utm_campaign" :value="utmParams.utm_campaign">
+            <input type="hidden" name="utm_term" :value="utmParams.utm_term">
             <input type="hidden" name="gclid" :value="utmParams.gclid">
+            <input type="hidden" name="origem_campanha" :value="originSummary()">
             <div class="space-y-5">
               <div>
                 <label for="nome" class="block font-heading text-sm font-semibold text-navy mb-1.5">Nome</label>
@@ -847,7 +857,7 @@
         <!-- Location -->
         <div class="flex items-center gap-2">
           <svg class="w-4 h-4 text-white/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-          <span class="font-body text-sm text-white/40">Capivari, SP — Brasil</span>
+          <span class="font-body text-sm text-white/40">Capivari, Piracicaba, Monte Mor, Tietê e Região — SP</span>
         </div>
 
         <!-- Copyright -->
@@ -883,12 +893,19 @@
         selectedService: '',
         isSubmitting: false,
         demosWarmedUp: false,
-        utmParams: {
-          utm_source: params.get('utm_source') || '(direct)',
-          utm_medium: params.get('utm_medium') || '(none)',
-          utm_campaign: params.get('utm_campaign') || '(not set)',
-          gclid: params.get('gclid') || ''
-        },
+        utmParams: (function() {
+          let saved = {};
+          try { saved = JSON.parse(sessionStorage.getItem('base_exata_utm') || '{}'); } catch (e) {}
+          const current = {
+            utm_source: params.get('utm_source') || saved.utm_source || '(direct)',
+            utm_medium: params.get('utm_medium') || saved.utm_medium || '(none)',
+            utm_campaign: params.get('utm_campaign') || saved.utm_campaign || '(not set)',
+            utm_term: params.get('utm_term') || saved.utm_term || '',
+            gclid: params.get('gclid') || saved.gclid || ''
+          };
+          try { sessionStorage.setItem('base_exata_utm', JSON.stringify(current)); } catch (e) {}
+          return current;
+        })(),
         cases: [
           {
             tag: 'Inteligência Comercial',
@@ -1040,11 +1057,22 @@
             : 'Olá, vim pelo site da Base Exata e gostaria de organizar minha empresa.';
           return base + encodeURIComponent(msg);
         },
+        originSummary() {
+          const u = this.utmParams || {};
+          return [
+            u.utm_source || '(direct)',
+            u.utm_medium || '(none)',
+            u.utm_campaign || '(not set)',
+            u.utm_term ? 'kw:' + u.utm_term : '',
+            u.gclid ? 'gclid:' + u.gclid.slice(0, 16) : ''
+          ].filter(Boolean).join(' | ');
+        },
         trackWhatsApp(location) {
           if (typeof gtag === 'function') {
             gtag('event', 'click_whatsapp', {
               cta_location: location,
               service_interest: this.selectedService || 'Geral',
+              lead_origin_detail: this.originSummary(),
               transport_type: 'beacon'
             });
           }
@@ -1065,6 +1093,7 @@
               form_destination: 'https://formsubmit.co/gabriel.cavallari2003@gmail.com',
               cta_location: 'contact_form',
               service_interest: this.selectedService || 'Geral',
+              lead_origin_detail: this.originSummary(),
               transport_type: 'beacon'
             });
           }

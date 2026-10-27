@@ -207,7 +207,7 @@
   </style>
 </head>
 
-<body class="bg-snow antialiased" x-data="siteApp()">
+<body class="bg-snow antialiased" x-data="siteApp()" x-init="initApp()">
 
   <!-- ============================================ -->
   <!--  NAVBAR                                      -->
@@ -781,7 +781,7 @@
                 action="https://formsubmit.co/gabriel.cavallari2003@gmail.com"
                 method="POST"
                 @focusin.once="trackFormStart()"
-                @submit="trackFormSubmit()"
+                @submit.prevent="submitForm($event)"
                 class="bg-white rounded-2xl p-8 shadow-2xl shadow-black/20">
             <!-- Configurações do FormSubmit -->
             <input type="hidden" name="_subject" :value="selectedService ? 'Novo Contato (' + selectedService + ') - Base Exata' : 'Novo Contato - Base Exata Consultoria'">
@@ -816,9 +816,11 @@
                           class="w-full font-body text-sm border border-navy/15 rounded-xl px-4 py-3 bg-snow placeholder-graphite-light/50 transition-all resize-none"></textarea>
               </div>
               <button type="submit"
-                      class="w-full bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-6 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 flex items-center justify-center gap-2 group">
-                Solicitar contato
-                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                      :disabled="isSubmitting"
+                      :class="isSubmitting ? 'opacity-75 cursor-wait' : 'hover:bg-brick-light hover:shadow-lg hover:shadow-brick/20'"
+                      class="w-full bg-brick text-white font-heading font-bold text-base px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2 group">
+                <span x-text="isSubmitting ? 'Enviando solicitação...' : 'Solicitar contato'">Solicitar contato</span>
+                <svg x-show="!isSubmitting" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
               </button>
             </div>
           </form>
@@ -879,6 +881,8 @@
         modalOpen: false,
         activeCase: 0,
         selectedService: '',
+        isSubmitting: false,
+        demosWarmedUp: false,
         utmParams: {
           utm_source: params.get('utm_source') || '(direct)',
           utm_medium: params.get('utm_medium') || '(none)',
@@ -941,12 +945,28 @@
             url: 'https://baseexata-performance.onrender.com'
           }
         ],
+        initApp() {
+          // Pre-warm Render demo containers 2.5s after page load so they open fast
+          setTimeout(() => { this.warmUpDemos(); }, 2500);
+        },
+        warmUpDemos() {
+          if (this.demosWarmedUp) return;
+          this.demosWarmedUp = true;
+          this.cases.forEach((c) => {
+            if (c && c.url) {
+              fetch(c.url, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+            }
+          });
+        },
         openModal(index) {
           this.activeCase = index;
           this.modalOpen = true;
           const item = this.cases[index];
           if (item) {
             this.selectedService = item.title;
+            if (item.url) {
+              fetch(item.url, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+            }
             if (typeof gtag === 'function') {
               gtag('event', 'view_item', {
                 cta_location: 'portfolio_card',
@@ -957,6 +977,9 @@
           }
         },
         trackSection(sectionName) {
+          if (sectionName === 'servicos' || sectionName === 'portfolio') {
+            this.warmUpDemos();
+          }
           if (typeof gtag === 'function') {
             gtag('event', 'section_view', {
               section_name: sectionName
@@ -1045,6 +1068,44 @@
               transport_type: 'beacon'
             });
           }
+        },
+        submitForm(event) {
+          if (this.isSubmitting) return;
+          this.isSubmitting = true;
+          this.trackFormSubmit();
+
+          const formEl = event.target;
+          const formData = new FormData(formEl);
+          const payload = {};
+          formData.forEach((val, key) => { payload[key] = val; });
+
+          try {
+            sessionStorage.setItem('base_exata_lead', JSON.stringify({
+              nome: payload.nome || '',
+              empresa: payload.empresa || '',
+              whatsapp: payload.whatsapp || '',
+              servico: payload.servico_interesse || this.selectedService || 'Diagnóstico Geral'
+            }));
+          } catch (e) {}
+
+          fetch('https://formsubmit.co/ajax/gabriel.cavallari2003@gmail.com', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+          .then((res) => {
+            if (res.ok) {
+              window.location.href = 'sucesso.html';
+            } else {
+              formEl.submit();
+            }
+          })
+          .catch(() => {
+            formEl.submit();
+          });
         }
       }
     }

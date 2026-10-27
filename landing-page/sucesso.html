@@ -139,10 +139,10 @@
     </div>
 
     <!-- Headers & Content -->
-    <h1 class="font-heading font-800 text-2xl sm:text-3xl text-navy mb-4 tracking-tight">
+    <h1 id="sucesso_titulo" class="font-heading font-800 text-2xl sm:text-3xl text-navy mb-4 tracking-tight">
       Sua solicitação foi enviada!
     </h1>
-    <p class="font-body text-graphite-light text-base leading-relaxed mb-8 max-w-md mx-auto">
+    <p id="sucesso_subtitulo" class="font-body text-graphite-light text-base leading-relaxed mb-8 max-w-md mx-auto">
       Obrigado por entrar em contato com a <strong class="text-navy font-semibold">Base Exata</strong>. Analisaremos seus dados e entraremos em contato em até <span class="text-brick font-semibold">24 horas</span>.
     </p>
 
@@ -152,7 +152,8 @@
     <!-- Buttons Section -->
     <div class="space-y-4">
       <!-- WhatsApp Premium Button (Primary CTA) -->
-      <a href="https://api.whatsapp.com/send?phone=5519992917531&text=Ol%C3%A1%2C%20acabei%20de%20preencher%20o%20formul%C3%A1rio%20no%20site%20da%20Base%20Exata%20e%20gostaria%20de%20conversar."
+      <a id="sucesso_whatsapp_btn"
+         href="https://api.whatsapp.com/send?phone=5519992917531&text=Ol%C3%A1%2C%20acabei%20de%20preencher%20o%20formul%C3%A1rio%20no%20site%20da%20Base%20Exata%20e%20gostaria%20de%20conversar."
          onclick="if(typeof gtag==='function'){gtag('event','click_whatsapp',{cta_location:'sucesso_page',transport_type:'beacon'});}"
          target="_blank" rel="noopener noreferrer"
          class="whatsapp-pulse-btn w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-heading font-bold text-base px-6 py-4 rounded-xl flex items-center justify-center gap-3">
@@ -180,5 +181,30 @@
 
   </div>
 
+  <script>
+    (function() {
+      try {
+        var raw = sessionStorage.getItem('base_exata_lead');
+        if (!raw) return;
+        var lead = JSON.parse(raw);
+        if (lead.nome) {
+          var firstName = lead.nome.trim().split(' ')[0];
+          var titulo = document.getElementById('sucesso_titulo');
+          if (titulo) titulo.textContent = 'Recebemos seu contato, ' + firstName + '!';
+        }
+        var btn = document.getElementById('sucesso_whatsapp_btn');
+        if (btn) {
+          var parts = ['Olá Gabriel!'];
+          if (lead.nome) parts.push('Sou ' + lead.nome + (lead.empresa ? ' (' + lead.empresa + ')' : '') + '.');
+          if (lead.servico && lead.servico !== 'Geral') {
+            parts.push('Acabei de enviar o formulário no site da Base Exata sobre "' + lead.servico + '" e gostaria de conversar.');
+          } else {
+            parts.push('Acabei de preencher o formulário no site da Base Exata e gostaria de conversar.');
+          }
+          btn.href = 'https://api.whatsapp.com/send?phone=5519992917531&text=' + encodeURIComponent(parts.join(' '));
+        }
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

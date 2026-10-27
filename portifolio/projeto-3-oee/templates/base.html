@@ -88,7 +88,7 @@
       <div class="nav-section">Análise</div>
       <a href="{{ url_for('relatorio_executivo') }}" class="{% if request.endpoint == 'relatorio_executivo' %}active{% endif %}"><i class="bi bi-file-earmark-bar-graph-fill"></i>Relatório Executivo</a>
     </nav>
-    <div class="sidebar-footer"><small>Base Exata Consultoria<br>Capivari, SP · Demo</small></div>
+    <div class="sidebar-footer"><small>Base Exata Consultoria<br>Capivari, SP · Demo</small><div class="mt-1"><a href="https://base-exata.onrender.com/#contato" target="_blank" rel="noopener noreferrer" onclick="if(typeof gtag==='function'){gtag('event','cta_click',{cta_location:'demo_sidebar_footer',service_interest:'Monitor de Eficiência Industrial OEE',transport_type:'beacon'});}" style="color:#E8731A;text-decoration:none;font-size:.72rem;font-weight:600;"><i class="bi bi-box-arrow-up-right me-1"></i>Voltar ao site principal</a></div></div>
   </aside>
   <div class="main-content">
     <div class="top-bar">
@@ -99,6 +99,7 @@
       <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
         <span class="badge demo-badge">Demo com dados simulados</span>
         <span class="badge bg-light text-dark"><i class="bi bi-calendar3 me-1"></i>{{ data_atual }}</span>
+        <a href="https://api.whatsapp.com/send?phone=5519992917531&text=Ol%C3%A1%20Gabriel%21%20Estou%20testando%20a%20demo%20%22Monitor%20de%20Efici%C3%AAncia%20Industrial%20OEE%22%20da%20Base%20Exata%20e%20gostaria%20de%20implementar%20algo%20assim%20na%20minha%20empresa." onclick="if(typeof gtag==='function'){gtag('event','click_whatsapp',{cta_location:'demo_topbar',service_interest:'Monitor de Eficiência Industrial OEE',transport_type:'beacon'});}" target="_blank" rel="noopener noreferrer" class="btn btn-sm fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="background:#25D366;color:#fff;border:none;font-size:.75rem;padding:.3rem .7rem;border-radius:6px;"><i class="bi bi-whatsapp"></i> Quero na minha empresa</a>
       </div>
     </div>
     <main class="page-content">

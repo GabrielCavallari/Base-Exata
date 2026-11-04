@@ -233,11 +233,12 @@
         </a>
 
         <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center gap-8">
+        <div class="hidden md:flex items-center gap-4 lg:gap-8">
           <a href="#problemas" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Problemas</a>
           <a href="#servicos" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Serviços</a>
           <a href="#portfolio" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Portfólio</a>
           <a href="#sobre" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Sobre</a>
+          <a data-insights-link href="https://base-exata-insights.netlify.app/login" class="font-heading text-sm font-medium text-graphite-light hover:text-navy transition-colors">Área do Cliente</a>
           <a href="#contato" @click="trackCta('navbar_desktop', 'Geral')" class="inline-flex items-center gap-2 bg-brick hover:bg-brick-light text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
             Fale Conosco
           </a>
@@ -257,6 +258,7 @@
           <a @click="open = false" href="#servicos" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Serviços</a>
           <a @click="open = false" href="#portfolio" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Portfólio</a>
           <a @click="open = false" href="#sobre" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Sobre</a>
+          <a data-insights-link href="https://base-exata-insights.netlify.app/login" class="font-heading text-sm font-medium text-graphite px-3 py-2.5 rounded-lg hover:bg-navy/5 transition-colors">Área do Cliente</a>
           <a @click="open = false; trackCta('navbar_mobile', 'Geral')" href="#contato" class="inline-flex items-center justify-center bg-brick text-white font-heading text-sm font-semibold px-5 py-2.5 rounded-lg mt-2">Fale Conosco</a>
         </div>
       </div>
@@ -297,7 +299,7 @@
         </p>
 
         <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">
           <a href="#contato" @click="trackCta('hero_primary', 'Diagnóstico Geral')" class="inline-flex items-center justify-center gap-2 bg-brick hover:bg-brick-light text-white font-heading font-bold text-base px-8 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-brick/20 group">
             Quero organizar minha empresa
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
@@ -306,6 +308,7 @@
             Entenda como funciona
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
           </a>
+          <a data-insights-link href="https://base-exata-insights.netlify.app/cadastro" class="inline-flex items-center justify-center bg-white/10 hover:bg-white/15 text-white font-heading font-semibold text-base px-8 py-4 rounded-xl border border-white/15 transition-all">Testar com minha Planilha (Grátis)</a>
         </div>
 
         <!-- Trust badges -->
@@ -901,6 +904,7 @@
             utm_medium: params.get('utm_medium') || saved.utm_medium || '(none)',
             utm_campaign: params.get('utm_campaign') || saved.utm_campaign || '(not set)',
             utm_term: params.get('utm_term') || saved.utm_term || '',
+            utm_content: params.get('utm_content') || saved.utm_content || '',
             gclid: params.get('gclid') || saved.gclid || ''
           };
           try { sessionStorage.setItem('base_exata_utm', JSON.stringify(current)); } catch (e) {}
@@ -1139,5 +1143,6 @@
       }
     }
   </script>
+  <script src="insights-attribution.js" defer></script>
 </body>
 </html>
